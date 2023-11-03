@@ -16,10 +16,9 @@
   </properties>
 
   <modules>
-    <module>bom/parent</module>
+    <module>pom/parent</module>
     <!-- see profiles below for more modules -->
   </modules>
-
 
   <build>
     <defaultGoal>clean package</defaultGoal>
