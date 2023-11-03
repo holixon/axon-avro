@@ -49,6 +49,8 @@ jobs:
         env:
           OSS_CENTRAL_USERNAME: "${{ secrets.SONATYPE_USERNAME }}"
           OSS_CENTRAL_PASSWORD: "${{ secrets.SONATYPE_PASSWORD }}"
+        if: github.ref == 'refs/heads/master' # limit artifact  production to master for the moment
+
 
       - name: Upload coverage information to CodeCov
         uses: codecov/codecov-action@v3
@@ -60,4 +62,3 @@ jobs:
         run: bash <(curl -Ls https://coverage.codacy.com/get.sh)
         env:
           CODACY_PROJECT_TOKEN: "${{secrets.CODACY_PROJECT_TOKEN}}"
-
