@@ -1,0 +1,88 @@
+# ###############################
+# Main config file for MkDocs.
+# ###############################
+#
+# To run:
+# mkdocs serve
+# ###############################
+
+site_name: Axon Avro
+site_url: https://www.holixon.io/axon-avro/
+site_author: Holisticon Event Sourcerers
+site_description: >-
+  Axon Avro is a set of libraries allowing for effective use
+  of Apache Avro for serialization and de-serialization of Axon Messages.
+
+copyright: Copyright &copy; 2023, Holisticon AG
+
+use_directory_urls: false
+
+# Repository
+repo_name: holixon/axon-avro
+repo_url: https://github.com/holixon/axon-avro/
+edit_uri: edit/develop/docs/
+
+markdown_extensions:
+  - attr_list
+  - toc:
+      permalink: "#"
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.details
+  - admonition
+
+theme:
+  name: material
+  features:
+    - navigation.instant # When instant loading is enabled, clicks on all internal links will be intercepted and dispatched via XHR without fully reloading the page
+    - navigation.tabs # add top level nav items into a horizontal menu
+    - navigation.tabs.sticky # make horizontal menu sticky (insider feature)
+    - navigation.sections
+    - navigation.top # add "navigate to top" page icon on bottom left
+    - toc.integrate # integrate site TOC into the menu on the left
+  logo: assets/img/holixon-logo.png
+  icon:
+    repo: fontawesome/brands/github
+  font:
+    text: Roboto
+    code: Roboto Mono
+  palette:
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+
+extra_css: [ assets/css/extra.css ]
+
+extra:
+  social:
+    - icon: fontawesome/brands/twitter
+      name: Holisticon on Twitter
+      link: https://twitter.com/holisticon
+    - icon: fontawesome/brands/medium
+      name: Holisticon Event Sourcerers on Medium
+      link: https://medium.com/holisticon-consultants/tagged/mpb
+  version:
+    provider: mike
+
+plugins:
+  - search
+  - mike:
+      # these fields are all optional; the defaults are as below...
+      version_selector: true   # set to false, in order to leave out the version selector
+      css_dir: css             # the directory to put the version selector's CSS
+      javascript_dir: js       # the directory to put the version selector's JS
+      canonical_version: null  # the version for <link rel="canonical">; `null` uses the version specified via `mike deploy`
+  - git-revision-date-localized:
+      type: date
+      fallback_to_build_date: true
+
+nav:
+  - Home: index.md
+
