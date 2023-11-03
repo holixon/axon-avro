@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>io.holixon.axon.avro</groupId>
+    <artifactId>axon-avro-root</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <relativePath>../../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>axon-avro-parent</artifactId>
+  <packaging>pom</packaging>
+
+  <name>POM: ${project.artifactId}</name>
+  <description>Axon Avro Parent</description>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <java.version>17</java.version>
+    <version.java>${java.version}</version.java>
+
+    <kotlin.version>1.9.20</kotlin.version>
+    <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
+    <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
+    <pattern.class.itest>**/*ITest.*</pattern.class.itest>
+    <pattern.package.itest>**/itest/**/*.*</pattern.package.itest>
+
+    <springboot.version>3.1.5</springboot.version>
+    <kotlin-logging.version>3.0.5</kotlin-logging.version>
+    <axon-bom.version>4.9.0</axon-bom.version>
+  </properties>
+
+  <modules>
+  </modules>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <!-- first: Import dependency management from Kotlin -->
+        <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-bom</artifactId>
+        <version>${kotlin.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <!-- second: Import dependency management from SpringBoot (if done prior kotlin, it will overwrite it) -->
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${springboot.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+
+      <!-- Axon Framework -->
+      <dependency>
+        <groupId>org.axonframework</groupId>
+        <artifactId>axon-bom</artifactId>
+        <version>${axon-bom.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+
+      <!-- Logging -->
+      <dependency>
+        <groupId>io.github.microutils</groupId>
+        <artifactId>kotlin-logging-jvm</artifactId>
+        <version>${kotlin-logging.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <!-- Kotlin -->
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-stdlib-jdk8</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-reflect</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.github.microutils</groupId>
+      <artifactId>kotlin-logging-jvm</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-test-junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <sourceDirectory>src/main/kotlin</sourceDirectory>
+    <testSourceDirectory>src/test/kotlin</testSourceDirectory>
+
+    <pluginManagement>
+      <plugins>
+        <!-- Coverage metering -->
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>0.8.11</version>
+          <executions>
+            <execution>
+              <id>pre-unit-test</id>
+              <phase>initialize</phase>
+              <goals>
+                <goal>prepare-agent</goal>
+              </goals>
+              <configuration>
+                <destFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</destFile>
+                <propertyName>surefireArgLine</propertyName>
+              </configuration>
+            </execution>
+            <execution>
+              <id>post-unit-test</id>
+              <phase>test</phase>
+              <goals>
+                <goal>report</goal>
+              </goals>
+              <configuration>
+                <dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>
+                <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
+                <excludes>
+                  <exclude>${pattern.package.itest}</exclude>
+                  <exclude>${pattern.class.itest}</exclude>
+                </excludes>
+              </configuration>
+            </execution>
+            <execution>
+              <id>pre-integration-test</id>
+              <phase>pre-integration-test</phase>
+              <goals>
+                <goal>prepare-agent</goal>
+              </goals>
+              <configuration>
+                <destFile>${project.build.directory}/coverage-reports/jacoco-it.exec</destFile>
+                <propertyName>failsafeArgLine</propertyName>
+              </configuration>
+            </execution>
+            <execution>
+              <id>post-integration-test</id>
+              <phase>post-integration-test</phase>
+              <goals>
+                <goal>report</goal>
+              </goals>
+              <configuration>
+                <dataFile>${project.build.directory}/coverage-reports/jacoco-it.exec</dataFile>
+                <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
+                <excludes>
+                  <exclude>${pattern.package.itest}</exclude>
+                  <exclude>${pattern.class.itest}</exclude>
+                </excludes>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
+        <plugin>
+          <!-- java compiler -->
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.11.0</version>
+          <configuration>
+            <encoding>UTF-8</encoding>
+            <source>${java.version}</source>
+            <target>${java.version}</target>
+          </configuration>
+          <executions>
+            <!-- Replacing default-compile as it is treated specially by maven -->
+            <execution>
+              <id>default-compile</id>
+              <phase>none</phase>
+            </execution>
+            <!-- Replacing default-testCompile as it is treated specially by maven -->
+            <execution>
+              <id>default-testCompile</id>
+              <phase>none</phase>
+            </execution>
+            <execution>
+              <id>java-compile</id>
+              <phase>compile</phase>
+              <goals>
+                <goal>compile</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>java-test-compile</id>
+              <phase>test-compile</phase>
+              <goals>
+                <goal>testCompile</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <plugin>
+          <!-- resources -->
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>3.3.1</version>
+          <configuration>
+            <encoding>UTF-8</encoding>
+          </configuration>
+        </plugin>
+
+        <plugin>
+          <!-- jar -->
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>3.3.0</version>
+          <configuration>
+            <archive>
+              <manifest>
+                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+              </manifest>
+            </archive>
+          </configuration>
+        </plugin>
+
+        <plugin>
+          <!-- for loading and unpacking artifacts -->
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>3.6.0</version>
+        </plugin>
+
+        <plugin>
+          <groupId>com.coderplus.maven.plugins</groupId>
+          <artifactId>copy-rename-maven-plugin</artifactId>
+          <version>1.0.1</version>
+        </plugin>
+
+        <plugin>
+          <!-- kotlin compiler -->
+          <artifactId>kotlin-maven-plugin</artifactId>
+          <groupId>org.jetbrains.kotlin</groupId>
+          <version>${kotlin.version}</version>
+          <configuration>
+            <jvmTarget>${java.version}</jvmTarget>
+            <apiVersion>1.9</apiVersion>
+            <languageVersion>1.9</languageVersion>
+            <args>
+              <arg>-Xjsr305=strict</arg>
+            </args>
+            <compilerPlugins>
+              <plugin>spring</plugin>
+              <plugin>jpa</plugin>
+              <plugin>no-arg</plugin>
+              <plugin>all-open</plugin>
+            </compilerPlugins>
+            <pluginOptions>
+              <option>all-open:annotation=org.axonframework.eventhandling.EventHandler</option>
+              <option>all-open:annotation=org.axonframework.queryhandling.QueryHandler</option>
+            </pluginOptions>
+          </configuration>
+          <executions>
+            <execution>
+              <id>compile</id>
+              <goals>
+                <goal>compile</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>test-compile</id>
+              <goals>
+                <goal>test-compile</goal>
+              </goals>
+              <configuration>
+                <sourceDirs>
+                  <sourceDir>${project.basedir}/src/test/kotlin</sourceDir>
+                </sourceDirs>
+              </configuration>
+            </execution>
+          </executions>
+          <dependencies>
+            <dependency>
+              <groupId>org.jetbrains.kotlin</groupId>
+              <artifactId>kotlin-maven-allopen</artifactId>
+              <version>${kotlin.version}</version>
+            </dependency>
+            <dependency>
+              <groupId>org.jetbrains.kotlin</groupId>
+              <artifactId>kotlin-maven-noarg</artifactId>
+              <version>${kotlin.version}</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>3.1.2</version>
+          <configuration>
+            <useSystemClassLoader>false</useSystemClassLoader>
+            <runOrder>random</runOrder>
+            <failIfNoTests>true</failIfNoTests>
+            <excludes>
+              <exclude>${pattern.class.itest}</exclude>
+              <exclude>${pattern.package.itest}</exclude>
+            </excludes>
+            <!-- Sets the VM argument line used when unit tests are run. -->
+            <!-- prevent the annoying ForkedBooter process from stealing window focus on Mac OS -->
+            <argLine>-Djava.awt.headless=true @{surefireArgLine} -XX:+StartAttachListener</argLine>
+            <systemPropertyVariables>
+              <jgiven.report.dir>${project.build.directory}/jgiven-reports</jgiven.report.dir>
+            </systemPropertyVariables>
+          </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>3.1.2</version>
+          <executions>
+            <execution>
+              <goals>
+                <goal>integration-test</goal>
+              </goals>
+            </execution>
+          </executions>
+          <configuration>
+            <useSystemClassLoader>false</useSystemClassLoader>
+            <includes>
+              <include>${pattern.class.itest}</include>
+              <include>${pattern.package.itest}</include>
+            </includes>
+            <!-- Sets the VM argument line used when integration tests are run. -->
+            <!-- prevent the annoying ForkedBooter process from stealing window focus on Mac OS -->
+            <!-- the add-opens is required for XStream -->
+            <argLine>-Djava.awt.headless=true @{failsafeArgLine} -XX:+StartAttachListener --add-opens java.base/java.util=ALL-UNNAMED</argLine>
+          </configuration>
+        </plugin>
+
+        <!-- javadoc for kotlin -->
+        <plugin>
+          <groupId>org.jetbrains.dokka</groupId>
+          <artifactId>dokka-maven-plugin</artifactId>
+          <version>1.9.10</version>
+          <executions>
+            <execution>
+              <id>attach-javadocs</id>
+              <phase>test</phase>
+              <goals>
+                <goal>javadocJar</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <!-- source from kotlin -->
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>3.4.0</version>
+          <executions>
+            <execution>
+              <phase>generate-sources</phase>
+              <goals>
+                <goal>add-source</goal>
+              </goals>
+              <configuration>
+                <sources>
+                  <source>src/main/kotlin</source>
+                </sources>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
+        <!-- attach sources -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>3.3.0</version>
+          <executions>
+            <execution>
+              <id>attach-sources</id>
+              <phase>package</phase>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+              <configuration>
+                <attach>true</attach>
+                <forceCreation>true</forceCreation>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+        <!-- Install -->
+        <plugin>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>3.1.1</version>
+        </plugin>
+
+      </plugins>
+    </pluginManagement>
+
+    <plugins>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+
+    <!--
+      Profile creating all artifacts: JARs, POMs, Sources, JavaDoc and all signatures.
+    -->
+    <profile>
+      <id>release</id>
+      <activation>
+        <property>
+          <name>release</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.jetbrains.dokka</groupId>
+            <artifactId>dokka-maven-plugin</artifactId>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>itest</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <properties>
+        <skipFrontend>true</skipFrontend>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <!-- Skip Unit test execution on ITest profile run -->
+              <skipTests>true</skipTests>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-failsafe-plugin</artifactId>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+  </profiles>
+
+</project>
