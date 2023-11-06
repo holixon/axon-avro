@@ -6,7 +6,7 @@ import io.holixon.avro.adapter.api.AvroAdapterApiTestHelper.avroSchemaWithId
 import io.holixon.avro.adapter.api.AvroSchemaId
 import io.holixon.avro.adapter.api.AvroSchemaWithId
 import io.holixon.avro.adapter.api.cache.Jsr107AvroAdapterCache.DEFAULT_CACHE_NAME
-import io.holixon.avro.adapter.api.cache.Jsr107AvroAdapterCache.Jsr107CachingAvroSchemaResolver
+// import io.holixon.avro.adapter.api.cache.Jsr107AvroAdapterCache.Jsr107CachingAvroSchemaResolver
 import io.holixon.avro.lib.test.schema.SampleEventV4711
 import io.holixon.avro.lib.test.schema.SampleEventV4712
 import io.holixon.avro.lib.test.schema.SampleEventV4713
@@ -22,6 +22,7 @@ import javax.cache.Cache
 import javax.cache.CacheManager
 import javax.cache.Caching
 
+/*
 internal class Jsr107CachingAvroSchemaResolverTest {
   companion object {
     val sampleEvent4711 = avroSchemaWithId(SampleEventV4711)
@@ -96,3 +97,4 @@ internal class Jsr107CachingAvroSchemaResolverTest {
     }
     .assertAll()
 }
+*/
