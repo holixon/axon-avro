@@ -25,15 +25,16 @@
     <kotlin.version>1.9.20</kotlin.version>
     <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
-    <pattern.class.itest>**/*ITest.*</pattern.class.itest>
-    <pattern.package.itest>**/itest/**/*.*</pattern.package.itest>
-
+    <pattern.class.itest>**/*ITest.*,**/*TCTest.*</pattern.class.itest>
     <springboot.version>3.1.5</springboot.version>
     <kotlin-logging.version>3.0.5</kotlin-logging.version>
     <axon-bom.version>4.9.0</axon-bom.version>
+    <avro.version>1.11.3</avro.version>
   </properties>
 
   <modules>
+    <module>../../lib</module>
+    <module>../../registry</module>
   </modules>
 
   <dependencyManagement>
@@ -71,6 +72,20 @@
         <artifactId>kotlin-logging-jvm</artifactId>
         <version>${kotlin-logging.version}</version>
       </dependency>
+
+      <dependency>
+        <groupId>org.apache.avro</groupId>
+        <artifactId>avro</artifactId>
+        <version>${avro.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.holixon.axon.avro</groupId>
+        <artifactId>axon-avro-lib-test</artifactId>
+        <version>${project.version}</version>
+        <scope>test</scope>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
@@ -88,27 +103,6 @@
       <groupId>io.github.microutils</groupId>
       <artifactId>kotlin-logging-jvm</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-test-junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.assertj</groupId>
-      <artifactId>assertj-core</artifactId>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
 
   <build>
@@ -116,8 +110,8 @@
     <testSourceDirectory>src/test/kotlin</testSourceDirectory>
 
     <pluginManagement>
+      <!-- Coverage metering -->
       <plugins>
-        <!-- Coverage metering -->
         <plugin>
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
@@ -134,21 +128,7 @@
                 <propertyName>surefireArgLine</propertyName>
               </configuration>
             </execution>
-            <execution>
-              <id>post-unit-test</id>
-              <phase>test</phase>
-              <goals>
-                <goal>report</goal>
-              </goals>
-              <configuration>
-                <dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>
-                <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
-                <excludes>
-                  <exclude>${pattern.package.itest}</exclude>
-                  <exclude>${pattern.class.itest}</exclude>
-                </excludes>
-              </configuration>
-            </execution>
+
             <execution>
               <id>pre-integration-test</id>
               <phase>pre-integration-test</phase>
@@ -160,6 +140,7 @@
                 <propertyName>failsafeArgLine</propertyName>
               </configuration>
             </execution>
+
             <execution>
               <id>post-integration-test</id>
               <phase>post-integration-test</phase>
@@ -169,12 +150,27 @@
               <configuration>
                 <dataFile>${project.build.directory}/coverage-reports/jacoco-it.exec</dataFile>
                 <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
+                <includes>
+                  <include>${pattern.class.itest}</include>
+                </includes>
+              </configuration>
+            </execution>
+
+            <execution>
+              <id>post-unit-test</id>
+              <phase>test</phase>
+              <goals>
+                <goal>report</goal>
+              </goals>
+              <configuration>
+                <dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>
+                <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
                 <excludes>
-                  <exclude>${pattern.package.itest}</exclude>
                   <exclude>${pattern.class.itest}</exclude>
                 </excludes>
               </configuration>
             </execution>
+
           </executions>
         </plugin>
 
@@ -319,11 +315,10 @@
             <failIfNoTests>true</failIfNoTests>
             <excludes>
               <exclude>${pattern.class.itest}</exclude>
-              <exclude>${pattern.package.itest}</exclude>
             </excludes>
             <!-- Sets the VM argument line used when unit tests are run. -->
             <!-- prevent the annoying ForkedBooter process from stealing window focus on Mac OS -->
-            <argLine>-Djava.awt.headless=true @{surefireArgLine} -XX:+StartAttachListener</argLine>
+            <argLine>-Djava.awt.headless=true @{surefireArgLine} -XX:+StartAttachListener --add-opens java.base/java.util=ALL-UNNAMED</argLine>
             <systemPropertyVariables>
               <jgiven.report.dir>${project.build.directory}/jgiven-reports</jgiven.report.dir>
             </systemPropertyVariables>
@@ -345,7 +340,6 @@
             <useSystemClassLoader>false</useSystemClassLoader>
             <includes>
               <include>${pattern.class.itest}</include>
-              <include>${pattern.package.itest}</include>
             </includes>
             <!-- Sets the VM argument line used when integration tests are run. -->
             <!-- prevent the annoying ForkedBooter process from stealing window focus on Mac OS -->
@@ -414,6 +408,26 @@
           <artifactId>maven-install-plugin</artifactId>
           <version>3.1.1</version>
         </plugin>
+
+        <plugin>
+          <groupId>org.apache.avro</groupId>
+          <artifactId>avro-maven-plugin</artifactId>
+          <version>${avro.version}</version>
+          <executions>
+            <execution>
+              <phase>generate-sources</phase>
+              <goals>
+                <goal>schema</goal>
+              </goals>
+              <configuration>
+                <sourceDirectory>${project.basedir}/src/main/resources/avro/</sourceDirectory>
+                <outputDirectory>${project.build.directory}/generated-sources/avro/</outputDirectory>
+                <stringType>String</stringType>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
 
       </plugins>
     </pluginManagement>
