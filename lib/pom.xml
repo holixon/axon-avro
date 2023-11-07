@@ -10,7 +10,7 @@
     <relativePath>../pom/parent/pom.xml</relativePath>
   </parent>
 
-  <artifactId>lib</artifactId>
+  <artifactId>lib-parent</artifactId>
   <packaging>pom</packaging>
   <name>POM: help libraries</name>
 
@@ -21,6 +21,7 @@
 
   <modules>
     <module>test</module>
+    <module>fixtures</module>
     <module>coverage-aggregate</module>
   </modules>
 </project>

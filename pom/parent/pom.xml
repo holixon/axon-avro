@@ -35,6 +35,7 @@
   <modules>
     <module>../../lib</module>
     <module>../../registry</module>
+    <module>../../serializer</module>
   </modules>
 
   <dependencyManagement>
