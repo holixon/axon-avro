@@ -14,7 +14,7 @@
   <description>Adapter implementation using Apicurio Schema registry.</description>
 
   <properties>
-    <apicurio.version>2.3.1.Final</apicurio.version>
+    <apicurio.version>2.5.3.Final</apicurio.version>
     <jacoco.skip>false</jacoco.skip>
   </properties>
 
