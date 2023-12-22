@@ -26,7 +26,7 @@
     <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
     <pattern.class.itest>**/*ITest.*,**/*TCTest.*</pattern.class.itest>
-    <springboot.version>3.1.5</springboot.version>
+    <springboot.version>3.2.1</springboot.version>
     <kotlin-logging.version>3.0.5</kotlin-logging.version>
     <axon-bom.version>4.9.0</axon-bom.version>
     <avro.version>1.11.3</avro.version>
