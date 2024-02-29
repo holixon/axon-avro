@@ -39,8 +39,9 @@ jobs:
         with:
           token: "${{ secrets.CODECOV_TOKEN }}"
 
-      - name: Upload test coverage to Codacy
-        if: github.event_name == 'push' && github.actor != 'dependabot[bot]'
-        run: bash <(curl -Ls https://coverage.codacy.com/get.sh)
-        env:
-          CODACY_PROJECT_TOKEN: "${{secrets.CODACY_PROJECT_TOKEN}}"
+# FIXME -> activate if the repo becomes public
+#      - name: Upload test coverage to Codacy
+#        if: github.event_name == 'push' && github.actor != 'dependabot[bot]'
+#        run: bash <(curl -Ls https://coverage.codacy.com/get.sh)
+#        env:
+#          CODACY_PROJECT_TOKEN: "${{secrets.CODACY_PROJECT_TOKEN}}"
