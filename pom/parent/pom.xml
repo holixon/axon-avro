@@ -22,7 +22,7 @@
     <java.version>17</java.version>
     <version.java>${java.version}</version.java>
 
-    <kotlin.version>1.9.20</kotlin.version>
+    <kotlin.version>1.9.22</kotlin.version>
 
     <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
