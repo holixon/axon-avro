@@ -13,7 +13,7 @@ import java.io.ByteArrayOutputStream
 open class DefaultSpecificRecordToSingleObjectEncoder : SpecificRecordToSingleObjectEncoder {
 
   override fun <T : SpecificRecordBase> encode(data: T): AvroSingleObjectEncoded = ByteArrayOutputStream().use {
-    BinaryMessageEncoder<T>(SpecificData(), data.schema).encode(data, it)
+    BinaryMessageEncoder<T>(data.specificData, data.schema).encode(data, it)
     return it.toByteArray()
   }
 }

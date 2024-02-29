@@ -40,8 +40,9 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.apache.avro</groupId>
-      <artifactId>avro</artifactId>
+      <groupId>io.toolisticon.lib</groupId>
+      <artifactId>avro-kotlin</artifactId>
+      <version>${avro-kotlin.version}</version>
     </dependency>
 
     <dependency>

@@ -19,10 +19,9 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.apache.avro</groupId>
-      <artifactId>avro</artifactId>
+      <groupId>io.toolisticon.lib</groupId>
+      <artifactId>avro-kotlin</artifactId>
     </dependency>
-
 
     <!-- all test dependencies are on the compile scope, because this is a test lib which is used on the test scope -->
     <dependency>

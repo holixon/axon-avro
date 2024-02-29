@@ -91,6 +91,7 @@ object AvroAdapterDefault {
    */
   @JvmStatic
   fun <T : SpecificRecordBase> T.toGenericDataRecord(): GenericData.Record {
+    // FIXME: get() needs conversions
     return GenericData.get().deepCopy(this.schema, this) as GenericData.Record
   }
 

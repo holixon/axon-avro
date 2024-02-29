@@ -23,6 +23,7 @@
     <version.java>${java.version}</version.java>
 
     <kotlin.version>1.9.20</kotlin.version>
+
     <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
     <pattern.class.itest>**/*ITest.*,**/*TCTest.*</pattern.class.itest>
@@ -30,6 +31,8 @@
     <kotlin-logging.version>3.0.5</kotlin-logging.version>
     <axon-bom.version>4.9.0</axon-bom.version>
     <avro.version>1.11.3</avro.version>
+
+    <avro-kotlin.version>1.11.2.2</avro-kotlin.version>
   </properties>
 
   <modules>
@@ -75,18 +78,17 @@
       </dependency>
 
       <dependency>
-        <groupId>org.apache.avro</groupId>
-        <artifactId>avro</artifactId>
-        <version>${avro.version}</version>
-      </dependency>
-
-      <dependency>
         <groupId>io.holixon.axon.avro</groupId>
         <artifactId>axon-avro-lib-test</artifactId>
         <version>${project.version}</version>
         <scope>test</scope>
       </dependency>
 
+      <dependency>
+        <groupId>io.toolisticon.lib</groupId>
+        <artifactId>avro-kotlin</artifactId>
+        <version>${avro-kotlin.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 

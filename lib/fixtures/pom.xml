@@ -14,8 +14,8 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.apache.avro</groupId>
-      <artifactId>avro</artifactId>
+      <groupId>io.toolisticon.lib</groupId>
+      <artifactId>avro-kotlin</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
