@@ -11,10 +11,11 @@ import bankaccount.event.MoneyWithdrawn
 import bankaccount.projection.CurrentBalanceProjection
 import bankaccount.query.BankAccountAuditQuery
 import bankaccount.query.CurrentBalanceQueries
-import io.holixon.avro.adapter.common.AvroAdapterDefault
+import com.thoughtworks.xstream.XStream
+import com.thoughtworks.xstream.security.AnyTypePermission
 import io.holixon.avro.adapter.common.registry.InMemoryAvroSchemaReadOnlyRegistry
+import io.holixon.axon.avro.serializer.AvroSerializer
 import io.holixon.axon.avro.serializer.spring.AxonAvroSerializerConfiguration
-import io.holixon.axon.avro.serializer.spring.AxonAvroSerializerSpringBase
 import io.holixon.axon.avro.serializer.spring.AxonAvroSerializerSpringBase.PROFILE_ITEST
 import io.holixon.axon.avro.serializer.spring.container.AxonServerContainer
 import mu.KLogging
@@ -22,15 +23,17 @@ import org.assertj.core.api.Assertions.assertThat
 import org.awaitility.kotlin.await
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.queryhandling.QueryGateway
+import org.axonframework.serialization.Serializer
+import org.axonframework.serialization.xml.CompactDriver
+import org.axonframework.serialization.xml.XStreamSerializer
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.ComponentScan
-import org.springframework.context.annotation.Import
-import org.springframework.context.annotation.Profile
+import org.springframework.context.annotation.*
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
@@ -59,6 +62,15 @@ internal class AxonAvroSerializerConfigurationITest {
 
   @Autowired
   lateinit var auditEventQuery: BankAccountAuditQuery
+
+  @Autowired
+  @Qualifier("eventSerializer")
+  lateinit var eventSerializer: Serializer
+
+  @BeforeEach
+  internal fun ensure_serializer() {
+    assertThat(eventSerializer).isInstanceOf(AvroSerializer::class.java)
+  }
 
   @Test
   internal fun `create account and deposit money`() {
@@ -94,6 +106,13 @@ internal class AxonAvroSerializerConfigurationITest {
 @Profile(PROFILE_ITEST)
 class AxonAvroSerializerConfigurationITestApplication {
 
+  private val serializer = XStreamSerializer
+    .builder()
+    .xStream(XStream(CompactDriver())
+      .apply { addPermission(AnyTypePermission()) })
+    .disableAxonTypeSecurity()
+    .build()
+
   @Bean
   fun projection() = CurrentBalanceProjection()
 
@@ -109,4 +128,14 @@ class AxonAvroSerializerConfigurationITestApplication {
 
   @Bean
   fun bankAccountAuditEventQuery(queryGateway: QueryGateway): BankAccountAuditQuery = BankAccountAuditQuery.create(queryGateway)
+
+
+  @Bean
+  @Primary
+  @Qualifier("defaultSerializer")
+  fun defaultSerializer(): Serializer = serializer
+
+  @Bean
+  @Qualifier("messageSerializer")
+  fun messageSerializer(): Serializer = serializer
 }
