@@ -32,7 +32,7 @@
     <axon-bom.version>4.9.4</axon-bom.version>
     <avro.version>1.11.3</avro.version>
 
-    <avro-kotlin.version>1.11.2.2</avro-kotlin.version>
+    <avro-kotlin.version>1.11.2.3</avro-kotlin.version>
   </properties>
 
   <modules>
