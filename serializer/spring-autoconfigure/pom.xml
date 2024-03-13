@@ -14,12 +14,7 @@
   <dependencies>
     <dependency>
       <groupId>io.holixon.axon.avro</groupId>
-      <artifactId>axon-avro-serializer-core</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.holixon.axon.avro</groupId>
-      <artifactId>avro-registry-adapter-api</artifactId>
+      <artifactId>axon-avro-serializer-core-old</artifactId>
       <version>${project.version}</version>
     </dependency>
 

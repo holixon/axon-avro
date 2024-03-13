@@ -25,14 +25,15 @@
     <!-- libs (alphabetical) -->
     <avro.version>1.11.3</avro.version>
 
-    <avro-kotlin.version>1.11.2.4</avro-kotlin.version>
+<!-- FIXME: use release version    <avro-kotlin.version>1.11.2.4</avro-kotlin.version>-->
+    <avro-kotlin.version>1.11.2.5-SNAPSHOT</avro-kotlin.version>
     <axon-bom.version>4.9.4</axon-bom.version>
 
   </properties>
 
   <modules>
     <module>../../lib</module>
-    <module>../../registry</module>
+<!--    <module>../../registry</module>-->
     <module>../../serializer</module>
   </modules>
 
@@ -130,13 +131,22 @@
               <plugin>jpa</plugin>
               <plugin>no-arg</plugin>
               <plugin>all-open</plugin>
+              <plugin>kotlinx-serialization</plugin>
             </compilerPlugins>
             <pluginOptions>
               <option>all-open:annotation=org.axonframework.eventhandling.EventHandler</option>
               <option>all-open:annotation=org.axonframework.queryhandling.QueryHandler</option>
             </pluginOptions>
           </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>org.jetbrains.kotlin</groupId>
+              <artifactId>kotlin-maven-serialization</artifactId>
+              <version>${kotlin.version}</version>
+            </dependency>
+          </dependencies>
         </plugin>
+
 
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>

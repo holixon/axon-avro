@@ -22,6 +22,6 @@
   <modules>
     <module>test</module>
     <module>fixtures</module>
-    <module>coverage-aggregate</module>
+<!-- FIXME: re-include    <module>coverage-aggregate</module>-->
   </modules>
 </project>
