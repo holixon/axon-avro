@@ -1,6 +1,26 @@
 spring:
   main:
     banner-mode: off
+  application:
+    name: holibank
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+springdoc:
+  api-docs:
+    enabled: true
+
+axon:
+  extension:
+    tracing:
+      enabled: false
+  axonserver:
+    enabled: false
+
+
 
 logging:
   level:
@@ -10,3 +30,5 @@ logging:
     org.springframework.boot.test.context: warn
     org.springframework.test.context: warn
     org.testcontainers: warn
+server:
+  port: 10119

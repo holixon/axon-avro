@@ -2,12 +2,15 @@ package io.holixon.axon.avro.serializer
 
 import com.github.avrokotlin.avro4k.Avro
 import io.holixon.axon.avro.serializer.converter.*
+import io.holixon.axon.avro.serializer.strategy.*
 import io.toolisticon.avro.kotlin.AvroKotlin
 import io.toolisticon.avro.kotlin.AvroSchemaResolver
 import io.toolisticon.avro.kotlin.value.SingleObjectEncodedBytes
+import mu.KLogging
 import org.apache.avro.generic.GenericData
 import org.apache.avro.util.ClassUtils
 import org.axonframework.serialization.*
+import java.util.function.Supplier
 
 
 class AvroSerializer private constructor(
@@ -19,7 +22,7 @@ class AvroSerializer private constructor(
 ) : Serializer {
 
 
-  companion object {
+  companion object : KLogging() {
 
     @JvmStatic
     fun builder() = Builder()
@@ -32,6 +35,7 @@ class AvroSerializer private constructor(
           registerConverter(SingleObjectEncodedToByteArrayConverter())
           registerConverter(GenericRecordToJsonStringConverter())
           registerConverter(SingleObjectEncodedToGenericRecordConverter(builder._avroSchemaResolver))
+          registerConverter(JsonStringToStringConverter())
 
           builder.contentTypeConverters.forEach { this.registerConverter(it) }
         }
@@ -39,21 +43,19 @@ class AvroSerializer private constructor(
         builder.converter
       }
 
+      val kotlinxDataClassStrategy = KotlinxDataClassStrategy(
+        avro4k = builder.avro4k,
+        genericData = builder.genericDataSupplier.get()
+      )
+      val specificRecordBaseStrategy = SpecificRecordBaseStrategy()
+      val metaDataStrategy = MetaDataStrategy(genericData = builder.genericDataSupplier.get())
+
       return AvroSerializer(
         converter = converter,
         revisionResolver = builder.revisionResolver,
         schemaResolver = builder._avroSchemaResolver,
-        serializationStrategies = listOf(
-          KotlinxDataClassSerializationStrategy(
-            avro4k = builder.avro4k,
-            genericData = AvroKotlin.defaultLogicalTypeConversions.genericData
-          ),
-          SpecificRecordBaseSerializationStrategy()
-        ),
-        deserializationStrategies = listOf(
-          KotlinxDataClassDeserializationStrategy(avro4k = builder.avro4k),
-          SpecificRecordBaseDeserializationStrategy()
-        )
+        serializationStrategies = listOf(metaDataStrategy, kotlinxDataClassStrategy, specificRecordBaseStrategy),
+        deserializationStrategies = listOf(metaDataStrategy, kotlinxDataClassStrategy, specificRecordBaseStrategy),
       )
     }
   }
@@ -64,6 +66,7 @@ class AvroSerializer private constructor(
     internal var revisionResolver: RevisionResolver = AnnotationRevisionResolver()
     internal val contentTypeConverters: MutableList<ContentTypeConverter<*, *>> = mutableListOf()
     internal var avro4k = Avro.default
+    internal var genericDataSupplier: Supplier<GenericData> = Supplier { AvroKotlin.defaultLogicalTypeConversions.genericData }
 
     fun avroSchemaResolver(avroSchemaResolver: AvroSchemaResolver) = apply {
       _avroSchemaResolver = avroSchemaResolver
@@ -77,6 +80,10 @@ class AvroSerializer private constructor(
       this.avro4k = avro4k
     }
 
+    fun genericDataSupplier(supplier: Supplier<GenericData>) = apply {
+      this.genericDataSupplier = supplier
+    }
+
     fun build(): AvroSerializer {
       require(this::_avroSchemaResolver.isInitialized) { "AvroSchemaResolver must be provided." }
 
@@ -88,14 +95,16 @@ class AvroSerializer private constructor(
   override fun <T : Any> serialize(data: Any?, expectedRepresentation: Class<T>): SerializedObject<T> {
     requireNotNull(data) { "Can't serialize null." }
 
-    // FIXME serialize MetaData
-    val genericRecord = checkNotNull(serializationStrategies.firstOrNull { it.canSerialize(data::class.java) }) {
-      "Could not find a matching serialization strategy for ${data::class.java}."
-    }.serialize(data)
+    val strategy = serializationStrategies.firstOrNull { it.canSerialize(data::class.java) }
 
-    val serializedContent: T = when (expectedRepresentation) {
-      GenericData.Record::class.java -> genericRecord as T
-      else -> converter.convert(genericRecord, expectedRepresentation)
+    val serializedContent: T  = if (strategy != null ) {
+      val genericRecord = strategy.serialize(data)
+      when (expectedRepresentation) {
+        GenericData.Record::class.java -> genericRecord as T
+        else -> converter.convert(genericRecord, expectedRepresentation)
+      }
+    } else {
+      converter.convert(data, expectedRepresentation)
     }
 
     return SimpleSerializedObject(
@@ -108,13 +117,10 @@ class AvroSerializer private constructor(
   override fun <S : Any, T : Any> deserialize(serializedObject: SerializedObject<S>): T {
     val serializedType = classForType(serializedObject.type)
 
-    val genericRecord = converter.convert(serializedObject, GenericData.Record::class.java)
+    val strategy = deserializationStrategies.firstOrNull { it.canDeserialize(serializedType) }
 
-    val deserializationStrategy = checkNotNull( deserializationStrategies.firstOrNull { it.canDeserialize(serializedType) }) {
-      "Could not find matching deserialization strategy for ${serializedObject.type.name}."
-    }
-
-    return deserializationStrategy.deserialize(serializedType, genericRecord.data)
+    return strategy?.deserialize(serializedType, converter.convert(serializedObject, GenericData.Record::class.java).data)
+        ?: converter.convert(serializedObject.data, serializedType) as T
   }
 
   override fun <T : Any> canSerializeTo(expectedRepresentation: Class<T>): Boolean {

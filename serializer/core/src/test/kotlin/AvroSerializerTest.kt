@@ -8,6 +8,7 @@ import io.toolisticon.avro.kotlin.model.wrapper.AvroSchema
 import io.toolisticon.avro.kotlin.value.SingleObjectEncodedBytes
 import org.apache.avro.generic.GenericData
 import org.assertj.core.api.Assertions.assertThat
+import org.axonframework.messaging.MetaData
 import org.axonframework.serialization.SimpleSerializedObject
 import org.axonframework.serialization.SimpleSerializedType
 import org.junit.jupiter.api.Test
@@ -111,5 +112,12 @@ internal class AvroSerializerTest {
 
     assertThat(deserialized).isInstanceOf(BarString::class.java)
     assertThat(deserialized).hasToString(bar.toString())
+  }
+
+  @Test
+  fun `deserialize serialize MetaData`() {
+    val metaData = MetaData.from(mapOf(
+      "foo" to "bar"
+    ))
   }
 }

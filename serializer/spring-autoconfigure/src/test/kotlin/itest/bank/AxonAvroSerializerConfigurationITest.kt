@@ -13,11 +13,12 @@ import bankaccount.query.BankAccountAuditQuery
 import bankaccount.query.CurrentBalanceQueries
 import com.thoughtworks.xstream.XStream
 import com.thoughtworks.xstream.security.AnyTypePermission
-import io.holixon.avro.adapter.common.registry.InMemoryAvroSchemaReadOnlyRegistry
 import io.holixon.axon.avro.serializer.AvroSerializer
 import io.holixon.axon.avro.serializer.spring.AxonAvroSerializerConfiguration
 import io.holixon.axon.avro.serializer.spring.AxonAvroSerializerSpringBase.PROFILE_ITEST
-import io.holixon.axon.avro.serializer.spring.container.AxonServerContainer
+import io.holixon.axon.avro.serializer.spring.container.AxonServerContainerOld
+import io.toolisticon.avro.kotlin.avroSchemaResolver
+import io.toolisticon.avro.kotlin.model.wrapper.AvroSchema
 import mu.KLogging
 import org.assertj.core.api.Assertions.assertThat
 import org.awaitility.kotlin.await
@@ -26,6 +27,7 @@ import org.axonframework.queryhandling.QueryGateway
 import org.axonframework.serialization.Serializer
 import org.axonframework.serialization.xml.CompactDriver
 import org.axonframework.serialization.xml.XStreamSerializer
+import org.axonframework.test.server.AxonServerContainer
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -49,9 +51,10 @@ internal class AxonAvroSerializerConfigurationITest {
     @Container
     val axon = AxonServerContainer()
 
-    @JvmStatic
+    /*@JvmStatic
     @DynamicPropertySource
     fun axonProperties(registry: DynamicPropertyRegistry) = axon.addDynamicProperties(registry)
+    */
   }
 
   @Autowired
@@ -117,10 +120,12 @@ class AxonAvroSerializerConfigurationITestApplication {
   fun projection() = CurrentBalanceProjection()
 
   @Bean
-  fun schemaRegistry() = InMemoryAvroSchemaReadOnlyRegistry.createWithSchemas(
-    BankAccountCreated.getClassSchema(),
-    MoneyDeposited.getClassSchema(),
-    MoneyWithdrawn.getClassSchema()
+  fun schemaResolver() = avroSchemaResolver(
+    listOf(
+      BankAccountCreated.getClassSchema(),
+      MoneyDeposited.getClassSchema(),
+      MoneyWithdrawn.getClassSchema()
+    ).map { AvroSchema(it) }
   )
 
   @Bean

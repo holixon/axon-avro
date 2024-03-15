@@ -5,6 +5,7 @@ import io.toolisticon.avro.kotlin.model.wrapper.AvroSchema
 import io.toolisticon.avro.kotlin.value.ByteArrayValue
 import io.toolisticon.avro.kotlin.value.HexString
 import io.toolisticon.avro.kotlin.value.SingleObjectEncodedBytes
+import org.junit.jupiter.api.Test
 
 
 object TestFixtures {
@@ -20,4 +21,13 @@ object TestFixtures {
 
   }
 
+}
+
+class FooTest {
+
+  @Test
+  fun name() {
+    val s = HexString("""�=G5�41""".encodeToByteArray()).formatted
+    println(s)
+  }
 }

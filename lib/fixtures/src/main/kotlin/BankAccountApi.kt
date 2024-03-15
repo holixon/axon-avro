@@ -1,0 +1,4 @@
+package bankaccount
+
+object BankAccountApi {
+}
