@@ -13,7 +13,7 @@ import java.util.*
 
 internal class MetaDataStrategyTest {
 
-  val strategy = MetaDataStrategy(AvroKotlin.defaultLogicalTypeConversions.genericData)
+  private val strategy = MetaDataStrategy(AvroKotlin.defaultLogicalTypeConversions.genericData)
 
   @Test
   fun `verify metaData is schema compliant`() {

@@ -8,6 +8,7 @@ import bankaccount.event.MoneyDeposited;
 import bankaccount.event.MoneyWithdrawn;
 import bankaccount.query.BankAccountAuditQuery.BankAccountAuditEvents;
 import bankaccount.query.BankAccountAuditQuery.FindBankAccountAuditEventByAccountId;
+import bankaccount.query.CurrentBalance;
 import bankaccount.query.CurrentBalanceQueries;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -116,50 +117,6 @@ public class CurrentBalanceProjection {
     accounts.compute(accountId, (k, v) -> requireNonNull(v) + amount);
   }
 
-  public static class CurrentBalance {
-
-    private final String accountId;
-    private final int balance;
-
-    public CurrentBalance(String accountId, int balance) {
-      this.accountId = accountId;
-      this.balance = balance;
-    }
-
-    public String getAccountId() {
-      return accountId;
-    }
-
-    public int getBalance() {
-      return balance;
-    }
-
-    @Override
-    public String toString() {
-      return "CurrentBalance{" +
-        "accountId='" + accountId + '\'' +
-        ", balance=" + balance +
-        '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) {
-        return true;
-      }
-      if (o == null || getClass() != o.getClass()) {
-        return false;
-      }
-      CurrentBalance that = (CurrentBalance) o;
-      return balance == that.balance &&
-        accountId.equals(that.accountId);
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(accountId, balance);
-    }
-  }
 
   public static class BankAccountAuditEvent {
 

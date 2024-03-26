@@ -1,11 +1,13 @@
 package bankaccount.query;
 
-import bankaccount.projection.CurrentBalanceProjection.CurrentBalance;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import kotlin.js.ExperimentalJsReflectionCreateInstance;
+import org.axonframework.messaging.responsetypes.ResponseTypes;
+import org.axonframework.queryhandling.QueryGateway;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import org.axonframework.messaging.responsetypes.ResponseTypes;
-import org.axonframework.queryhandling.QueryGateway;
 
 public class CurrentBalanceQueries {
   private final QueryGateway queryGateway;
@@ -24,14 +26,21 @@ public class CurrentBalanceQueries {
 
   public static class CurrentBalanceQuery {
 
-    private final String accountId;
+    private String accountId;
 
-    public CurrentBalanceQuery(String accountId) {
+    public CurrentBalanceQuery() {
+    }
+
+    public CurrentBalanceQuery(@JsonProperty String accountId) {
       this.accountId = accountId;
     }
 
     public String getAccountId() {
       return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+      this.accountId = accountId;
     }
   }
 

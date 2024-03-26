@@ -1,0 +1,15 @@
+{
+  "type": "record",
+  "name": "AvroConfigToken",
+  "namespace": "io.holixon.axon.avro.serializer.model",
+  "fields": [
+    {
+      "name": "config",
+      "type": {
+        "type": "map",
+        "values": "string",
+        "default": []
+      }
+    }
+  ]
+}

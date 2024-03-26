@@ -9,26 +9,35 @@ spring:
     console:
       enabled: true
       path: /h2-console
+  jpa:
+    open-in-view: false
 springdoc:
   api-docs:
     enabled: true
+  swagger-ui:
+    try-it-out-enabled: true
 
 axon:
   extension:
     tracing:
       enabled: false
-  axonserver:
-    enabled: false
 
-
+axoniq:
+  console:
+    credentials: "5b101ea2-0:9b282b694cf446ddb7158668726cdec4"
 
 logging:
   level:
     root: info
-    io.axoniq.axonserver.connector: error
-    org.axonframework.eventhandling: error
-    org.springframework.boot.test.context: warn
-    org.springframework.test.context: warn
+    io.axoniq:
+      console.framework.client: warn
+      axonserver.connector: error
+    org.axonframework:
+      eventhandling: error
     org.testcontainers: warn
+    org.springframework:
+      core.annotation: error
+      boot.test.context: warn
+      test.context: warn
 server:
   port: 10119
