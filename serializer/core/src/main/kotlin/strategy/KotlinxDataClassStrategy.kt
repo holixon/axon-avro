@@ -2,6 +2,7 @@ package io.holixon.axon.avro.serializer.strategy
 
 import com.github.avrokotlin.avro4k.Avro
 import io.toolisticon.avro.kotlin.model.wrapper.AvroSchema
+import io.toolisticon.avro.kotlin.model.wrapper.AvroSchemaChecks.compatibleToReadFrom
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import org.apache.avro.generic.GenericData
