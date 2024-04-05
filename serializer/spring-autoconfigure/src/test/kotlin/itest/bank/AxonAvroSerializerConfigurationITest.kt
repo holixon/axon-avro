@@ -16,6 +16,7 @@ import com.thoughtworks.xstream.security.AnyTypePermission
 import io.holixon.axon.avro.serializer.AvroSerializer
 import io.holixon.axon.avro.serializer.spring.AxonAvroSerializerConfiguration
 import io.holixon.axon.avro.serializer.spring.AxonAvroSerializerSpringBase.PROFILE_ITEST
+import io.holixon.axon.avro.serializer.spring._test.BankTestApplication
 import io.toolisticon.avro.kotlin.AvroSchemaResolver
 import io.toolisticon.avro.kotlin.avroSchemaResolver
 import io.toolisticon.avro.kotlin.model.wrapper.AvroSchema
@@ -48,7 +49,7 @@ import java.util.*
 
 @SpringBootTest(classes = [AxonAvroSerializerConfigurationITest.AxonAvroSerializerConfigurationITestApplication::class], webEnvironment = RANDOM_PORT)
 @Testcontainers
-@ActiveProfiles(PROFILE_ITEST)
+@ActiveProfiles(PROFILE_ITEST, BankTestApplication.PROFILES.AVRO_SERVER)
 @ContextConfiguration(initializers = [ AxonAvroSerializerConfigurationITest.Initializer::class ])
 internal class AxonAvroSerializerConfigurationITest {
   companion object : KLogging() {
@@ -84,15 +85,18 @@ internal class AxonAvroSerializerConfigurationITest {
   }
 
   @Test
-  internal fun `create account and deposit money`() {
+  fun `create account and deposit money`() {
     val accountId = UUID.randomUUID().toString()
 
-    assertThat(queries.findByAccountId(accountId).join()).isEmpty
+    assertThat(queries.findByAccountId(accountId).join().value).isNotNull
+    assertThat(queries.findAll().join()).isEmpty()
 
     commandGateway.sendAndWait<Any>(CreateBankAccount(accountId, 100))
 
     await.untilAsserted {
-      assertThat(queries.findByAccountId(accountId).join()).isNotEmpty
+      val currentBalance = queries.findByAccountId(accountId).join()
+      assertThat(currentBalance.value).isNotNull
+      logger.info { "current: ${currentBalance.value}" }
     }
 
     val auditEvents = auditEventQuery.apply(accountId)
@@ -104,7 +108,7 @@ internal class AxonAvroSerializerConfigurationITest {
     commandGateway.sendAndWait<Any>(DepositMoney(accountId, 50))
 
     await.untilAsserted {
-      assertThat(queries.findByAccountId(accountId).join().orElseThrow().balance).isEqualTo(150)
+      assertThat(queries.findByAccountId(accountId).join().value?.balance).isEqualTo(150)
     }
 
     logger.info { "auditEvents for accountId='$accountId': ${auditEventQuery.apply(accountId)}" }

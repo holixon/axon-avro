@@ -27,10 +27,11 @@ class AvroSerializer private constructor(
   companion object : KLogging() {
 
     internal val axonSchemaResolver: AvroSchemaResolverMap = AvroSchemaResolverMap(
-      mapOf(
-        MetaDataStrategy.SCHEMA.fingerprint to MetaDataStrategy.SCHEMA,
-        ConfigTokenStrategy.SCHEMA.fingerprint to ConfigTokenStrategy.SCHEMA
-      )
+      listOf(
+        MetaDataStrategy.SCHEMA,
+        InstanceResponseTypeStrategy.SCHEMA,
+        MultipleInstancesResponseTypeStrategy.SCHEMA,
+      ).associateBy { it.fingerprint }
     )
 
     @JvmStatic
@@ -59,21 +60,42 @@ class AvroSerializer private constructor(
         builder.converter
       }
 
+      val genericData = builder.genericDataSupplier.get()
+
       val kotlinxDataClassStrategy = KotlinxDataClassStrategy(
         avro4k = builder.avro4k,
-        genericData = builder.genericDataSupplier.get()
+        genericData = genericData
+      )
+      val kotlinxEnumClassStrategy = KotlinxEnumClassStrategy(
+        avro4k = builder.avro4k,
+        genericData = genericData
       )
       val specificRecordBaseStrategy = SpecificRecordBaseStrategy()
-      val metaDataStrategy = MetaDataStrategy(genericData = builder.genericDataSupplier.get())
-      val configTokenStrategy = ConfigTokenStrategy(genericData = builder.genericDataSupplier.get())
+      val metaDataStrategy = MetaDataStrategy(genericData = genericData)
+      val instanceResponseTypeStrategy = InstanceResponseTypeStrategy(genericData)
+      val multipleInstancesResponseTypeStrategy = MultipleInstancesResponseTypeStrategy(genericData)
 
 
       return AvroSerializer(
         converter = converter,
         revisionResolver = builder.revisionResolver,
         schemaResolver = schemaResolver,
-        serializationStrategies = listOf(metaDataStrategy, configTokenStrategy, kotlinxDataClassStrategy, specificRecordBaseStrategy),
-        deserializationStrategies = listOf(metaDataStrategy, configTokenStrategy, kotlinxDataClassStrategy, specificRecordBaseStrategy),
+        serializationStrategies = listOf(
+          metaDataStrategy,
+          instanceResponseTypeStrategy,
+          multipleInstancesResponseTypeStrategy,
+          kotlinxDataClassStrategy,
+          kotlinxEnumClassStrategy,
+          specificRecordBaseStrategy
+        ),
+        deserializationStrategies = listOf(
+          metaDataStrategy,
+          kotlinxDataClassStrategy,
+          kotlinxEnumClassStrategy,
+          instanceResponseTypeStrategy,
+          multipleInstancesResponseTypeStrategy,
+          specificRecordBaseStrategy
+        ),
       )
     }
   }
@@ -111,9 +133,19 @@ class AvroSerializer private constructor(
 
 
   override fun <T : Any> serialize(data: Any?, expectedRepresentation: Class<T>): SerializedObject<T> {
-    requireNotNull(data) { "Can't serialize null." }
+    requireNotNull(data) {
+      "Can't serialize null."
+    }
 
     val strategy = serializationStrategies.firstOrNull { it.canSerialize(data::class.java) }
+
+    logger.info {
+      """===== serialize; $data
+      | class:    ${data::class.java}
+      | expected: $expectedRepresentation
+      | strategy: $strategy
+    """.trimMargin()
+    }
 
     val serializedContent: T = if (strategy != null) {
       val genericRecord = strategy.serialize(data)

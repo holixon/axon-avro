@@ -7,9 +7,7 @@ import bankaccount.event.BankAccountCreated
 import bankaccount.event.MoneyDeposited
 import bankaccount.event.MoneyWithdrawn
 import bankaccount.projection.CurrentBalanceProjection
-import bankaccount.query.BankAccountAuditQuery
-import bankaccount.query.CurrentBalance
-import bankaccount.query.CurrentBalanceQueries
+import bankaccount.query.*
 import com.github.avrokotlin.avro4k.Avro
 import io.holixon.axon.avro.serializer.AvroSerializer
 import io.holixon.axon.avro.serializer.spring.AxonAvroSerializerSpringBase
@@ -33,6 +31,7 @@ import org.axonframework.eventsourcing.eventstore.jpa.JpaEventStorageEngine
 import org.axonframework.modelling.saga.repository.jpa.SagaEntry
 import org.axonframework.queryhandling.QueryGateway
 import org.axonframework.serialization.Serializer
+import org.axonframework.serialization.json.JacksonSerializer
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.domain.EntityScan
@@ -46,150 +45,175 @@ import org.springframework.web.bind.annotation.*
 @ComponentScan(basePackageClasses = [BankAccount::class, BankTestApplication::class])
 @ActiveProfiles(AxonAvroSerializerSpringBase.PROFILE_ITEST)
 @EntityScan(
-    basePackageClasses = [
-        DomainEventEntry::class, SagaEntry::class, TokenEntry::class, DeadLetterEntry::class
-    ]
+  basePackageClasses = [
+    DomainEventEntry::class, SagaEntry::class, TokenEntry::class, DeadLetterEntry::class
+  ]
 )
 @OpenAPIDefinition(
-    info = Info(title = "Bank Fixture Application", version = "1"),
-    externalDocs = ExternalDocumentation(description = "h2-console", url = "/h2-console")
+  info = Info(title = "Bank Fixture Application", version = "1"),
+  externalDocs = ExternalDocumentation(description = "h2-console", url = "/h2-console")
 )
 class BankTestApplication {
-    companion object : KLogging()
+  companion object : KLogging()
 
-    object PROFILES {
-        const val JACKSON_NO_SERVER = "jackson-no-server"
-        const val JACKSON_SERVER = "jackson-server"
-        const val AVRO_SERVER = "avro-server"
-        const val AVRO_NO_SERVER = "avro-no-server"
+  object PROFILES {
+    const val JACKSON_NO_SERVER = "jackson-no-server"
+    const val JACKSON_SERVER = "jackson-server"
+    const val AVRO_SERVER = "avro-server"
+    const val AVRO_NO_SERVER = "avro-no-server"
+  }
+
+  abstract class ProfileConfiguration(
+    serializer: String, serverEnabled: Boolean
+  ) {
+    init {
+      logger.info { "----- Running config: serializer=$serializer, server-enabled=$serverEnabled" }
     }
+  }
 
-    abstract class ProfileConfiguration(
-        serializer: String, serverEnabled: Boolean
-    ) {
-        init {
-            logger.info { "----- Running config: serializer=$serializer, server-enabled=$serverEnabled" }
-        }
-    }
+  @Configuration
+  @Profile(PROFILES.JACKSON_NO_SERVER)
+  @PropertySource("classpath:profiles/server-disabled.properties")
+  @PropertySource("classpath:profiles/serializer-jackson.properties")
+  class JacksonNoServerConfiguration : ProfileConfiguration("jackson", false) {
+    @Bean
+    @Primary
+    fun objectMapper() = BankAccountApi.configureObjectMapper()
+  }
 
-    @Configuration
-    @Profile(PROFILES.JACKSON_NO_SERVER)
-    @PropertySource("classpath:profiles/server-disabled.properties")
-    @PropertySource("classpath:profiles/serializer-jackson.properties")
-    class JacksonNoServerConfiguration : ProfileConfiguration("jackson", false) {
-        @Bean
-        @Primary
-        fun objectMapper() = BankAccountApi.configureObjectMapper()
-    }
-
-    @Configuration
-    @Profile(PROFILES.JACKSON_SERVER)
-    @PropertySource("classpath:profiles/server-enabled.properties")
-    @PropertySource("classpath:profiles/serializer-jackson.properties")
-    class JacksonServerConfiguration : ProfileConfiguration("jackson", true) {
-        @Bean
-        @Primary
-        fun objectMapper() = BankAccountApi.configureObjectMapper()
-    }
+  @Configuration
+  @Profile(PROFILES.JACKSON_SERVER)
+  @PropertySource("classpath:profiles/server-enabled.properties")
+  @PropertySource("classpath:profiles/serializer-jackson.properties")
+  class JacksonServerConfiguration : ProfileConfiguration("jackson", true) {
+    @Bean
+    @Primary
+    fun objectMapper() = BankAccountApi.configureObjectMapper()
+  }
 
 
-    @Configuration
-    @EnableAxonAvroSerializer
-    @Profile(PROFILES.AVRO_NO_SERVER)
-    @PropertySource("classpath:profiles/server-disabled.properties")
-    class AvroNoServerConfiguration : ProfileConfiguration("avro", false) {
-        @Bean
-        @Primary
-        fun defaultSerializer(builder: AvroSerializer.Builder): Serializer = builder.build()
-
-        @Bean
-        @Qualifier("eventSerializer")
-        fun eventSerializer(builder: AvroSerializer.Builder): Serializer = builder.build()
-
-        @Bean
-        @Qualifier("messageSerializer")
-        fun messageSerializer(builder: AvroSerializer.Builder): Serializer = builder.build()
-
-        @Bean
-        fun schemaResolver() = avroSchemaResolver(listOf(
-            BankAccountCreated.getClassSchema(),
-            MoneyDeposited.getClassSchema(),
-            MoneyWithdrawn.getClassSchema(),
-            Avro.default.schema(CreateBankAccount.serializer())
-        ).map { AvroSchema(it) })
-    }
-
-    @Configuration
-    @EnableAxonAvroSerializer
-    @Profile(PROFILES.AVRO_SERVER)
-    @PropertySource("classpath:profiles/server-enabled.properties")
-    class AvroServerConfiguration : ProfileConfiguration("avro", true) {
-
-        @Bean
-        fun storageEngine(
-            emp: EntityManagerProvider,
-            txManager: TransactionManager,
-            @Qualifier("eventSerializer")
-            eventSerializer: Serializer
-        ): EventStorageEngine = JpaEventStorageEngine.builder()
-            .entityManagerProvider(emp)
-            .eventSerializer(eventSerializer)
-            .snapshotSerializer(eventSerializer)
-            .transactionManager(txManager)
-            .build()
-
-        @Bean
-        @Primary
-        fun defaultSerializer(builder: AvroSerializer.Builder): Serializer = builder.build()
-
-        @Bean
-        @Qualifier("eventSerializer")
-        fun eventSerializer(builder: AvroSerializer.Builder): Serializer = builder.build()
-
-        @Bean
-        @Qualifier("messageSerializer")
-        fun messageSerializer(builder: AvroSerializer.Builder): Serializer = builder.build()
-
-        @Bean
-        fun schemaResolver(): AvroSchemaResolver = AvroSchemaResolverMap(
-            listOf(
-                BankAccountCreated.getClassSchema(),
-                MoneyDeposited.getClassSchema(),
-                MoneyWithdrawn.getClassSchema(),
-                Avro.default.schema(
-                    CreateBankAccount.serializer()
-                )
-            ).map { AvroSchema(it) }.associateBy { it.fingerprint })
-    }
-
+  @Configuration
+  @EnableAxonAvroSerializer
+  @Profile(PROFILES.AVRO_NO_SERVER)
+  @PropertySource("classpath:profiles/server-disabled.properties")
+  class AvroNoServerConfiguration : ProfileConfiguration("avro", false) {
+    @Bean
+    @Primary
+    fun defaultSerializer(builder: AvroSerializer.Builder): Serializer = builder.build()
 
     @Bean
-    fun currentBalanceQueries(queryGateway: QueryGateway): CurrentBalanceQueries = CurrentBalanceQueries(queryGateway)
+    @Qualifier("eventSerializer")
+    fun eventSerializer(builder: AvroSerializer.Builder): Serializer = builder.build()
 
     @Bean
-    fun bankAccountAuditEventQuery(queryGateway: QueryGateway): BankAccountAuditQuery =
-        BankAccountAuditQuery.create(queryGateway)
+    @Qualifier("messageSerializer")
+    fun messageSerializer(builder: AvroSerializer.Builder): Serializer = builder.build()
 
     @Bean
-    fun projection() = CurrentBalanceProjection()
+    fun schemaResolver() = avroSchemaResolver(listOf(
+      BankAccountCreated.getClassSchema(),
+      MoneyDeposited.getClassSchema(),
+      MoneyWithdrawn.getClassSchema(),
+      Avro.default.schema(CreateBankAccount.serializer())
+    ).map { AvroSchema(it) })
+  }
+
+  @Configuration
+  @EnableAxonAvroSerializer
+  @Profile(PROFILES.AVRO_SERVER)
+  @PropertySource("classpath:profiles/server-enabled.properties")
+  class AvroServerConfiguration : ProfileConfiguration("avro", true) {
+
+    @Bean
+    fun storageEngine(
+      emp: EntityManagerProvider,
+      txManager: TransactionManager,
+      @Qualifier("eventSerializer")
+      eventSerializer: Serializer
+    ): EventStorageEngine = JpaEventStorageEngine.builder()
+      .entityManagerProvider(emp)
+      .eventSerializer(eventSerializer)
+      .snapshotSerializer(eventSerializer)
+      .transactionManager(txManager)
+      .build()
+
+    @Bean
+    @Primary
+    fun defaultSerializer(builder: AvroSerializer.Builder): Serializer = JacksonSerializer.builder()
+      .build()
+
+//@Bean
+//    @Primary
+//    fun defaultSerializer(builder: AvroSerializer.Builder): Serializer = builder.build()
+
+    @Bean
+    @Qualifier("eventSerializer")
+    fun eventSerializer(builder: AvroSerializer.Builder): Serializer = builder.build()
+
+    @Bean
+    @Qualifier("messageSerializer")
+    fun messageSerializer(builder: AvroSerializer.Builder): Serializer = builder.build()
+
+    @Bean
+    fun schemaResolver(): AvroSchemaResolver = AvroSchemaResolverMap(
+      listOf(
+        BankAccountCreated.getClassSchema(),
+        MoneyDeposited.getClassSchema(),
+        MoneyWithdrawn.getClassSchema(),
+        Avro.default.schema(
+          CreateBankAccount.serializer()
+        ),
+        Avro.default.schema(
+          CurrentBalanceQuery.serializer()
+        ),
+        Avro.default.schema(
+          CurrentBalanceResult.serializer()
+        ),
+        Avro.default.schema(
+          CurrentBalance.serializer()
+        ),
+        Avro.default.schema(
+          CurrentBalanceResultList.serializer()
+        ),
+        Avro.default.schema(
+          FindAllQuery.serializer()
+        ),
+      ).map { AvroSchema(it) }.associateBy { it.fingerprint })
+  }
 
 
-    @RestController
-    @RequestMapping("/bank")
-    class BankController(
-        val commandGateway: CommandGateway,
-        val currentBalanceQueries: CurrentBalanceQueries
-    ) {
+  @Bean
+  fun currentBalanceQueries(queryGateway: QueryGateway): CurrentBalanceQueries = CurrentBalanceQueries(queryGateway)
 
-        @PostMapping("/accounts")
-        fun createAccount(id: String, amount: Int): String {
-            return commandGateway.sendAndWait(CreateBankAccount(id, amount))
-        }
+  @Bean
+  fun bankAccountAuditEventQuery(queryGateway: QueryGateway): BankAccountAuditQuery =
+    BankAccountAuditQuery.create(queryGateway)
 
-        @GetMapping("/current-balance/{accountId}")
-        fun getCurrentBalance(@PathVariable accountId: String): ResponseEntity<CurrentBalance> =
-            ResponseEntity.of(currentBalanceQueries.findByAccountId(accountId).join())
+  @Bean
+  fun projection() = CurrentBalanceProjection()
+
+
+  @RestController
+  @RequestMapping("/bank")
+  class BankController(
+    val commandGateway: CommandGateway,
+    val currentBalanceQueries: CurrentBalanceQueries
+  ) {
+
+    @PostMapping("/accounts")
+    fun createAccount(id: String, amount: Int): String {
+      return commandGateway.sendAndWait(CreateBankAccount(id, amount))
     }
+
+    @GetMapping("/accounts")
+    fun getAll(): ResponseEntity<CurrentBalanceResultList> {
+      return ResponseEntity.ok(currentBalanceQueries.findAll().join())
+    }
+
+    @GetMapping("/current-balance/{accountId}")
+    fun getCurrentBalance(@PathVariable accountId: String): ResponseEntity<CurrentBalanceResult> =
+      ResponseEntity.ok(currentBalanceQueries.findByAccountId(accountId).join())
+  }
 }
 
 fun main() = runApplication<BankTestApplication>().let { }
