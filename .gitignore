@@ -1,3 +1,7 @@
+.docker/data
+.docker/events
+.docker/plugins
+
 .attach_*
 *.iml
 .idea/
