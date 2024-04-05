@@ -10,12 +10,13 @@ import kotlin.reflect.full.companionObject
 import kotlin.reflect.full.companionObjectInstance
 import kotlin.reflect.full.functions
 
-class KotlinxDataClassStrategy(
+class KotlinxEnumClassStrategy(
   private val avro4k: Avro,
   private val genericData: GenericData
 ) : AvroSerializationStrategy, AvroDeserializationStrategy {
 
-  override fun canDeserialize(serializedType: Class<*>): Boolean = isKotlinxDataClass(serializedType)
+  override fun canSerialize(serializedType: Class<*>): Boolean = isKotlinxEnumClass(serializedType)
+  override fun canDeserialize(serializedType: Class<*>): Boolean = isKotlinxEnumClass(serializedType)
 
   override fun <T : Any> deserialize(serializedType: Class<*>, data: GenericData.Record): T {
     val writerSchema = AvroSchema(data.schema)
@@ -30,7 +31,6 @@ class KotlinxDataClassStrategy(
     return avro4k.fromRecord(kserializer, data) as T
   }
 
-  override fun canSerialize(serializedType: Class<*>): Boolean = isKotlinxDataClass(serializedType)
 
   override fun serialize(data: Any): GenericData.Record {
     val fn = data::class.companionObject?.functions?.find { it.name == "serializer" }!!
@@ -42,9 +42,9 @@ class KotlinxDataClassStrategy(
     }
   }
 
-  private fun isKotlinxDataClass(serializedType: Class<*>) : Boolean {
+  private fun isKotlinxEnumClass(serializedType: Class<*>) : Boolean {
     // TODO: can this check be replaced by some convenience magic from kotlinx.serialization
-    return serializedType.kotlin.isData
+    return serializedType.isEnum
       && serializedType.annotations.any { it is Serializable }
   }
 }

@@ -41,6 +41,16 @@
       <groupId>com.github.avro-kotlin.avro4k</groupId>
       <artifactId>avro4k-core</artifactId>
       <version>1.8.0</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.avro</groupId>
+          <artifactId>avro</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.xerial.snappy</groupId>
+          <artifactId>snappy-java</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
 

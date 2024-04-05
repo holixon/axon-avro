@@ -1,22 +1,11 @@
 package bankaccount.projection;
 
-import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.toList;
-
 import bankaccount.event.BankAccountCreated;
 import bankaccount.event.MoneyDeposited;
 import bankaccount.event.MoneyWithdrawn;
 import bankaccount.query.BankAccountAuditQuery.BankAccountAuditEvents;
 import bankaccount.query.BankAccountAuditQuery.FindBankAccountAuditEventByAccountId;
-import bankaccount.query.CurrentBalanceQueries;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
+import bankaccount.query.*;
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.eventhandling.SequenceNumber;
 import org.axonframework.eventhandling.Timestamp;
@@ -24,6 +13,13 @@ import org.axonframework.messaging.annotation.MetaDataValue;
 import org.axonframework.queryhandling.QueryHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.time.Instant;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+
+import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.toList;
 
 public class CurrentBalanceProjection {
 
@@ -50,15 +46,18 @@ public class CurrentBalanceProjection {
   ) {
     accounts.put(evt.getAccountId(), evt.getInitialBalance());
 
+    LOGGER.info("ACCOUNTS:");
+    LOGGER.info(accounts.toString());
+
     addAuditEvent(sequenceNumber, timestamp, evt.getAccountId(), evt.getInitialBalance(), traceId, correlationId);
   }
 
   @EventHandler
   public void on(MoneyWithdrawn evt,
-    @SequenceNumber long sequenceNumber,
-    @Timestamp Instant timestamp,
-    @MetaDataValue("traceId") String traceId,
-    @MetaDataValue("correlationId") String correlationId
+                 @SequenceNumber long sequenceNumber,
+                 @Timestamp Instant timestamp,
+                 @MetaDataValue("traceId") String traceId,
+                 @MetaDataValue("correlationId") String correlationId
   ) {
     newBalance(evt.getAccountId(), -evt.getAmount());
 
@@ -67,10 +66,10 @@ public class CurrentBalanceProjection {
 
   @EventHandler
   public void on(MoneyDeposited evt,
-    @SequenceNumber long sequenceNumber,
-    @Timestamp Instant timestamp,
-    @MetaDataValue("traceId") String traceId,
-    @MetaDataValue("correlationId") String correlationId
+                 @SequenceNumber long sequenceNumber,
+                 @Timestamp Instant timestamp,
+                 @MetaDataValue("traceId") String traceId,
+                 @MetaDataValue("correlationId") String correlationId
   ) {
     newBalance(evt.getAccountId(), evt.getAmount());
 
@@ -78,13 +77,19 @@ public class CurrentBalanceProjection {
   }
 
   @QueryHandler
-  public Optional<CurrentBalance> findCurrentBalanceById(CurrentBalanceQueries.CurrentBalanceQuery query) {
-    return Optional.ofNullable(accounts.get(query.getAccountId())).map(it -> new CurrentBalance(query.getAccountId(), it));
+  public CurrentBalanceResult findCurrentBalanceById(CurrentBalanceQuery query) {
+    Integer balance = accounts.get(query.getAccountId());
+
+    CurrentBalance result = (balance != null)
+      ? new CurrentBalance(query.getAccountId(), balance)
+      : null;
+
+    return new CurrentBalanceResult(result);
   }
 
   @QueryHandler
-  public List<CurrentBalance> findAll(CurrentBalanceQueries.FindAll query) {
-    return accounts.entrySet().stream().map(it -> new CurrentBalance(it.getKey(), it.getValue())).collect(toList());
+  public CurrentBalanceResultList findAll(FindAllQuery query) {
+    return new CurrentBalanceResultList(accounts.entrySet().stream().map(it -> new CurrentBalance(it.getKey(), it.getValue())).collect(toList()));
   }
 
   @QueryHandler
@@ -114,52 +119,13 @@ public class CurrentBalanceProjection {
 
   private void newBalance(String accountId, int amount) {
     accounts.compute(accountId, (k, v) -> requireNonNull(v) + amount);
+    LOGGER.info("Changing Balance: {} - {}", accountId, amount);
+
+    LOGGER.info("ACCOUNTS:");
+    LOGGER.info(accounts.toString());
+
   }
 
-  public static class CurrentBalance {
-
-    private final String accountId;
-    private final int balance;
-
-    public CurrentBalance(String accountId, int balance) {
-      this.accountId = accountId;
-      this.balance = balance;
-    }
-
-    public String getAccountId() {
-      return accountId;
-    }
-
-    public int getBalance() {
-      return balance;
-    }
-
-    @Override
-    public String toString() {
-      return "CurrentBalance{" +
-        "accountId='" + accountId + '\'' +
-        ", balance=" + balance +
-        '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) {
-        return true;
-      }
-      if (o == null || getClass() != o.getClass()) {
-        return false;
-      }
-      CurrentBalance that = (CurrentBalance) o;
-      return balance == that.balance &&
-        accountId.equals(that.accountId);
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(accountId, balance);
-    }
-  }
 
   public static class BankAccountAuditEvent {
 
@@ -171,7 +137,7 @@ public class CurrentBalanceProjection {
     private final String correlationId;
 
     public BankAccountAuditEvent(long sequenceNumber, Instant timestamp, String accountId,
-      int amount, String traceId, String correlationId) {
+                                 int amount, String traceId, String correlationId) {
       this.sequenceNumber = sequenceNumber;
       this.timestamp = timestamp;
       this.accountId = accountId;
