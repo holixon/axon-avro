@@ -1,6 +1,6 @@
-.docker/data/
-.docker/events/
-.docker/plugins/
+.docker/axonsever/data/
+.docker/axonsever/events/
+.docker/axonsever/plugins/
 
 .attach_*
 *.iml
