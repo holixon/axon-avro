@@ -1,6 +1,6 @@
-.docker/axonsever/data/
-.docker/axonsever/events/
-.docker/axonsever/plugins/
+.docker/axonserver/data/
+.docker/axonserver/events/
+.docker/axonserver/plugins/
 
 .attach_*
 *.iml
@@ -21,3 +21,4 @@ javacore.*.txt
 Snap.*.trc
 
 _old/
+
