@@ -12,3 +12,5 @@ services:
       - .docker/axonserver/data:/axonserver/data
       - .docker/axonserver/events:/axonserver/events
       - .docker/axonserver/plugins:/axonserver/plugins
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
