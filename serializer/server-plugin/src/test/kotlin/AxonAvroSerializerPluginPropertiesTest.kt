@@ -6,6 +6,7 @@ import io.holixon.axon.avro.serializer.plugin.AxonAvroSerializerPluginProperties
 import io.holixon.axon.avro.serializer.plugin.AxonAvroSerializerPluginProperties.Companion.KEY_URL_TEMPLATE
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 internal class AxonAvroSerializerPluginPropertiesTest {
   companion object {
@@ -29,11 +30,20 @@ internal class AxonAvroSerializerPluginPropertiesTest {
   @Test
   internal fun `default values when map is empty`() {
     val properties = AxonAvroSerializerPluginProperties(emptyMap())
-
     assertThat(properties).isEqualTo(
       AxonAvroSerializerPluginProperties(
         registryUrlTemplate = DEFAULT_URL_TEMPLATE,
       )
     )
+  }
+
+  @Test
+  internal fun `validates wrong url with missing fingerprint parameter`() {
+    val e = assertThrows<IllegalArgumentException> {
+      AxonAvroSerializerPluginProperties(
+        createProperties("missing-scheme-url")
+      )
+    }
+    assertThat(e.message).isEqualTo("Registry URL template must contain param '{fingerprint}'")
   }
 }

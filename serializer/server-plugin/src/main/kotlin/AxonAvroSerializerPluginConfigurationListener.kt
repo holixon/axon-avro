@@ -1,5 +1,6 @@
 package io.holixon.axon.avro.serializer.plugin
 
+import io.axoniq.axonserver.plugin.AttributeType
 import io.axoniq.axonserver.plugin.Configuration
 import io.axoniq.axonserver.plugin.ConfigurationListener
 import io.axoniq.axonserver.plugin.PluginPropertyDefinition
@@ -24,6 +25,7 @@ class AxonAvroSerializerPluginConfigurationListener : ConfigurationListener, Axo
       PluginPropertyDefinition
         .newBuilder(AxonAvroSerializerPluginProperties.KEY_URL_TEMPLATE, "Registry URL Template")
         .description("URL of the remote schema registry")
+        .type(AttributeType.STRING)
         .defaultValue(AxonAvroSerializerPluginProperties.DEFAULT_URL_TEMPLATE)
         .build()
     ),
@@ -33,12 +35,12 @@ class AxonAvroSerializerPluginConfigurationListener : ConfigurationListener, Axo
   override fun updated(context: String, configuration: Map<String, *>?) {
     val new = AxonAvroSerializerPluginProperties(configuration)
     val updated = propertiesPerContext.put(context, new)
-    logger.debug { "Updated properties for context=$context, old configuration=$updated, new configuration=$new" }
+    logger.trace { "Updated properties for context=$context, old configuration=$updated, new configuration=$new" }
   }
 
   override fun removed(context: String) {
     val removed = propertiesPerContext.remove(context)
-    logger.debug { "Removed configuration for context=$context, configuration=$removed" }
+    logger.trace { "Removed configuration for context=$context, configuration=$removed" }
   }
 
   override fun getAxonAvroProperties(contextName: String): AxonAvroSerializerPluginProperties {

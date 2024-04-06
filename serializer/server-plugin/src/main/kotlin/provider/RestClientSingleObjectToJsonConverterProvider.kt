@@ -12,6 +12,9 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.util.concurrent.ConcurrentHashMap
 
+/**
+ * A caching converter resolver using a remote REST resolver and caching all schemas locally.
+ */
 class RestClientSingleObjectToJsonConverterProvider(
   private val axonAvroSerializerPluginPropertiesForContextResolver: AxonAvroSerializerPluginPropertiesForContextResolver
 ) : SingleObjectToJsonConverterProvider {
@@ -29,21 +32,35 @@ class RestClientSingleObjectToJsonConverterProvider(
     )
   }
 
+  /**
+   * Retrieves the schema from the external resource.
+   * @param properties properties for schema resolution.
+   * @param fingerprint fingerprint of the Avro Schema.
+   * @return Avro Schema
+   */
+  @Throws(IllegalStateException::class)
   private fun getSchema(properties: AxonAvroSerializerPluginProperties, fingerprint: AvroFingerprint): AvroSchema {
     val uri = properties.buildRegistryUri(fingerprint.value)
+
     val request = HttpRequest
       .newBuilder()
       .uri(uri)
       .GET()
+      .headers("Accept", "application/json")
       .build()
 
     val httpClient: HttpClient = HttpClient.newHttpClient()
-    val response = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
-    require(response.statusCode() == 200) { "Expected response to be 200 but got ${response.statusCode()} calling registry at ${uri.toASCIIString()}" }
-    require(
-      response.headers().firstValue("Content-Type").get() == "application/json"
-    ) { "Expected application/json content type, but got ${response.headers().firstValue("Content-Type").get()}" }
 
-    return AvroSchema(JsonString(response.body()))
+    return try {
+      val response = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
+
+      require(response.statusCode() == 200) { "Expected response to be 200 but got ${response.statusCode()} calling registry at ${uri.toASCIIString()}" }
+      val contentTypeHeader = response.headers().firstValue("Content-Type").get()
+      require(contentTypeHeader == "application/json") { "Expected application/json content type, but got $contentTypeHeader" }
+
+      AvroSchema(JsonString(response.body()))
+    } catch (e: Exception) {
+      throw IllegalStateException("Error while retrieving Avro Schema from registry: $uri", e)
+    }
   }
 }

@@ -44,6 +44,4 @@ class AxonAvroSerializerPlugin : BundleActivator {
   override fun stop(context: BundleContext) {
     registrations.forEach { it.unregister() }
   }
-
-
 }

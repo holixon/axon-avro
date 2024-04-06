@@ -35,7 +35,9 @@ data class AxonAvroSerializerPluginProperties(
     operator fun invoke(map: Map<String, Any?>? = null) = if (map != null) {
       AxonAvroSerializerPluginProperties(
         registryUrlTemplate = map.getOrDefault(KEY_URL_TEMPLATE, DEFAULT_URL_TEMPLATE) as String,
-      )
+      ).also {
+        it.validate()
+      }
     } else {
       EMPTY
     }

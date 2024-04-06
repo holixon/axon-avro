@@ -5,7 +5,7 @@ import io.axoniq.axonserver.grpc.SerializedObject
 import io.axoniq.axonserver.grpc.event.Event
 import io.axoniq.axonserver.plugin.ExecutionContext
 import io.axoniq.axonserver.plugin.interceptor.ReadEventInterceptor
-import io.holixon.axon.avro.serializer.plugin.*
+import io.holixon.axon.avro.serializer.plugin.AxonAvroSerializerPluginConfigurationListener
 import io.holixon.axon.avro.serializer.plugin.ext.data
 import io.holixon.axon.avro.serializer.plugin.ext.findSingleObjectToJsonConverterProvider
 import io.holixon.axon.avro.serializer.plugin.ext.isDashboardRequest
@@ -20,14 +20,15 @@ import org.osgi.framework.FrameworkUtil
 /**
  * If the event payload is single-object-encoded, replace the payload bytes with the json representation of the event.
  */
-class AvroSingleObjectEncodedToJsonReadEventInterceptor(configurationHandler: AxonAvroSerializerPluginConfigurationListener) : ReadEventInterceptor {
+class AvroSingleObjectEncodedToJsonReadEventInterceptor(configurationHandler: AxonAvroSerializerPluginConfigurationListener) :
+  ReadEventInterceptor {
 
   companion object : KLogging()
 
   override fun readEvent(event: Event, executionContext: ExecutionContext): Event {
 
     if (!executionContext.isDashboardRequest()) {
-      logger.debug { "Request is not coming from dashboard, just passing event: ${event.messageIdentifier}" }
+      logger.trace { "Request is not coming from dashboard, just passing event: ${event.messageIdentifier}" }
       return event
     }
 
@@ -48,7 +49,7 @@ class AvroSingleObjectEncodedToJsonReadEventInterceptor(configurationHandler: Ax
         ) { jsonConverter ->
 
           val jsonConverted: JsonString = jsonConverter.convert(singleObjectEncodedBytes)
-          logger.debug { "Converted JSON: $jsonConverted" }
+          logger.trace { "Converted JSON: $jsonConverted" }
           val result = Event.newBuilder(event)
             .setPayload(
               SerializedObject.newBuilder(event.payload)
@@ -56,16 +57,16 @@ class AvroSingleObjectEncodedToJsonReadEventInterceptor(configurationHandler: Ax
                 .build()
             )
             .build()
-          logger.debug { "Resulting event is $result" }
+          logger.trace { "Resulting event is $result" }
           result
         }
       } catch (e: Exception) {
-        logger.error { "Could not convert: ${e.message}\n${e.stackTraceToString()}" }
+        logger.trace { "Could not convert: ${e.message}\n${e.stackTraceToString()}" }
         event
       }
 
     } catch (e: Exception) {
-      logger.warn { "Not converting, because not single object encoded." }
+      logger.trace { "Not converting, because not single object encoded." }
       event
     }
   }
