@@ -11,16 +11,12 @@ spring:
       path: /h2-console
   jpa:
     open-in-view: false
+
 springdoc:
   api-docs:
     enabled: true
   swagger-ui:
     try-it-out-enabled: true
-
-axon:
-  extension:
-    tracing:
-      enabled: false
 
 axoniq:
   console:

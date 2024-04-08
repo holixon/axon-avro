@@ -1,0 +1,33 @@
+### Retrieve schema for BankAccountCreated
+// @no-log
+GET http://localhost:8080/rest/schema/3787786784637011773
+Accept: application/json
+
+> {%
+  client.test("Request executed successfully", function () {
+    client.assert(response.status === 200, "Response status is not 200, but " + response.status);
+  });
+  client.test("Content-Type is application/json", () => {
+    const contentType = response.headers.valueOf("content-type");
+    client.assert(contentType == "application/json",
+                  `Expected Content-Type is application/json, but actual is ${contentType}`);
+  })
+%}
+
+### Create account 1
+POST http://localhost:8080/bank/accounts?id=1&amount=100
+
+> {%
+  client.test("Request executed successfully", function () {
+    client.assert(response.status === 201, "Response status is not 201, but " + response.status);
+  });
+%}
+
+### Create account 2
+POST http://localhost:8080/bank/accounts?id=2&amount=99
+
+> {%
+  client.test("Request executed successfully", function () {
+    client.assert(response.status === 201, "Response status is not 201, but " + response.status);
+  });
+%}
