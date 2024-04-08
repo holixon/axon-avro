@@ -10,7 +10,7 @@
 4. Open [Server Dashboard](http://localhost:8024/)
 5. Open [Plugins Tab](http://localhost:8024/#plugins)
 6. Upload the JAR file from ./serializer/server-plugin/target/
-7. Edit properties: for AxonServer set the `Registry URL template` to `http://host.docker.internal:8080/rest/schema/{fingerprint}`
+7. Edit properties: for AxonServer set the `Registry URL template` to `http://host.docker.internal:10119/rest/schema/{fingerprint}`
 8. Open [Query Tab](http://localhost:8024/#query), search for events
 
 
