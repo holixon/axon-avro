@@ -5,8 +5,9 @@
 
   <parent>
     <groupId>io.holixon.axon.avro</groupId>
-    <artifactId>axon-avro-serializer</artifactId>
+    <artifactId>axon-avro-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
+    <relativePath>../pom/parent/pom.xml</relativePath>
   </parent>
 
   <artifactId>axon-avro-server-plugin</artifactId>
@@ -16,10 +17,6 @@
     <dependency>
       <groupId>io.toolisticon.lib</groupId>
       <artifactId>avro-kotlin</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.github.microutils</groupId>
-      <artifactId>kotlin-logging-jvm</artifactId>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
@@ -37,6 +34,15 @@
       <artifactId>org.osgi.core</artifactId>
       <version>6.0.0</version>
       <scope>provided</scope>
+    </dependency>
+
+    <!-- Testing -->
+    <dependency>
+      <groupId>io.holixon.axon.avro</groupId>
+      <artifactId>axon-avro-lib-test</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+      <type>pom</type>
     </dependency>
   </dependencies>
 

@@ -12,17 +12,12 @@
 
   <artifactId>axon-avro-serializer</artifactId>
   <packaging>pom</packaging>
-  <name>POM: axon-avro-registry</name>
+  <name>POM: axon-avro-serializer</name>
 
   <modules>
     <module>core</module>
     <module>spring-autoconfigure</module>
-    <module>server-plugin</module>
   </modules>
-
-  <dependencyManagement>
-
-  </dependencyManagement>
 
   <dependencies>
     <dependency>
@@ -42,7 +37,9 @@
     <dependency>
       <groupId>io.holixon.axon.avro</groupId>
       <artifactId>axon-avro-lib-test</artifactId>
+      <version>${project.version}</version>
       <scope>test</scope>
+      <type>pom</type>
     </dependency>
   </dependencies>
 
