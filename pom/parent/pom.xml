@@ -20,6 +20,7 @@
     <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
     <pattern.class.itest>**/*ITest.*,**/*TCTest.*</pattern.class.itest>
+
     <springboot.version>3.1.5</springboot.version>
 
     <!-- libs (alphabetical) -->
@@ -31,9 +32,10 @@
   </properties>
 
   <modules>
+    <module>../test</module>
     <module>../../lib</module>
-<!--    <module>../../registry</module>-->
     <module>../../serializer</module>
+    <module>../../server-plugin</module>
   </modules>
 
   <dependencyManagement>
@@ -54,14 +56,6 @@
         <version>${axon-bom.version}</version>
         <scope>import</scope>
         <type>pom</type>
-      </dependency>
-
-
-      <dependency>
-        <groupId>io.holixon.axon.avro</groupId>
-        <artifactId>axon-avro-lib-test</artifactId>
-        <version>${project.version}</version>
-        <scope>test</scope>
       </dependency>
 
       <dependency>
@@ -89,30 +83,10 @@
   </dependencies>
 
   <build>
+    <defaultGoal>clean jacoco:prepare verify</defaultGoal>
     <pluginManagement>
       <!-- Coverage metering -->
       <plugins>
-
-        <plugin>
-          <!-- jar -->
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-jar-plugin</artifactId>
-          <version>3.3.0</version>
-          <configuration>
-            <archive>
-              <manifest>
-                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-              </manifest>
-            </archive>
-          </configuration>
-        </plugin>
-
-        <plugin>
-          <groupId>com.coderplus.maven.plugins</groupId>
-          <artifactId>copy-rename-maven-plugin</artifactId>
-          <version>1.0.1</version>
-        </plugin>
 
         <plugin>
           <!-- kotlin compiler -->
@@ -147,55 +121,6 @@
         </plugin>
 
         <plugin>
-          <groupId>org.jacoco</groupId>
-          <artifactId>jacoco-maven-plugin</artifactId>
-          <version>0.8.11</version>
-          <executions>
-            <execution>
-              <id>pre-unit-test</id>
-              <goals>
-                <goal>prepare-agent</goal>
-              </goals>
-              <configuration>
-                <destFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</destFile>
-                <propertyName>surefireArgLine</propertyName>
-              </configuration>
-            </execution>
-            <execution>
-              <id>pre-integration-test</id>
-              <goals>
-                <goal>prepare-agent-integration</goal>
-              </goals>
-              <configuration>
-                <destFile>${project.build.directory}/coverage-reports/jacoco-it.exec</destFile>
-                <propertyName>failsafeArgLine</propertyName>
-              </configuration>
-            </execution>
-            <execution>
-              <id>post-unit-test</id>
-              <phase>test</phase>
-              <goals>
-                <goal>report</goal>
-              </goals>
-              <configuration>
-                <dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>
-                <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
-              </configuration>
-            </execution>
-            <execution>
-              <id>post-integration-test</id>
-              <phase>post-integration-test</phase>
-              <goals>
-                <goal>report</goal>
-              </goals>
-              <configuration>
-                <dataFile>${project.build.directory}/coverage-reports/jacoco-it.exec</dataFile>
-                <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
           <configuration>
             <failIfNoTests>true</failIfNoTests>
@@ -222,8 +147,7 @@
             <!-- Sets the VM argument line used when integration tests are run. -->
             <!-- prevent the annoying ForkedBooter process from stealing window focus on Mac OS -->
             <!-- the add-opens is required for XStream -->
-            <!-- FIXME coverage -->
-            <argLine>-Djava.awt.headless=true -XX:+StartAttachListener --add-opens java.base/java.util=ALL-UNNAMED</argLine>
+            <argLine>-Djava.awt.headless=true @{failsafeArgLine} -XX:+StartAttachListener --add-opens java.base/java.util=ALL-UNNAMED</argLine>
           </configuration>
         </plugin>
 
@@ -258,34 +182,5 @@
       </plugin>
     </plugins>
   </build>
-
-  <profiles>
-    <profile>
-      <id>itest</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <properties>
-        <skipFrontend>true</skipFrontend>
-      </properties>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-              <!-- Skip Unit test execution on ITest profile run -->
-              <skipTests>true</skipTests>
-            </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-failsafe-plugin</artifactId>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
-  </profiles>
 
 </project>

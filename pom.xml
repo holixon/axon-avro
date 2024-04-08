@@ -19,12 +19,8 @@
   <description>Axon Avro Root POM</description>
   <url>https://github.com/holixon/axon-avro/</url>
 
-  <properties>
-  </properties>
-
   <modules>
     <module>pom/parent</module>
-    <!-- see profiles below for more modules -->
   </modules>
 
   <licenses>
