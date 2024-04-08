@@ -20,18 +20,7 @@
   </modules>
 
   <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>io.holixon.axon.avro</groupId>
-        <artifactId>avro-registry-adapter-api</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.holixon.axon.avro</groupId>
-        <artifactId>avro-registry-adapter-default</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-    </dependencies>
+
   </dependencyManagement>
 
   <dependencies>

@@ -1,0 +1,11 @@
+{
+  "type": "record",
+  "name": "AvroMultipleInstancesResponseType",
+  "namespace": "io.holixon.axon.avro.serializer.model",
+  "fields": [
+    {
+      "name": "expectedResponseType",
+      "type": "string"
+    }
+  ]
+}
