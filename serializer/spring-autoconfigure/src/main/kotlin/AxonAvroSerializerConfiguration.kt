@@ -14,6 +14,8 @@ import org.springframework.context.annotation.Bean
 open class AxonAvroSerializerConfiguration {
   companion object {
     const val EVENT_SERIALIZER = "eventSerializer"
+    const val MESSAGE_SERIALIZER = "messageSerializer"
+    const val DEFAULT_SERIALIZER = "defaultSerializer"
   }
 
   /**
@@ -24,15 +26,6 @@ open class AxonAvroSerializerConfiguration {
   fun defaultAxonSerializerBuilder(schemaResolver: AvroSchemaResolver): AvroSerializer.Builder = AvroSerializer.builder()
     .avroSchemaResolver(schemaResolver)
     .avro4k(Avro.default) // TODO: use correct setup with registered serializers
-
-
-  /**
-   * Bean factory for the serializer.
-   */
-//  @Bean
-//  @Qualifier(EVENT_SERIALIZER)
-//  fun avroSerializer(builder: AvroSerializer.Builder): Serializer = AvroSerializer(builder)
-
 
 
 }

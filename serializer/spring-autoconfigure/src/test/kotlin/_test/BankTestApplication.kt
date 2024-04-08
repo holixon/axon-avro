@@ -1,24 +1,24 @@
+@file:Suppress("SpringJavaInjectionPointsAutowiringInspection")
+
 package io.holixon.axon.avro.serializer.spring._test
 
 import bankaccount.BankAccount
 import bankaccount.BankAccountApi
 import bankaccount.command.CreateBankAccount
-import bankaccount.event.BankAccountCreated
-import bankaccount.event.MoneyDeposited
-import bankaccount.event.MoneyWithdrawn
 import bankaccount.projection.CurrentBalanceProjection
-import bankaccount.query.*
-import com.github.avrokotlin.avro4k.Avro
+import bankaccount.query.BankAccountAuditQuery
+import bankaccount.query.CurrentBalanceQueries
+import bankaccount.query.CurrentBalanceResult
+import bankaccount.query.CurrentBalanceResultList
 import io.holixon.axon.avro.serializer.AvroSerializer
+import io.holixon.axon.avro.serializer.spring.AxonAvroSerializerConfiguration.Companion.EVENT_SERIALIZER
+import io.holixon.axon.avro.serializer.spring.AxonAvroSerializerConfiguration.Companion.MESSAGE_SERIALIZER
 import io.holixon.axon.avro.serializer.spring.AxonAvroSerializerSpringBase
 import io.holixon.axon.avro.serializer.spring.EnableAxonAvroSerializer
 import io.swagger.v3.oas.annotations.ExternalDocumentation
 import io.swagger.v3.oas.annotations.OpenAPIDefinition
 import io.swagger.v3.oas.annotations.info.Info
 import io.toolisticon.avro.kotlin.AvroSchemaResolver
-import io.toolisticon.avro.kotlin.AvroSchemaResolverMap
-import io.toolisticon.avro.kotlin.avroSchemaResolver
-import io.toolisticon.avro.kotlin.model.wrapper.AvroSchema
 import mu.KLogging
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.common.jpa.EntityManagerProvider
@@ -62,6 +62,7 @@ class BankTestApplication {
     const val AVRO_SERVER = "avro-server"
     const val AVRO_NO_SERVER = "avro-no-server"
   }
+
 
   abstract class ProfileConfiguration(
     serializer: String, serverEnabled: Boolean
@@ -110,12 +111,7 @@ class BankTestApplication {
     fun messageSerializer(builder: AvroSerializer.Builder): Serializer = builder.build()
 
     @Bean
-    fun schemaResolver() = avroSchemaResolver(listOf(
-      BankAccountCreated.getClassSchema(),
-      MoneyDeposited.getClassSchema(),
-      MoneyWithdrawn.getClassSchema(),
-      Avro.default.schema(CreateBankAccount.serializer())
-    ).map { AvroSchema(it) })
+    fun schemaResolver() = BankAccountSchemas.schemaResolver
   }
 
   @Configuration
@@ -128,7 +124,7 @@ class BankTestApplication {
     fun storageEngine(
       emp: EntityManagerProvider,
       txManager: TransactionManager,
-      @Qualifier("eventSerializer")
+      @Qualifier(EVENT_SERIALIZER)
       eventSerializer: Serializer
     ): EventStorageEngine = JpaEventStorageEngine.builder()
       .entityManagerProvider(emp)
@@ -142,48 +138,22 @@ class BankTestApplication {
     fun defaultSerializer(builder: AvroSerializer.Builder): Serializer = JacksonSerializer.builder()
       .build()
 
-//@Bean
-//    @Primary
-//    fun defaultSerializer(builder: AvroSerializer.Builder): Serializer = builder.build()
-
     @Bean
-    @Qualifier("eventSerializer")
+    @Qualifier(EVENT_SERIALIZER)
     fun eventSerializer(builder: AvroSerializer.Builder): Serializer = builder.build()
 
     @Bean
-    @Qualifier("messageSerializer")
+    @Qualifier(MESSAGE_SERIALIZER)
     fun messageSerializer(builder: AvroSerializer.Builder): Serializer = builder.build()
 
     @Bean
-    fun schemaResolver(): AvroSchemaResolver = AvroSchemaResolverMap(
-      listOf(
-        BankAccountCreated.getClassSchema(),
-        MoneyDeposited.getClassSchema(),
-        MoneyWithdrawn.getClassSchema(),
-        Avro.default.schema(
-          CreateBankAccount.serializer()
-        ),
-        Avro.default.schema(
-          CurrentBalanceQuery.serializer()
-        ),
-        Avro.default.schema(
-          CurrentBalanceResult.serializer()
-        ),
-        Avro.default.schema(
-          CurrentBalance.serializer()
-        ),
-        Avro.default.schema(
-          CurrentBalanceResultList.serializer()
-        ),
-        Avro.default.schema(
-          FindAllQuery.serializer()
-        ),
-      ).map { AvroSchema(it) }.associateBy { it.fingerprint })
+    fun schemaResolver(): AvroSchemaResolver = BankAccountSchemas.schemaResolver
   }
 
 
   @Bean
-  fun currentBalanceQueries(queryGateway: QueryGateway): CurrentBalanceQueries = CurrentBalanceQueries(queryGateway)
+  fun currentBalanceQueries(queryGateway: QueryGateway): CurrentBalanceQueries =
+    CurrentBalanceQueries(queryGateway)
 
   @Bean
   fun bankAccountAuditEventQuery(queryGateway: QueryGateway): BankAccountAuditQuery =

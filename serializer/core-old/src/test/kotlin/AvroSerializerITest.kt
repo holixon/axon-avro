@@ -1,6 +1,6 @@
 package io.holixon.axon.avro.serializer
 
-import bankaccount.BankAccount
+import bankaccount.
 import bankaccount.command.CreateBankAccount
 import bankaccount.projection.CurrentBalanceProjection
 import bankaccount.projection.CurrentBalanceProjection.CurrentBalance
