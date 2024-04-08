@@ -13,7 +13,7 @@ site_description: >-
   Axon Avro is a set of libraries allowing for effective use
   of Apache Avro for serialization and de-serialization of Axon Messages.
 
-copyright: Copyright &copy; 2023, Holisticon AG
+copyright: Copyright &copy; 2024, Holisticon AG
 
 use_directory_urls: false
 
@@ -85,4 +85,9 @@ plugins:
 
 nav:
   - Home: index.md
+  - Motivation: motivation.md
+  - Features:
+      - Avro Axon Serializer: features/serializer.md
+      - Avro Axon Server Plugin: features/server-plugin.md
+
 
