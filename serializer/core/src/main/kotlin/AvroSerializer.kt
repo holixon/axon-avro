@@ -26,7 +26,7 @@ class AvroSerializer private constructor(
 
   companion object : KLogging() {
 
-    internal val axonSchemaResolver: AvroSchemaResolverMap = AvroSchemaResolverMap(
+    private val axonSchemaResolver: AvroSchemaResolverMap = AvroSchemaResolverMap(
       listOf(
         MetaDataStrategy.SCHEMA,
         InstanceResponseTypeStrategy.SCHEMA,
@@ -138,14 +138,6 @@ class AvroSerializer private constructor(
     }
 
     val strategy = serializationStrategies.firstOrNull { it.canSerialize(data::class.java) }
-
-    logger.info {
-      """===== serialize; $data
-      | class:    ${data::class.java}
-      | expected: $expectedRepresentation
-      | strategy: $strategy
-    """.trimMargin()
-    }
 
     val serializedContent: T = if (strategy != null) {
       val genericRecord = strategy.serialize(data)

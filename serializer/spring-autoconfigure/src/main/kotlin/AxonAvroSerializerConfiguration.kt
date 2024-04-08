@@ -15,6 +15,8 @@ import org.springframework.context.annotation.Bean
 open class AxonAvroSerializerConfiguration {
   companion object {
     const val EVENT_SERIALIZER = "eventSerializer"
+    const val MESSAGE_SERIALIZER = "messageSerializer"
+    const val DEFAULT_SERIALIZER = "defaultSerializer"
   }
 
   /**
