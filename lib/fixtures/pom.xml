@@ -71,7 +71,7 @@
     <dependency>
       <groupId>com.github.avro-kotlin.avro4k</groupId>
       <artifactId>avro4k-core</artifactId>
-      <version>1.8.0</version>
+      <version>1.10.0</version>
     </dependency>
   </dependencies>
 
