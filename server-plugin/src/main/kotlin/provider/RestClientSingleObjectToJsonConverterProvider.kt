@@ -2,11 +2,13 @@ package io.holixon.axon.avro.serializer.plugin.provider
 
 import io.holixon.axon.avro.serializer.plugin.AxonAvroSerializerPluginProperties
 import io.holixon.axon.avro.serializer.plugin.AxonAvroSerializerPluginPropertiesForContextResolver
-import io.holixon.axon.avro.serializer.plugin.SingleObjectToJsonConverter
 import io.holixon.axon.avro.serializer.plugin.SingleObjectToJsonConverterProvider
+import io.toolisticon.avro.kotlin.AvroKotlin.defaultLogicalTypeConversions
+import io.toolisticon.avro.kotlin.codec.SingleObjectToJsonConverter
 import io.toolisticon.avro.kotlin.model.wrapper.AvroSchema
 import io.toolisticon.avro.kotlin.value.AvroFingerprint
 import io.toolisticon.avro.kotlin.value.JsonString
+import org.apache.avro.generic.GenericData
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
@@ -28,7 +30,8 @@ class RestClientSingleObjectToJsonConverterProvider(
           val properties = axonAvroSerializerPluginPropertiesForContextResolver.getAxonAvroProperties(contextName)
           getSchema(properties, key)
         }
-      }
+      },
+      genericData = defaultLogicalTypeConversions.genericData
     )
   }
 

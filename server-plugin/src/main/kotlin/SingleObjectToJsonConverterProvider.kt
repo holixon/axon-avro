@@ -1,5 +1,7 @@
 package io.holixon.axon.avro.serializer.plugin
 
+import io.toolisticon.avro.kotlin.codec.SingleObjectToJsonConverter
+
 /**
  * Provider for SingleObjectToJsonConverter.
  */
