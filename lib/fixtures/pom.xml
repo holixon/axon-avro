@@ -61,16 +61,20 @@
       <groupId>com.fasterxml.jackson.module</groupId>
       <artifactId>jackson-module-kotlin</artifactId>
     </dependency>
-
     <dependency>
       <groupId>io.toolisticon.jackson.module</groupId>
       <artifactId>jackson-avro-module</artifactId>
       <version>${jackson-avro-module.version}</version>
     </dependency>
-
     <dependency>
       <groupId>com.github.avro-kotlin.avro4k</groupId>
       <artifactId>avro4k-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>logical-types</artifactId>
+      <version>${project.version}</version>
     </dependency>
   </dependencies>
 
@@ -80,6 +84,17 @@
       <plugin>
         <groupId>org.apache.avro</groupId>
         <artifactId>avro-maven-plugin</artifactId>
+        <configuration>
+          <customLogicalTypeFactories>bankaccount.conversions.MoneyLogicalType</customLogicalTypeFactories>
+          <customConversions>bankaccount.conversions.MoneyConversion</customConversions>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>logical-types</artifactId>
+            <version>${project.version}</version>
+          </dependency>
+        </dependencies>
       </plugin>
     </plugins>
   </build>

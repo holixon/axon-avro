@@ -97,4 +97,14 @@
 
   </dependencies>
 
+  <profiles>
+    <profile>
+      <id>itest</id>
+      <build>
+        <!-- FIXME BUG in Kotlin Base, the default target of this profile should call failsafe:verify -->
+        <defaultGoal>verify failsafe:verify</defaultGoal>
+      </build>
+    </profile>
+  </profiles>
+
 </project>

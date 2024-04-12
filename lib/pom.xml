@@ -21,5 +21,6 @@
 
   <modules>
     <module>fixtures</module>
+    <module>logical-types</module>
   </modules>
 </project>

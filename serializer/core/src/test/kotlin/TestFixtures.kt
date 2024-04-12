@@ -15,9 +15,10 @@ object TestFixtures {
     val SCHEMA = AvroSchema(BankAccountCreated.getClassSchema())
 
     /**
-     * id = 1, amount = 10
+     * id = 1, amount = 10 EUR
      */
-    val SINGLE_OBJECT_ENCODED = SingleObjectEncodedBytes(bytes = ByteArrayValue(HexString("[C3 01 3D 47 35 17 03 EC 90 34 02 31 14]")))
+    val SINGLE_OBJECT_ENCODED = SingleObjectEncodedBytes(bytes = ByteArrayValue(HexString("[C3 01 00 4B 86 F4 58 00 7B 6C 02 31 10 31 45 2B 31 20 45 55 52]")))
+
 
   }
 

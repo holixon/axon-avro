@@ -11,8 +11,6 @@ enum class FindAllQuery {
 
 internal class Avro4kEnumSerializationTest {
 
-
-
   @Test
   fun name() {
     println(Avro.default.schema(FindAllQuery.serializer()))

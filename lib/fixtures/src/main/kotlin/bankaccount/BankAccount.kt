@@ -11,20 +11,40 @@ import org.axonframework.eventsourcing.EventSourcingHandler
 import org.axonframework.modelling.command.AggregateIdentifier
 import org.axonframework.modelling.command.AggregateLifecycle
 import org.axonframework.spring.stereotype.Aggregate
+import org.javamoney.moneta.Money
 
 @Aggregate
 class BankAccount {
+
+  companion object {
+
+    private val ZERO = Money.of(0, "EUR")
+
+    @JvmStatic
+    @CommandHandler
+    fun handle(cmd: CreateBankAccount): BankAccount {
+      AggregateLifecycle.apply(
+        BankAccountCreated.newBuilder()
+          .setAccountId(cmd.accountId)
+          .setInitialBalance(cmd.initialBalance)
+          .build()
+      )
+      return BankAccount()
+    }
+  }
+
   @AggregateIdentifier
   protected var accountId: String? = null
-
-  protected var balance: Int = 0
+  protected var balance: Money = ZERO
 
   @CommandHandler
   fun handle(cmd: WithdrawMoney) {
+    require(cmd.amount.currency == balance.currency) { "This bank account only supports ${balance.currency}, but a withdraw currency was ${cmd.amount.currency}" }
+
     if (cmd.amount > balance) {
-      throw IllegalStateException(String.format("Unsufficient Balance: %d, cmd=%s", balance, cmd))
+      throw IllegalStateException(String.format("Insufficient Balance: %d, cmd=%s", balance, cmd))
     }
-    if (cmd.amount <= 0) {
+    if (cmd.amount.isLessThanOrEqualTo(ZERO)) {
       throw IllegalArgumentException("Amount has to be > 0, cmd=$cmd")
     }
     AggregateLifecycle.apply(
@@ -37,7 +57,8 @@ class BankAccount {
 
   @CommandHandler
   fun handle(cmd: DepositMoney) {
-    if (cmd.amount <= 0) {
+    require(cmd.amount.currency == balance.currency) { "This bank account only supports ${balance.currency}, but a withdraw currency was ${cmd.amount.currency}" }
+    if (cmd.amount.isLessThanOrEqualTo(ZERO)) {
       throw IllegalArgumentException("Amount has to be > 0, cmd=$cmd")
     }
     AggregateLifecycle.apply(
@@ -50,33 +71,19 @@ class BankAccount {
 
   @EventSourcingHandler
   fun on(evt: BankAccountCreated) {
-    this.accountId = evt.getAccountId()
-    this.balance = evt.getInitialBalance()
+    this.accountId = evt.accountId
+    this.balance = evt.initialBalance
   }
 
   @EventSourcingHandler
   fun on(evt: MoneyDeposited) {
-    this.accountId = evt.getAccountId()
-    this.balance += evt.getAmount()
+    this.accountId = evt.accountId
+    this.balance = this.balance.add(evt.amount)
   }
 
   @EventSourcingHandler
   fun on(evt: MoneyWithdrawn) {
-    this.accountId = evt.getAccountId()
-    this.balance -= evt.getAmount()
-  }
-
-  companion object {
-    @JvmStatic
-    @CommandHandler
-    fun handle(cmd: CreateBankAccount): BankAccount {
-      AggregateLifecycle.apply(
-        BankAccountCreated.newBuilder()
-          .setAccountId(cmd.accountId)
-          .setInitialBalance(cmd.initialBalance)
-          .build()
-      )
-      return BankAccount()
-    }
+    this.accountId = evt.accountId
+    this.balance = this.balance.subtract(evt.amount)
   }
 }

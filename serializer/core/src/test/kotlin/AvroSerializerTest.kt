@@ -11,6 +11,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.messaging.MetaData
 import org.axonframework.serialization.SimpleSerializedObject
 import org.axonframework.serialization.SimpleSerializedType
+import org.javamoney.moneta.Money
 import org.junit.jupiter.api.Test
 
 
@@ -58,14 +59,14 @@ internal class AvroSerializerTest {
 
     val data = BankAccountCreated.newBuilder()
       .setAccountId("1")
-      .setInitialBalance(10)
+      .setInitialBalance(Money.of(10, "EUR"))
       .build()
 
     val serialized = serializer.serialize(data, SingleObjectEncodedBytes::class.java)
 
     val bytes = serialized.data
 
-    assertThat(SpecificRecordCodec.specificRecordSingleObjectDecoder(schemaResolver).decode(serialized.data)).isEqualTo(data)
+    assertThat(SpecificRecordCodec.specificRecordSingleObjectDecoder(schemaResolver).decode(bytes)).isEqualTo(data)
   }
 
   @Test
@@ -75,10 +76,10 @@ internal class AvroSerializerTest {
       .avroSchemaResolver(schemaResolver)
       .build()
 
-    val data = BankAccountCreated.newBuilder()
-      .setAccountId("1")
-      .setInitialBalance(10)
-      .build()
+//    val data = BankAccountCreated.newBuilder()
+//      .setAccountId("1")
+//      .setInitialBalance(Money.of(10, "EUR"))
+//      .build()
 
     val serializedObject = SimpleSerializedObject(
       TestFixtures.BankAccountCreatedFixture.SINGLE_OBJECT_ENCODED,
@@ -91,7 +92,7 @@ internal class AvroSerializerTest {
     assertThat(deserialized).isInstanceOf(BankAccountCreated::class.java)
     with(deserialized as BankAccountCreated) {
       assertThat(accountId).isEqualTo("1")
-      assertThat(initialBalance).isEqualTo(10)
+      assertThat(initialBalance).isEqualTo(Money.of(10, "EUR"))
     }
   }
 
