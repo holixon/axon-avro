@@ -25,8 +25,8 @@
 
     <!-- libs (alphabetical) -->
     <avro.version>1.11.3</avro.version>
-
     <avro-kotlin.version>1.11.3.1</avro-kotlin.version>
+    <avro4k.version>1.10.0</avro4k.version>
     <axon-bom.version>4.9.4</axon-bom.version>
 
   </properties>
@@ -59,9 +59,32 @@
       </dependency>
 
       <dependency>
+        <groupId>io.holixon.axon.avro</groupId>
+        <artifactId>axon-avro-lib-test</artifactId>
+        <version>${project.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
         <groupId>io.toolisticon.lib</groupId>
         <artifactId>avro-kotlin</artifactId>
         <version>${avro-kotlin.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.github.avro-kotlin.avro4k</groupId>
+        <artifactId>avro4k-core</artifactId>
+        <version>${avro4k.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.apache.avro</groupId>
+            <artifactId>avro</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.xerial.snappy</groupId>
+            <artifactId>snappy-java</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -121,37 +144,6 @@
         </plugin>
 
         <plugin>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <configuration>
-            <failIfNoTests>true</failIfNoTests>
-            <excludes>
-              <exclude>${pattern.class.itest}</exclude>
-            </excludes>
-            <!-- Sets the VM argument line used when unit tests are run. -->
-            <!-- prevent the annoying ForkedBooter process from stealing window focus on Mac OS -->
-            <argLine>-Djava.awt.headless=true @{surefireArgLine} -XX:+StartAttachListener --add-opens java.base/java.util=ALL-UNNAMED</argLine>
-            <systemPropertyVariables>
-              <jgiven.report.dir>${project.build.directory}/jgiven-reports</jgiven.report.dir>
-            </systemPropertyVariables>
-          </configuration>
-        </plugin>
-
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-failsafe-plugin</artifactId>
-          <configuration>
-            <useSystemClassLoader>false</useSystemClassLoader>
-            <includes>
-              <include>${pattern.class.itest}</include>
-            </includes>
-            <!-- Sets the VM argument line used when integration tests are run. -->
-            <!-- prevent the annoying ForkedBooter process from stealing window focus on Mac OS -->
-            <!-- the add-opens is required for XStream -->
-            <argLine>-Djava.awt.headless=true @{failsafeArgLine} -XX:+StartAttachListener --add-opens java.base/java.util=ALL-UNNAMED</argLine>
-          </configuration>
-        </plugin>
-
-        <plugin>
           <groupId>org.apache.avro</groupId>
           <artifactId>avro-maven-plugin</artifactId>
           <executions>
@@ -172,10 +164,6 @@
     </pluginManagement>
 
     <plugins>
-      <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-      </plugin>
       <plugin>
         <groupId>org.jetbrains.kotlin</groupId>
         <artifactId>kotlin-maven-plugin</artifactId>
