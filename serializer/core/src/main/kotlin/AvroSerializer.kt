@@ -141,6 +141,7 @@ class AvroSerializer private constructor(
 
     val serializedContent: T = if (strategy != null) {
       val genericRecord = strategy.serialize(data)
+      @Suppress("UNCHECKED_CAST")
       when (expectedRepresentation) {
         GenericData.Record::class.java -> genericRecord as T
         else -> converter.convert(genericRecord, expectedRepresentation)
@@ -161,6 +162,7 @@ class AvroSerializer private constructor(
 
     val strategy = deserializationStrategies.firstOrNull { it.canDeserialize(serializedType) }
 
+    @Suppress("UNCHECKED_CAST")
     return strategy?.deserialize(serializedType, converter.convert(serializedObject, GenericData.Record::class.java).data)
       ?: converter.convert(serializedObject.data, serializedType) as T
   }

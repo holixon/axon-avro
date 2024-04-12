@@ -20,6 +20,7 @@ import org.osgi.framework.FrameworkUtil
 /**
  * If the event payload is single-object-encoded, replace the payload bytes with the json representation of the event.
  */
+@Suppress("UNUSED_PARAMETER")
 class AvroSingleObjectEncodedToJsonReadEventInterceptor(configurationHandler: AxonAvroSerializerPluginConfigurationListener) :
   ReadEventInterceptor {
 

@@ -64,9 +64,9 @@
               org.osgi.framework;
               com.google.protobuf.*;
               java.net.*;
+              org.apache.avro.*;
               io.toolisticon.avro.kotlin.*;
               mu.*;
-              org.apache.avro.*;
               <!--
               org.xml.sax.*;
               javax.xml.parsers.*;

@@ -10,6 +10,7 @@ class SpecificRecordBaseStrategy : AvroSerializationStrategy, AvroDeserializatio
   override fun canDeserialize(serializedType: Class<*>): Boolean = isGeneratedSpecificRecordBase(serializedType)
 
   override fun <T : Any> deserialize(serializedType: Class<*>, data: GenericData.Record): T {
+    @Suppress("UNCHECKED_CAST")
     return SpecificRecordCodec.genericRecordToSpecificRecordConverter(serializedType).convert(data) as T
   }
 

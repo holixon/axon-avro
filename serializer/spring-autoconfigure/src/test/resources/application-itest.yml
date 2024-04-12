@@ -1,3 +1,9 @@
+server:
+  port: 10119
+  error:
+    include-binding-errors: always
+    include-stacktrace: always
+    include-exception: true
 spring:
   main:
     banner-mode: off
@@ -18,10 +24,6 @@ springdoc:
   swagger-ui:
     try-it-out-enabled: true
 
-axoniq:
-  console:
-    credentials: "5b101ea2-0:9b282b694cf446ddb7158668726cdec4"
-
 logging:
   level:
     root: info
@@ -35,5 +37,3 @@ logging:
       core.annotation: error
       boot.test.context: warn
       test.context: warn
-server:
-  port: 10119
