@@ -95,12 +95,6 @@
       <scope>test</scope>
     </dependency>
 
-    <dependency>
-      <groupId>io.axoniq.console</groupId>
-      <artifactId>console-framework-client-spring-boot-starter</artifactId>
-      <version>1.4.1</version>
-    </dependency>
-
   </dependencies>
 
 </project>

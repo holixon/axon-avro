@@ -22,18 +22,21 @@ class KotlinxEnumClassStrategy(
     val writerSchema = AvroSchema(data.schema)
 
     val fn = serializedType.kotlin.companionObject?.functions?.find { it.name == "serializer" }!!
+    @Suppress("UNCHECKED_CAST")
     val kserializer = fn.call(serializedType.kotlin.companionObjectInstance) as KSerializer<Any>
     val readerSchema = AvroSchema(avro4k.schema(kserializer))
 
     // TODO nicer?
     require( readerSchema.compatibleToReadFrom(writerSchema).result.incompatibilities.isEmpty()) {"Reader/writer schema incompatibleQ!"}
 
+    @Suppress("UNCHECKED_CAST")
     return avro4k.fromRecord(kserializer, data) as T
   }
 
 
   override fun serialize(data: Any): GenericData.Record {
     val fn = data::class.companionObject?.functions?.find { it.name == "serializer" }!!
+    @Suppress("UNCHECKED_CAST")
     val kserializer = fn.call(data::class.companionObjectInstance) as KSerializer<Any>
 
     return avro4k.toRecord(kserializer, data).let {
