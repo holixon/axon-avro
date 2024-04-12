@@ -6,13 +6,12 @@ import bankaccount.event.MoneyWithdrawn
 import bankaccount.query.*
 import bankaccount.query.BankAccountAuditQuery.BankAccountAuditEvents
 import bankaccount.query.BankAccountAuditQuery.FindBankAccountAuditEventByAccountId
+import mu.KLogging
 import org.axonframework.eventhandling.EventHandler
 import org.axonframework.eventhandling.SequenceNumber
 import org.axonframework.eventhandling.Timestamp
 import org.axonframework.messaging.annotation.MetaDataValue
 import org.axonframework.queryhandling.QueryHandler
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import java.time.Instant
 import java.util.*
 import java.util.Objects.requireNonNull
@@ -22,6 +21,8 @@ class CurrentBalanceProjection {
   private val accounts: ConcurrentHashMap<String, Int> = ConcurrentHashMap()
   private val auditEvents: ConcurrentHashMap<String, MutableList<BankAccountAuditEvent>> = ConcurrentHashMap()
 
+  companion object : KLogging()
+
   @EventHandler
   fun on(
     evt: BankAccountCreated,
@@ -30,12 +31,10 @@ class CurrentBalanceProjection {
     @MetaDataValue("traceId") traceId: String,
     @MetaDataValue("correlationId") correlationId: String
   ) {
-    accounts.put(evt.getAccountId(), evt.initialBalance)
+    accounts[evt.accountId] = evt.initialBalance
 
-    LOGGER.info("ACCOUNTS:")
-    LOGGER.info(accounts.toString())
-
-    addAuditEvent(sequenceNumber, timestamp, evt.getAccountId(), evt.getInitialBalance(), traceId, correlationId)
+    reportAccounts()
+    addAuditEvent(sequenceNumber, timestamp, evt.accountId, evt.initialBalance, traceId, correlationId)
   }
 
   @EventHandler
@@ -46,9 +45,9 @@ class CurrentBalanceProjection {
     @MetaDataValue("traceId") traceId: String,
     @MetaDataValue("correlationId") correlationId: String
   ) {
-    newBalance(evt.getAccountId(), -evt.getAmount())
+    newBalance(evt.accountId, -evt.amount)
 
-    addAuditEvent(sequenceNumber, timestamp, evt.getAccountId(), evt.getAmount(), traceId, correlationId)
+    addAuditEvent(sequenceNumber, timestamp, evt.accountId, evt.amount, traceId, correlationId)
   }
 
   @EventHandler
@@ -59,9 +58,9 @@ class CurrentBalanceProjection {
     @MetaDataValue("traceId") traceId: String,
     @MetaDataValue("correlationId") correlationId: String
   ) {
-    newBalance(evt.getAccountId(), evt.getAmount())
+    newBalance(evt.accountId, evt.amount)
 
-    addAuditEvent(sequenceNumber, timestamp, evt.getAccountId(), evt.getAmount(), traceId, correlationId)
+    addAuditEvent(sequenceNumber, timestamp, evt.accountId, evt.amount, traceId, correlationId)
   }
 
   @QueryHandler
@@ -75,6 +74,7 @@ class CurrentBalanceProjection {
     return CurrentBalanceResult(result)
   }
 
+  @Suppress("UNUSED_PARAMETER")
   @QueryHandler
   fun findAll(query: FindAllQuery?): CurrentBalanceResultList {
     return CurrentBalanceResultList(
@@ -111,24 +111,30 @@ class CurrentBalanceProjection {
 
     auditEvents[accountId]!!.add(evt)
 
-    LOGGER.info("received: {}", evt)
+    logger.info("received: {}", evt)
   }
 
 
   private fun newBalance(accountId: String, amount: Int) {
-    accounts.compute(accountId) { k, v -> requireNonNull(v)!!.plus(amount) }
-    LOGGER.info("Changing Balance: {} - {}", accountId, amount)
+    accounts.compute(accountId) { _, v -> requireNotNull(v).plus(amount) }
+    logger.info("Changing Balance: {} - {}", accountId, amount)
+    reportAccounts()
+  }
 
-    LOGGER.info("ACCOUNTS:")
-    LOGGER.info(accounts.toString())
+  private fun reportAccounts() {
+    logger.info("ACCOUNTS:")
+    logger.info(accounts.toString())
   }
 
 
   class BankAccountAuditEvent(
-    val sequenceNumber: Long, timestamp: Instant, val accountId: String,
-    val amount: Int, val traceId: String, val correlationId: String
+    private val sequenceNumber: Long,
+    private val timestamp: Instant,
+    val accountId: String,
+    val amount: Int,
+    private val traceId: String,
+    private val correlationId: String
   ) {
-    private val timestamp: Instant = timestamp
 
     fun getTimestamp(): Instant {
       return timestamp
@@ -139,13 +145,18 @@ class CurrentBalanceProjection {
       if (this === other) {
         return true
       }
-      if (other == null || this::class.java !== other::class.java) {
+      if (this::class.java !== other::class.java) {
         return false
       }
       val that = other as BankAccountAuditEvent
-      return (sequenceNumber == that.sequenceNumber && timestamp.equals(that.timestamp) && accountId
-        .equals(that.accountId) && amount == that.amount && traceId.equals(that.traceId)
-        && correlationId.equals(that.correlationId))
+      return (
+        sequenceNumber == that.sequenceNumber
+          && timestamp == that.timestamp
+          && accountId == that.accountId
+          && amount == that.amount
+          && traceId == that.traceId
+          && correlationId == that.correlationId
+        )
     }
 
     @Override
@@ -164,10 +175,5 @@ class CurrentBalanceProjection {
         ", correlationId='" + correlationId + '\'' +
         '}'
     }
-  }
-
-
-  companion object {
-    private val LOGGER: Logger = LoggerFactory.getLogger(CurrentBalanceProjection::class.java)
   }
 }

@@ -36,6 +36,7 @@
     <module>../../lib</module>
     <module>../../serializer</module>
     <module>../../server-plugin</module>
+    <module>../coverage-aggregator</module>
   </modules>
 
   <dependencyManagement>
@@ -106,11 +107,9 @@
   </dependencies>
 
   <build>
-    <defaultGoal>clean jacoco:prepare verify</defaultGoal>
+    <defaultGoal>clean verify</defaultGoal>
     <pluginManagement>
-      <!-- Coverage metering -->
       <plugins>
-
         <plugin>
           <!-- kotlin compiler -->
           <groupId>org.jetbrains.kotlin</groupId>
