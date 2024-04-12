@@ -1,7 +1,6 @@
 package io.holixon.axon.avro.serializer.plugin.ext
 
 import io.holixon.axon.avro.serializer.plugin.AxonAvroSerializerPlugin
-import io.holixon.axon.avro.serializer.plugin.SingleObjectToJsonConverter
 import io.holixon.axon.avro.serializer.plugin.SingleObjectToJsonConverterProvider
 import org.osgi.framework.BundleContext
 import org.osgi.framework.InvalidSyntaxException
