@@ -120,7 +120,7 @@ internal class AxonAvroSerializerConfigurationITest {
     commandGateway.sendAndWait<Any>(DepositMoney(accountId, Money.of(50, "EUR")))
 
     await.untilAsserted {
-      assertThat(queries.findByAccountId(accountId).join().value?.balance).isEqualTo(150)
+      assertThat(queries.findByAccountId(accountId).join().value?.balance).isEqualTo(Money.of(150, "EUR"))
     }
 
     //logger.info { "auditEvents for accountId='$accountId': ${auditEventQuery.apply(accountId)}" }

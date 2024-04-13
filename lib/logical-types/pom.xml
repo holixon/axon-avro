@@ -11,6 +11,7 @@
   </parent>
 
   <artifactId>logical-types</artifactId>
+  <description>Library with custom conversions</description>
 
   <dependencies>
     <dependency>

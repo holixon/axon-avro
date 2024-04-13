@@ -114,11 +114,4 @@ internal class AvroSerializerTest {
     assertThat(deserialized).isInstanceOf(BarString::class.java)
     assertThat(deserialized).hasToString(bar.toString())
   }
-
-  @Test
-  fun `deserialize serialize MetaData`() {
-    val metaData = MetaData.from(mapOf(
-      "foo" to "bar"
-    ))
-  }
 }

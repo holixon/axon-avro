@@ -5,14 +5,11 @@ package io.holixon.axon.avro.serializer.spring._test
 import bankaccount.BankAccount
 import bankaccount.BankAccountApi
 import bankaccount.command.CreateBankAccount
-import bankaccount.conversions.MoneySerializer
 import bankaccount.projection.CurrentBalanceProjection
 import bankaccount.query.BankAccountAuditQuery
 import bankaccount.query.CurrentBalanceQueries
 import bankaccount.query.CurrentBalanceResult
 import bankaccount.query.CurrentBalanceResultList
-import com.github.avrokotlin.avro4k.Avro
-import com.github.avrokotlin.avro4k.serializer.UUIDSerializer
 import io.holixon.axon.avro.serializer.AvroSerializer
 import io.holixon.axon.avro.serializer.spring.AxonAvroSerializerConfiguration.Companion.EVENT_SERIALIZER
 import io.holixon.axon.avro.serializer.spring.AxonAvroSerializerConfiguration.Companion.MESSAGE_SERIALIZER
@@ -22,8 +19,6 @@ import io.swagger.v3.oas.annotations.ExternalDocumentation
 import io.swagger.v3.oas.annotations.OpenAPIDefinition
 import io.swagger.v3.oas.annotations.info.Info
 import io.toolisticon.avro.kotlin.AvroSchemaResolver
-import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.modules.contextual
 import mu.KLogging
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.common.jpa.EntityManagerProvider
