@@ -7,16 +7,14 @@ import kotlin.reflect.KClass
 
 abstract class AbstractConversion<T : Any, AVRO4K_TYPE : Any>(
   private val targetClass: KClass<T>,
-  private val logicalTypeName: String,
   logicalTypeClass: KClass<out AbstractAvroLogicalTypeBase<T, AVRO4K_TYPE>>
 ) : Conversion<T>() {
 
-  private val logicalTypeInstance by lazy {
-    logicalTypeClass.constructors.first().call()
-  }
+  private val logicalTypeInstance = logicalTypeClass.constructors.first().call()
+
 
   private val registeredInstance by lazy {
-    requireNotNull(LogicalTypes.getCustomRegisteredTypes()[logicalTypeName]) { "Cold not find custom logical type $logicalTypeName. Did you register it?" } as AbstractAvroLogicalTypeBase<T, AVRO4K_TYPE>
+    requireNotNull(LogicalTypes.getCustomRegisteredTypes()[logicalTypeInstance.typeName]) { "Cold not find custom logical type $logicalTypeInstance.typeName. Did you register it?" } as AbstractAvroLogicalTypeBase<T, AVRO4K_TYPE>
   }
 
 
@@ -36,11 +34,7 @@ abstract class AbstractConversion<T : Any, AVRO4K_TYPE : Any>(
       }
   }
 
-  fun toJvm(value: AVRO4K_TYPE): T {
-    return logicalTypeInstance.toJvm(value)
-  }
+  abstract fun fromAvro(value: AVRO4K_TYPE): T
 
-  fun toAvro4K(value: T): AVRO4K_TYPE {
-    return logicalTypeInstance.toAvro(value)
-  }
+  abstract fun toAvro(value: T): AVRO4K_TYPE
 }
