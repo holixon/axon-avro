@@ -1,4 +1,4 @@
-package bankaccount.conversions
+package io.toolisticon.avro.kotlin.logicaltypes
 
 import com.github.avrokotlin.avro4k.decoder.ExtendedDecoder
 import com.github.avrokotlin.avro4k.encoder.ExtendedEncoder
@@ -6,11 +6,9 @@ import com.github.avrokotlin.avro4k.schema.AvroDescriptor
 import com.github.avrokotlin.avro4k.schema.NamingStrategy
 import com.github.avrokotlin.avro4k.serializer.AvroSerializer
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.SerializationException
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.modules.SerializersModule
 import org.apache.avro.Schema
-import org.apache.avro.util.Utf8
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
 
@@ -25,7 +23,7 @@ abstract class GeneralizedSerializer<T : Any, AVRO_TYPE : Any, LOGICAL_TYPE : Ab
   private val conversion: AbstractConversion<T, AVRO_TYPE>,
 ) : AvroSerializer<T>() {
 
-  private val logicalTypeInstance = logicalTypeClass.createInstance()
+  val logicalTypeInstance = logicalTypeClass.createInstance()
 
   override fun encodeAvroValue(schema: Schema, encoder: ExtendedEncoder, obj: T) {
     encoder.encodeTypedValue(schema.type, conversion.toAvro(obj, schema, logicalTypeInstance.logicalType))

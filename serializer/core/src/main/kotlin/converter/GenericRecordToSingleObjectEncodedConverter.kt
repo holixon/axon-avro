@@ -17,7 +17,7 @@ class GenericRecordToSingleObjectEncodedConverter : ContentTypeConverter<Generic
 
   override fun convert(original: GenericData.Record): SingleObjectEncodedBytes {
     // TODO: we (sh|c)ould make genericData/conversions configurable ... maybe.
-    logger.info {" Generic: $original" }
+    logger.trace {"Generic record: $original" }
     return GenericRecordCodec.encodeSingleObject(
       record = original,
       genericData = defaultLogicalTypeConversions.genericData

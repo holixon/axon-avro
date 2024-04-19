@@ -1,4 +1,4 @@
-package bankaccount.conversions
+package io.toolisticon.avro.kotlin.logicaltypes
 
 import io.toolisticon.avro.kotlin.value.LogicalTypeName
 import org.apache.avro.LogicalType

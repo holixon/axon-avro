@@ -1,4 +1,4 @@
-package bankaccount.conversions
+package io.toolisticon.avro.kotlin.logicaltypes
 
 import com.github.avrokotlin.avro4k.decoder.ExtendedDecoder
 import com.github.avrokotlin.avro4k.encoder.ExtendedEncoder

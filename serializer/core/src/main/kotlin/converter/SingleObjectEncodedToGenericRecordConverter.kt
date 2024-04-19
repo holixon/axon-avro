@@ -15,7 +15,6 @@ class SingleObjectEncodedToGenericRecordConverter(
 
   override fun convert(singleObjectEncodedBytes: SingleObjectEncodedBytes): GenericData.Record {
     val readerSchema = schemaResolver[singleObjectEncodedBytes.fingerprint]
-
     // TODO: we (sh|c)ould make genericData/conversions configurable ... maybe.
     return GenericRecordCodec.decodeSingleObject(singleObjectEncodedBytes = singleObjectEncodedBytes, readerSchema = readerSchema)
   }

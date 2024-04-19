@@ -1,5 +1,6 @@
 package bankaccount.conversions
 
+import io.toolisticon.avro.kotlin.logicaltypes.GeneralizedSerializer
 import kotlinx.serialization.ExperimentalSerializationApi
 import org.javamoney.moneta.Money
 

@@ -1,5 +1,6 @@
 package bankaccount.conversions
 
+import io.toolisticon.avro.kotlin.logicaltypes.AbstractConversion
 import org.apache.avro.LogicalType
 import org.apache.avro.Schema
 import org.javamoney.moneta.Money
