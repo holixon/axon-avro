@@ -28,6 +28,7 @@ abstract class GeneralizedSerializer<T : Any, AVRO4K_TYPE : Any, LOGICAL_TYPE : 
 
   val logicalTypeInstance = logicalTypeClass.constructors.first().call() // call default constructor
 
+  // FIXME -> move to custom mapping
   val primitiveKind =
     when (logicalTypeInstance.schemaType) {
       Schema.Type.STRING -> PrimitiveKind.STRING
@@ -39,6 +40,7 @@ abstract class GeneralizedSerializer<T : Any, AVRO4K_TYPE : Any, LOGICAL_TYPE : 
     }
 
   override fun encodeAvroValue(schema: Schema, encoder: ExtendedEncoder, obj: T) {
+    // FIXME -> move to custom mapping
     when (schema.type) {
       Schema.Type.STRING -> encoder.encodeString(logicalTypeInstance.toAvro(obj) as String)
       Schema.Type.FLOAT -> encoder.encodeFloat(logicalTypeInstance.toAvro(obj) as Float)
@@ -64,6 +66,7 @@ abstract class GeneralizedSerializer<T : Any, AVRO4K_TYPE : Any, LOGICAL_TYPE : 
       val schema: Schema = SchemaBuilder.builder().let {
         when (logicalTypeInstance.schemaType) {
           Schema.Type.STRING -> it.stringType()
+          // FIXME -> map all types
           else -> throw UnsupportedOperationException("Unknown schema type ${logicalTypeInstance.schemaType}")
         }
       }

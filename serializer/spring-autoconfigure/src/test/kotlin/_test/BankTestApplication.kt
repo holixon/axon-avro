@@ -5,6 +5,7 @@ package io.holixon.axon.avro.serializer.spring._test
 import bankaccount.BankAccount
 import bankaccount.BankAccountApi
 import bankaccount.command.CreateBankAccount
+import bankaccount.conversions.MoneyLogicalType
 import bankaccount.projection.CurrentBalanceProjection
 import bankaccount.query.BankAccountAuditQuery
 import bankaccount.query.CurrentBalanceQueries
@@ -20,6 +21,7 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition
 import io.swagger.v3.oas.annotations.info.Info
 import io.toolisticon.avro.kotlin.AvroSchemaResolver
 import mu.KLogging
+import org.apache.avro.LogicalTypes
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.common.jpa.EntityManagerProvider
 import org.axonframework.common.transaction.TransactionManager
@@ -189,3 +191,4 @@ class BankTestApplication {
 }
 
 fun main() = runApplication<BankTestApplication>().let { }
+

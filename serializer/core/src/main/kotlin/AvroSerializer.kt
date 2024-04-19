@@ -137,7 +137,12 @@ class AvroSerializer private constructor(
       "Can't serialize null."
     }
 
-    val strategy = serializationStrategies.firstOrNull { it.canSerialize(data::class.java) }
+    val strategy = serializationStrategies.firstOrNull { it.canSerialize(data::class.java) }.also {
+      if (it != null) {
+        logger.info { "Using strategy ${it::class.java.name}" }
+      }
+    }
+
 
     val serializedContent: T = if (strategy != null) {
       val genericRecord = strategy.serialize(data)
