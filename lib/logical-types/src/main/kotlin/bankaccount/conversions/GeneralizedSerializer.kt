@@ -7,84 +7,47 @@ import com.github.avrokotlin.avro4k.schema.NamingStrategy
 import com.github.avrokotlin.avro4k.serializer.AvroSerializer
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerializationException
-import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.modules.SerializersModule
-import org.apache.avro.Conversion
 import org.apache.avro.Schema
-import org.apache.avro.SchemaBuilder
 import org.apache.avro.util.Utf8
-import java.nio.ByteBuffer
 import kotlin.reflect.KClass
+import kotlin.reflect.full.createInstance
 
 /**
  * [T] JVM type: money
- * [AVRO4K_TYPE] Avro4k raw type (CharSequence)
+ * [AVRO_TYPE] Avro type (CharSequence)
  * [LOGICAL_TYPE] Logical Type
  */
 @ExperimentalSerializationApi
-abstract class GeneralizedSerializer<T : Any, AVRO4K_TYPE : Any, LOGICAL_TYPE : AbstractAvroLogicalTypeBase<T, AVRO4K_TYPE>>(
+abstract class GeneralizedSerializer<T : Any, AVRO_TYPE : Any, LOGICAL_TYPE : AbstractAvroLogicalTypeBase<T, AVRO_TYPE>>(
   val logicalTypeClass: KClass<LOGICAL_TYPE>,
-  private val conversion: AbstractConversion<T, AVRO4K_TYPE>,
+  private val conversion: AbstractConversion<T, AVRO_TYPE>,
 ) : AvroSerializer<T>() {
 
-  val logicalTypeInstance = logicalTypeClass.constructors.first().call() // call default constructor
-
-  // FIXME -> move to custom mapping
-  val primitiveKind =
-    when (logicalTypeInstance.schemaType) {
-      Schema.Type.STRING -> PrimitiveKind.STRING
-      Schema.Type.FLOAT -> PrimitiveKind.FLOAT
-      Schema.Type.LONG -> PrimitiveKind.LONG
-      Schema.Type.INT -> PrimitiveKind.INT
-      Schema.Type.BOOLEAN -> PrimitiveKind.BOOLEAN
-      Schema.Type.DOUBLE -> PrimitiveKind.DOUBLE
-      Schema.Type.BYTES -> PrimitiveKind.BYTE
-      else -> throw UnsupportedOperationException("Unknown schema type ${logicalTypeInstance.schemaType}")
-    }
+  private val logicalTypeInstance = logicalTypeClass.createInstance()
 
   override fun encodeAvroValue(schema: Schema, encoder: ExtendedEncoder, obj: T) {
-    // FIXME -> move to custom mapping
-    when (schema.type) {
-      // FIXME -> use methods from conversion instead!!!!
-      Schema.Type.STRING -> encoder.encodeString(conversion.toAvro(obj) as String)
-      Schema.Type.FLOAT -> encoder.encodeFloat(conversion.toAvro(obj) as Float)
-      Schema.Type.LONG -> encoder.encodeLong(conversion.toAvro(obj) as Long)
-      Schema.Type.INT -> encoder.encodeInt(conversion.toAvro(obj) as Int)
-      Schema.Type.BOOLEAN -> encoder.encodeBoolean(conversion.toAvro(obj) as Boolean)
-      Schema.Type.DOUBLE -> encoder.encodeDouble(conversion.toAvro(obj) as Double)
-      Schema.Type.BYTES -> encoder.encodeByteArray(ByteBuffer.wrap(conversion.toAvro(obj) as ByteArray))
-      else -> throw SerializationException("Unsupported schema type ${schema.type}.")
-    }
+    encoder.encodeTypedValue(schema.type, conversion.toAvro(obj, schema, logicalTypeInstance.logicalType))
   }
 
   override fun decodeAvroValue(schema: Schema, decoder: ExtendedDecoder): T {
     val any = requireNotNull(decoder.decodeAny()) { "Decode any must not return null" }
-    @Suppress("UNCHECKED_CAST") // two times unchecked cast
-
-    // FIXME -> use methods from conversion instead!!!!
-    return when (any::class.java) {
-      conversion.convertedType -> any as T
-      Utf8::class.java -> conversion.fromAvro(decoder.decodeString() as AVRO4K_TYPE)
-      else -> throw SerializationException("Could not decode $any of type ${any::class}")
+    return if (any::class.java == conversion.convertedType) {
+      @Suppress("UNCHECKED_CAST")
+      any as T
+    } else {
+      @Suppress("UNCHECKED_CAST")
+      conversion.fromAvro(decoder.decode(any::class) as AVRO_TYPE, schema, logicalTypeInstance.logicalType)
     }
   }
 
-  override val descriptor: SerialDescriptor = object : AvroDescriptor(logicalTypeClass, primitiveKind) {
+  override val descriptor: SerialDescriptor = object : AvroDescriptor(
+    type = logicalTypeClass,
+    kind = logicalTypeInstance.schemaType.primitiveType()
+  ) {
     override fun schema(annos: List<Annotation>, serializersModule: SerializersModule, namingStrategy: NamingStrategy): Schema {
-      val schema: Schema = SchemaBuilder.builder().let {
-        when (logicalTypeInstance.schemaType) {
-          Schema.Type.STRING -> it.stringType()
-          Schema.Type.FLOAT -> it.floatType()
-          Schema.Type.LONG -> it.longType()
-          Schema.Type.INT -> it.intType()
-          Schema.Type.BOOLEAN -> it.booleanType()
-          Schema.Type.DOUBLE -> it.doubleType()
-          Schema.Type.BYTES -> it.bytesType()
-          // FIXME -> map all types
-          else -> throw UnsupportedOperationException("Unknown schema type ${logicalTypeInstance.schemaType}")
-        }
-      }
+      val schema: Schema = logicalTypeInstance.schemaType.schema()
       return logicalTypeInstance.logicalType.addToSchema(schema)
     }
   }

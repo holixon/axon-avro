@@ -2,7 +2,7 @@ package bankaccount.conversions
 
 import org.apache.avro.LogicalType
 
-interface AvroLogicalType<T, AVRO4K_TYPE> {
+interface AvroLogicalTypeHolder {
   /**
    * Logical type.
    */

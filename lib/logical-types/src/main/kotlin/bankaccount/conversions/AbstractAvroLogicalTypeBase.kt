@@ -7,9 +7,9 @@ import org.apache.avro.Schema
 
 /**
  * [T] JVM Type, like Money
- * [AVRO4K_TYPE] Avro Type, like CharSequence
+ * [AVRO_TYPE] Avro Type, like CharSequence
  */
-abstract class AbstractAvroLogicalTypeBase<T, AVRO4K_TYPE>(
+abstract class AbstractAvroLogicalTypeBase<T, AVRO_TYPE>(
   /**
    * Raw type in schema.
    */
@@ -18,7 +18,7 @@ abstract class AbstractAvroLogicalTypeBase<T, AVRO4K_TYPE>(
    * Logical type name.
    */
   val name: LogicalTypeName
-) : AvroLogicalType<T, AVRO4K_TYPE>, LogicalTypes.LogicalTypeFactory {
+) : AvroLogicalTypeHolder, LogicalTypes.LogicalTypeFactory {
 
   override val logicalType: LogicalType by lazy {
     object : LogicalType(name.value) {
