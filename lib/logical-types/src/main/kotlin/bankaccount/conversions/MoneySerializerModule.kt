@@ -5,7 +5,8 @@ import kotlinx.serialization.modules.SerializersModule
 import org.javamoney.moneta.Money
 
 /**
- * A module definition with all custom serializers.
+ * A module definition with all custom serializers present in this Module. Registered via SPI.
+ * To use it please add the module adding `SerializersModuleLoader.scanAndRegisterModules()`.
  */
 class MoneySerializerModule : SerializersModuleFactory {
 

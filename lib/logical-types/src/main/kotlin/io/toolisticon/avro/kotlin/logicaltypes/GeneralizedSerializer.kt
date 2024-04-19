@@ -9,6 +9,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.modules.SerializersModule
 import org.apache.avro.Schema
+import org.apache.avro.generic.GenericData
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
 
@@ -19,11 +20,20 @@ import kotlin.reflect.full.createInstance
  */
 @ExperimentalSerializationApi
 abstract class GeneralizedSerializer<T : Any, AVRO_TYPE : Any, LOGICAL_TYPE : AbstractAvroLogicalTypeBase<T, AVRO_TYPE>>(
-  val logicalTypeClass: KClass<LOGICAL_TYPE>,
-  private val conversion: AbstractConversion<T, AVRO_TYPE>,
+  val logicalTypeClass: KClass<LOGICAL_TYPE>
 ) : AvroSerializer<T>() {
 
   val logicalTypeInstance = logicalTypeClass.createInstance()
+
+  /*
+   * Conversion is resolved using the service loader.
+   */
+  private val conversion: AbstractConversion<T, AVRO_TYPE> =
+    GenericData.get().getConversionFor<T>(logicalTypeInstance.logicalType).let { conversion ->
+      require(conversion is AbstractConversion<*, *>) { "Found conversion of wrong type. It must be a subtype of ${AbstractConversion::class}" }
+      @Suppress("UNCHECKED_CAST")
+      return@let conversion as AbstractConversion<T, AVRO_TYPE>
+    }
 
   override fun encodeAvroValue(schema: Schema, encoder: ExtendedEncoder, obj: T) {
     encoder.encodeTypedValue(schema.type, conversion.toAvro(obj, schema, logicalTypeInstance.logicalType))

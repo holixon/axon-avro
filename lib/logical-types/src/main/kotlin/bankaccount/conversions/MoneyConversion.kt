@@ -6,7 +6,7 @@ import org.apache.avro.Schema
 import org.javamoney.moneta.Money
 
 /**
- * Logical type conversion for Money type from moneta library.
+ * Logical type conversion for Money type from moneta library. Registered via SPI.
  */
 class MoneyConversion : AbstractConversion<Money, CharSequence>(
   logicalTypeClass = MoneyLogicalTypeFactory::class,

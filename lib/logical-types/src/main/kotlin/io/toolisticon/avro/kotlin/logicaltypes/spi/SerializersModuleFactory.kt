@@ -8,6 +8,9 @@ import kotlinx.serialization.modules.SerializersModule
  */
 interface SerializersModuleFactory {
 
+  /**
+   * Returns a custom module with all KSerializers contained.
+   */
   @ExperimentalSerializationApi
   fun customModule(): SerializersModule
 }
