@@ -1,6 +1,6 @@
 package bankaccount.command
 
-import bankaccount.conversions.MoneyLogicalType
+import bankaccount.conversions.MoneySerializer
 import kotlinx.serialization.Serializable
 import org.axonframework.modelling.command.TargetAggregateIdentifier
 import org.javamoney.moneta.Money
@@ -9,6 +9,6 @@ import org.javamoney.moneta.Money
 data class WithdrawMoney(
   @TargetAggregateIdentifier
   val accountId: String,
-  @Serializable(with = MoneyLogicalType.Serializer::class)
+  @Serializable(with = MoneySerializer::class)
   val amount: Money
 )

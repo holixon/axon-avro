@@ -8,7 +8,6 @@ import io.toolisticon.avro.kotlin.model.wrapper.AvroSchema
 import io.toolisticon.avro.kotlin.value.SingleObjectEncodedBytes
 import org.apache.avro.generic.GenericData
 import org.assertj.core.api.Assertions.assertThat
-import org.axonframework.messaging.MetaData
 import org.axonframework.serialization.SimpleSerializedObject
 import org.axonframework.serialization.SimpleSerializedType
 import org.javamoney.moneta.Money

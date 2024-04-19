@@ -1,12 +1,12 @@
 package bankaccount.query
 
-import bankaccount.conversions.MoneyLogicalType
+import bankaccount.conversions.MoneySerializer
 import kotlinx.serialization.Serializable
 import org.javamoney.moneta.Money
 
 @Serializable
 data class CurrentBalance(
   val accountId: String,
-  @Serializable(with = MoneyLogicalType.Serializer::class)
+  @Serializable(with = MoneySerializer::class)
   val balance: Money,
 )

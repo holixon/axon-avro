@@ -85,8 +85,8 @@
         <groupId>org.apache.avro</groupId>
         <artifactId>avro-maven-plugin</artifactId>
         <configuration>
-          <customLogicalTypeFactories>bankaccount.conversions.MoneyLogicalType</customLogicalTypeFactories>
-          <customConversions>bankaccount.conversions.MoneyLogicalType$AvroConversion</customConversions>
+          <customLogicalTypeFactories>bankaccount.conversions.MoneyLogicalTypeFactory</customLogicalTypeFactories>
+          <customConversions>bankaccount.conversions.MoneyConversion</customConversions>
         </configuration>
         <dependencies>
           <dependency>

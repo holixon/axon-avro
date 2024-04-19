@@ -3,7 +3,7 @@ package io.holixon.axon.avro.serializer.spring._test
 import bankaccount.command.CreateBankAccount
 import bankaccount.command.DepositMoney
 import bankaccount.command.WithdrawMoney
-import bankaccount.conversions.MoneyLogicalType
+import bankaccount.conversions.MoneySerializer
 import bankaccount.event.BankAccountCreated
 import bankaccount.event.MoneyDeposited
 import bankaccount.event.MoneyWithdrawn
@@ -18,7 +18,7 @@ import kotlinx.serialization.modules.contextual
 
 val avro4k = Avro(serializersModule = SerializersModule {
   contextual(UUIDSerializer())
-  contextual(MoneyLogicalType.Serializer())
+  contextual(MoneySerializer())
 })
 
 enum class BankAccountSchemas(val schema: AvroSchema) {
