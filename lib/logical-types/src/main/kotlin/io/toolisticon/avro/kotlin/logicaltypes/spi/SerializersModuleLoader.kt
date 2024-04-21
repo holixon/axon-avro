@@ -11,15 +11,21 @@ object SerializersModuleLoader {
   @JvmStatic
   @OptIn(ExperimentalSerializationApi::class)
   fun scanAndRegisterModules(): SerializersModule {
-    val moduleFactories = ServiceLoader.load(SerializersModuleFactory::class.java).iterator().asSequence().toList()
-    return if (moduleFactories.isNotEmpty()) {
-      var module = moduleFactories.first().customModule()
-      moduleFactories.subList(1, moduleFactories.size).forEach {
-        module = module.plus(it.customModule())
-      }
-      module
-    } else {
-      EmptySerializersModule()
+
+    // much simpler: fold
+//    val moduleFactories = ServiceLoader.load(SerializersModuleFactory::class.java).iterator().asSequence().toList()
+//     if (moduleFactories.isNotEmpty()) {
+//      var module = moduleFactories.first().customModule()
+//      moduleFactories.subList(1, moduleFactories.size).forEach {
+//        module = module.plus(it.customModule())
+//      }
+//      module
+//    } else {
+//      EmptySerializersModule()
+//    }
+
+    return ServiceLoader.load(SerializersModuleFactory::class.java).fold(EmptySerializersModule()) { acc,cur ->
+      acc + cur.customModule()
     }
   }
 }
