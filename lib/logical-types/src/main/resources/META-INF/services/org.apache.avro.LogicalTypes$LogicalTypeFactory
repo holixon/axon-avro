@@ -1,2 +1,1 @@
-bankaccount.conversions.MoneyLogicalTypeFactory
-
+bankaccount.conversions.MoneyLogicalType$MoneyLogicalTypeFactory

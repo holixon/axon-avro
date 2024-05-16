@@ -7,27 +7,18 @@ import bankaccount.event.BankAccountCreated
 import bankaccount.event.MoneyDeposited
 import bankaccount.event.MoneyWithdrawn
 import bankaccount.query.*
-import com.github.avrokotlin.avro4k.Avro
-import com.github.avrokotlin.avro4k.serializer.UUIDSerializer
 import io.toolisticon.avro.kotlin.avroSchemaResolver
-import io.toolisticon.avro.kotlin.logicaltypes.spi.SerializersModuleLoader
 import io.toolisticon.avro.kotlin.model.wrapper.AvroSchema
-import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.modules.contextual
-import kotlinx.serialization.modules.plus
+import io.toolisticon.kotlin.avro.serialization.AvroKotlinSerialization
 
 
-val avro4k = Avro(
-  serializersModule = SerializersModule {
-    contextual(UUIDSerializer())
-  }.plus(SerializersModuleLoader.scanAndRegisterModules())
-)
+val avroSerialization = AvroKotlinSerialization()
 
 enum class BankAccountSchemas(val schema: AvroSchema) {
   // Commands
-  SCHEMA_CREATE_BANK_ACCOUNT(AvroSchema(avro4k.schema(CreateBankAccount.serializer()))),
-  SCHEMA_WITHDRAW_MONEY(AvroSchema(avro4k.schema(WithdrawMoney.serializer()))),
-  SCHEMA_DEPOSIT_MONEY(AvroSchema(avro4k.schema(DepositMoney.serializer()))),
+  SCHEMA_CREATE_BANK_ACCOUNT(avroSerialization.schema(CreateBankAccount::class)),
+  SCHEMA_WITHDRAW_MONEY(avroSerialization.schema(WithdrawMoney::class)),
+  SCHEMA_DEPOSIT_MONEY(avroSerialization.schema(DepositMoney::class)),
 
   // Events
   SCHEMA_BANK_ACCOUNT_CREATED(AvroSchema(BankAccountCreated.getClassSchema())),
@@ -35,13 +26,13 @@ enum class BankAccountSchemas(val schema: AvroSchema) {
   SCHEMA_MONEY_DEPOSITED(AvroSchema(MoneyDeposited.getClassSchema())),
 
   // Query
-  SCHEMA_CURRENT_BALANCE_QUERY(AvroSchema(avro4k.schema(CurrentBalanceQuery.serializer()))),
-  SCHEMA_FIND_ALL_QUERY(AvroSchema(avro4k.schema(FindAllQuery.serializer()))),
+  SCHEMA_CURRENT_BALANCE_QUERY(avroSerialization.schema(CurrentBalanceQuery::class)),
+  SCHEMA_FIND_ALL_QUERY(avroSerialization.schema(FindAllQuery::class)),
 
   // Query Result
-  SCHEMA_CURRENT_BALANCE(AvroSchema(avro4k.schema(CurrentBalance.serializer()))),
-  SCHEMA_CURRENT_BALANCE_RESULT(AvroSchema(avro4k.schema(CurrentBalanceResult.serializer()))),
-  SCHEMA_CURRENT_BALANCE_RESULT_LIST(AvroSchema(avro4k.schema(CurrentBalanceResultList.serializer()))),
+  SCHEMA_CURRENT_BALANCE(avroSerialization.schema(CurrentBalance::class)),
+  SCHEMA_CURRENT_BALANCE_RESULT(avroSerialization.schema(CurrentBalanceResult::class)),
+  SCHEMA_CURRENT_BALANCE_RESULT_LIST(avroSerialization.schema(CurrentBalanceResultList::class)),
   ;
 
   companion object {

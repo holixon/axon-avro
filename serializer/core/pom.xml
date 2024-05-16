@@ -36,10 +36,6 @@
       <scope>test</scope>
     </dependency>
 
-    <dependency>
-      <groupId>com.github.avro-kotlin.avro4k</groupId>
-      <artifactId>avro4k-core</artifactId>
-    </dependency>
 
   </dependencies>
 

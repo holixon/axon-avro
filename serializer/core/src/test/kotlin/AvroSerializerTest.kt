@@ -6,7 +6,9 @@ import io.toolisticon.avro.kotlin.avroSchemaResolver
 import io.toolisticon.avro.kotlin.codec.SpecificRecordCodec
 import io.toolisticon.avro.kotlin.model.wrapper.AvroSchema
 import io.toolisticon.avro.kotlin.value.SingleObjectEncodedBytes
+import io.toolisticon.kotlin.avro.serialization.AvroKotlinSerialization
 import org.apache.avro.generic.GenericData
+import org.apache.avro.generic.GenericRecord
 import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.serialization.SimpleSerializedObject
 import org.axonframework.serialization.SimpleSerializedType
@@ -24,7 +26,7 @@ internal class AvroSerializerTest {
       .avroSchemaResolver(schemaResolver)
       .build()
 
-    assertThat(serializer.canSerializeTo(GenericData.Record::class.java)).isTrue()
+    assertThat(serializer.canSerializeTo(GenericRecord::class.java)).isTrue()
   }
 
   @Test
@@ -91,7 +93,7 @@ internal class AvroSerializerTest {
     assertThat(deserialized).isInstanceOf(BankAccountCreated::class.java)
     with(deserialized as BankAccountCreated) {
       assertThat(accountId).isEqualTo("1")
-      assertThat(initialBalance).isEqualTo(Money.of(10, "EUR"))
+      assertThat(initialBalance).isEqualTo(Money.of(1, "EUR"))
     }
   }
 
@@ -103,7 +105,7 @@ internal class AvroSerializerTest {
     val schemaResolver = avroSchemaResolver(AvroSchema(avro4k.schema(BarString.serializer())))
     val serializer = AvroSerializer.builder()
       .avroSchemaResolver(schemaResolver)
-      .avro4k(avro4k)
+      .avroKotlinSerialization(AvroKotlinSerialization())
       .build()
 
     val serialized = serializer.serialize(bar, ByteArray::class.java)

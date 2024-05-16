@@ -5,6 +5,7 @@ import io.toolisticon.avro.kotlin.AvroKotlin
 import io.toolisticon.avro.kotlin.model.wrapper.AvroSchema
 import io.toolisticon.avro.kotlin.value.Name
 import org.apache.avro.generic.GenericData
+import org.apache.avro.generic.GenericRecord
 import org.axonframework.messaging.MetaData
 
 class MetaDataStrategy(
@@ -19,13 +20,13 @@ class MetaDataStrategy(
     override fun canDeserialize(serializedType: Class<*>): Boolean = MetaData::class.java == serializedType
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T : Any> deserialize(serializedType: Class<*>, data: GenericData.Record): T {
+    override fun <T : Any> deserialize(serializedType: Class<*>, data: GenericRecord): T {
         return MetaData.from(data.get(FIELD_VALUES) as Map<String, *>) as T
     }
 
     override fun canSerialize(serializedType: Class<*>): Boolean = MetaData::class.java == serializedType
 
-    override fun serialize(data: Any): GenericData.Record {
+    override fun serialize(data: Any): GenericRecord {
         require(isSchemaCompliant(data)) { "Data: $data not compliant with schema=$SCHEMA" }
         return AvroKotlin.createGenericRecord(SCHEMA) {
             put(FIELD_VALUES, data)

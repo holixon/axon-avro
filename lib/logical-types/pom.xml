@@ -15,14 +15,10 @@
 
   <dependencies>
     <dependency>
-      <groupId>io.toolisticon.lib</groupId>
-      <artifactId>avro-kotlin</artifactId>
+      <groupId>io.toolisticon.kotlin.avro</groupId>
+      <artifactId>avro-kotlin-serialization</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>com.github.avro-kotlin.avro4k</groupId>
-      <artifactId>avro4k-core</artifactId>
-    </dependency>
 
     <dependency>
       <groupId>org.javamoney.moneta</groupId>

@@ -102,15 +102,15 @@ class BankTestApplication {
 
     @Bean
     @Primary
-    fun defaultSerializer(builder: AvroSerializer.Builder): Serializer = builder.avro4k(avro4k = avro4k).build()
+    fun defaultSerializer(builder: AvroSerializer.Builder): Serializer = builder.avroKotlinSerialization(avroKotlinSerialization = avroSerialization).build()
 
     @Bean
     @Qualifier("eventSerializer")
-    fun eventSerializer(builder: AvroSerializer.Builder): Serializer = builder.avro4k(avro4k = avro4k).build()
+    fun eventSerializer(builder: AvroSerializer.Builder): Serializer = builder.avroKotlinSerialization(avroKotlinSerialization = avroSerialization).build()
 
     @Bean
     @Qualifier("messageSerializer")
-    fun messageSerializer(builder: AvroSerializer.Builder): Serializer = builder.avro4k(avro4k = avro4k).build()
+    fun messageSerializer(builder: AvroSerializer.Builder): Serializer = builder.avroKotlinSerialization(avroKotlinSerialization = avroSerialization).build()
 
     @Bean
     fun schemaResolver() = BankAccountSchemas.schemaResolver
@@ -142,11 +142,11 @@ class BankTestApplication {
 
     @Bean
     @Qualifier(EVENT_SERIALIZER)
-    fun eventSerializer(builder: AvroSerializer.Builder): Serializer = builder.avro4k(avro4k = avro4k).build()
+    fun eventSerializer(builder: AvroSerializer.Builder): Serializer = builder.avroKotlinSerialization(avroKotlinSerialization = avroSerialization).build()
 
     @Bean
     @Qualifier(MESSAGE_SERIALIZER)
-    fun messageSerializer(builder: AvroSerializer.Builder): Serializer = builder.avro4k(avro4k = avro4k).build()
+    fun messageSerializer(builder: AvroSerializer.Builder): Serializer = builder.avroKotlinSerialization(avroKotlinSerialization = avroSerialization).build()
 
     @Bean
     fun schemaResolver(): AvroSchemaResolver = BankAccountSchemas.schemaResolver

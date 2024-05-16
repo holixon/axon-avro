@@ -1,50 +1,26 @@
 package io.holixon.axon.avro.serializer.strategy
 
-import com.github.avrokotlin.avro4k.Avro
-import io.toolisticon.avro.kotlin.model.wrapper.AvroSchema
-import io.toolisticon.avro.kotlin.model.wrapper.AvroSchemaChecks.compatibleToReadFrom
-import kotlinx.serialization.KSerializer
+import io.toolisticon.kotlin.avro.serialization.AvroKotlinSerialization
 import kotlinx.serialization.Serializable
 import org.apache.avro.generic.GenericData
-import kotlin.reflect.full.companionObject
-import kotlin.reflect.full.companionObjectInstance
-import kotlin.reflect.full.functions
+import org.apache.avro.generic.GenericRecord
 
 class KotlinxDataClassStrategy(
-  private val avro4k: Avro,
+  private val avroKotlinSerialization: AvroKotlinSerialization,
   private val genericData: GenericData
 ) : AvroSerializationStrategy, AvroDeserializationStrategy {
 
   override fun canDeserialize(serializedType: Class<*>): Boolean = isKotlinxDataClass(serializedType)
 
-  override fun <T : Any> deserialize(serializedType: Class<*>, data: GenericData.Record): T {
-    val writerSchema = AvroSchema(data.schema)
-
-    val fn = serializedType.kotlin.companionObject?.functions?.find { it.name == "serializer" }!!
-
-    @Suppress("UNCHECKED_CAST")
-    val kserializer = fn.call(serializedType.kotlin.companionObjectInstance) as KSerializer<Any>
-    val readerSchema = AvroSchema(avro4k.schema(kserializer))
-
-    // TODO nicer?
-    require(readerSchema.compatibleToReadFrom(writerSchema).result.incompatibilities.isEmpty()) { "Reader/writer schema are incompatible" }
-
-    @Suppress("UNCHECKED_CAST")
-    return avro4k.fromRecord(kserializer, data) as T
+  @Suppress("UNCHECKED_CAST")
+  override fun <T : Any> deserialize(serializedType: Class<*>, data: GenericRecord): T {
+    return avroKotlinSerialization.fromRecord(data, serializedType.kotlin) as T
   }
 
   override fun canSerialize(serializedType: Class<*>): Boolean = isKotlinxDataClass(serializedType)
 
-  override fun serialize(data: Any): GenericData.Record {
-    val fn = data::class.companionObject?.functions?.find { it.name == "serializer" }!!
-
-    @Suppress("UNCHECKED_CAST")
-    val kserializer = fn.call(data::class.companionObjectInstance) as KSerializer<Any>
-
-    return avro4k.toRecord(kserializer, data).let {
-      // TODO: we could return interface GenericRecord and not do a deep copy/conversion here
-      genericData.deepCopy(it.schema, it) as GenericData.Record
-    }
+  override fun serialize(data: Any): GenericRecord {
+    return avroKotlinSerialization.toRecord(data)
   }
 
   private fun isKotlinxDataClass(serializedType: Class<*>): Boolean {

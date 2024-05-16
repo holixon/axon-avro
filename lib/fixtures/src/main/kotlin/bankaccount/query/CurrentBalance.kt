@@ -1,6 +1,6 @@
 package bankaccount.query
 
-import bankaccount.conversions.MoneySerializer
+import bankaccount.conversions.MoneyLogicalType.MoneySerializer
 import kotlinx.serialization.Serializable
 import org.javamoney.moneta.Money
 

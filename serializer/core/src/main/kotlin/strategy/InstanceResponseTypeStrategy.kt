@@ -5,6 +5,7 @@ import io.toolisticon.avro.kotlin.AvroKotlin
 import io.toolisticon.avro.kotlin.model.wrapper.AvroSchema
 import io.toolisticon.avro.kotlin.value.Name
 import org.apache.avro.generic.GenericData
+import org.apache.avro.generic.GenericRecord
 import org.apache.avro.util.Utf8
 import org.axonframework.messaging.responsetypes.InstanceResponseType
 import org.axonframework.messaging.responsetypes.MultipleInstancesResponseType
@@ -22,7 +23,7 @@ class InstanceResponseTypeStrategy(
 
   override fun canDeserialize(serializedType: Class<*>): Boolean = InstanceResponseType::class.java == serializedType
 
-  override fun <T : Any> deserialize(serializedType: Class<*>, data: GenericData.Record): T {
+  override fun <T : Any> deserialize(serializedType: Class<*>, data: GenericRecord): T {
     val className = data.get(FIELD) as Utf8
 
     return InstanceResponseType(Class.forName(className.toString())) as T
@@ -30,7 +31,7 @@ class InstanceResponseTypeStrategy(
 
   override fun canSerialize(serializedType: Class<*>): Boolean = InstanceResponseType::class.java == serializedType
 
-  override fun serialize(data: Any): GenericData.Record {
+  override fun serialize(data: Any): GenericRecord {
     require(data is InstanceResponseType<*>)
     return AvroKotlin.createGenericRecord(SCHEMA) {
       put(FIELD, data.expectedResponseType.canonicalName)
