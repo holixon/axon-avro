@@ -1,12 +1,12 @@
 package bankaccount.conversions
 
-import io.toolisticon.avro.kotlin.logical.StringLogicalType
-import io.toolisticon.avro.kotlin.logical.StringLogicalTypeFactory
-import io.toolisticon.avro.kotlin.logical.conversion.StringLogicalTypeConversion
-import io.toolisticon.avro.kotlin.logical.conversion.TypeConverter
-import io.toolisticon.avro.kotlin.value.LogicalTypeName.Companion.toLogicalTypeName
+import io.toolisticon.kotlin.avro.logical.StringLogicalType
+import io.toolisticon.kotlin.avro.logical.StringLogicalTypeFactory
+import io.toolisticon.kotlin.avro.logical.conversion.StringLogicalTypeConversion
+import io.toolisticon.kotlin.avro.logical.conversion.TypeConverter
 import io.toolisticon.kotlin.avro.serialization.serializer.StringLogicalTypeSerializer
 import io.toolisticon.kotlin.avro.serialization.spi.AvroSerializerModuleFactory
+import io.toolisticon.kotlin.avro.value.LogicalTypeName.Companion.toLogicalTypeName
 import kotlinx.serialization.modules.SerializersModule
 import org.javamoney.moneta.Money
 import java.util.*

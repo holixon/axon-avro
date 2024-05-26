@@ -7,8 +7,8 @@ import bankaccount.event.BankAccountCreated
 import bankaccount.event.MoneyDeposited
 import bankaccount.event.MoneyWithdrawn
 import bankaccount.query.*
-import io.toolisticon.avro.kotlin.avroSchemaResolver
-import io.toolisticon.avro.kotlin.model.wrapper.AvroSchema
+import io.toolisticon.kotlin.avro.model.wrapper.AvroSchema
+import io.toolisticon.kotlin.avro.repository.avroSchemaResolver
 import io.toolisticon.kotlin.avro.serialization.AvroKotlinSerialization
 
 

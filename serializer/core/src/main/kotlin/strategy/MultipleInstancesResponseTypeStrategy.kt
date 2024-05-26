@@ -1,9 +1,9 @@
 package io.holixon.axon.avro.serializer.strategy
 
 import _ktx.ResourceKtx
-import io.toolisticon.avro.kotlin.AvroKotlin
-import io.toolisticon.avro.kotlin.model.wrapper.AvroSchema
-import io.toolisticon.avro.kotlin.value.Name
+import io.toolisticon.kotlin.avro.AvroKotlin
+import io.toolisticon.kotlin.avro.model.wrapper.AvroSchema
+import io.toolisticon.kotlin.avro.value.Name.Companion.toName
 import org.apache.avro.generic.GenericData
 import org.apache.avro.generic.GenericRecord
 import org.apache.avro.util.Utf8
@@ -14,9 +14,9 @@ class MultipleInstancesResponseTypeStrategy(
   val genericData: GenericData
 ) : AvroDeserializationStrategy, AvroSerializationStrategy {
   companion object {
-    val SCHEMA = AvroSchema(resource = ResourceKtx.resourceUrl("schema/AvroMultipleInstancesResponseType.avsc"))
+    val SCHEMA = AvroSchema.of(resource = ResourceKtx.resourceUrl("schema/AvroMultipleInstancesResponseType.avsc"))
     const val FIELD = "expectedResponseType"
-    val FIELD_SCHEMA = SCHEMA.getField(Name(FIELD))!!.schema
+    val FIELD_SCHEMA = SCHEMA.getField(FIELD.toName())!!.schema
   }
 
 

@@ -1,10 +1,9 @@
 package io.holixon.axon.avro.serializer.converter
 
-import io.toolisticon.avro.kotlin.AvroKotlin.defaultLogicalTypeConversions
-import io.toolisticon.avro.kotlin.codec.GenericRecordCodec
-import io.toolisticon.avro.kotlin.value.SingleObjectEncodedBytes
+import io.toolisticon.kotlin.avro.AvroKotlin
+import io.toolisticon.kotlin.avro.codec.GenericRecordCodec
+import io.toolisticon.kotlin.avro.value.SingleObjectEncodedBytes
 import mu.KLogging
-import org.apache.avro.generic.GenericData
 import org.apache.avro.generic.GenericRecord
 import org.axonframework.serialization.ContentTypeConverter
 
@@ -21,7 +20,7 @@ class GenericRecordToSingleObjectEncodedConverter : ContentTypeConverter<Generic
     logger.trace {"Generic record: $original" }
     return GenericRecordCodec.encodeSingleObject(
       record = original,
-      genericData = defaultLogicalTypeConversions.genericData
+      genericData = AvroKotlin.genericData
     )
   }
 }

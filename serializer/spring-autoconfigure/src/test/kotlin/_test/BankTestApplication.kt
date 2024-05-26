@@ -18,7 +18,7 @@ import io.holixon.axon.avro.serializer.spring.EnableAxonAvroSerializer
 import io.swagger.v3.oas.annotations.ExternalDocumentation
 import io.swagger.v3.oas.annotations.OpenAPIDefinition
 import io.swagger.v3.oas.annotations.info.Info
-import io.toolisticon.avro.kotlin.AvroSchemaResolver
+import io.toolisticon.kotlin.avro.repository.AvroSchemaResolver
 import mu.KLogging
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.common.jpa.EntityManagerProvider
@@ -102,15 +102,18 @@ class BankTestApplication {
 
     @Bean
     @Primary
-    fun defaultSerializer(builder: AvroSerializer.Builder): Serializer = builder.avroKotlinSerialization(avroKotlinSerialization = avroSerialization).build()
+    fun defaultSerializer(builder: AvroSerializer.Builder): Serializer =
+      builder.avroKotlinSerialization(avroKotlinSerialization = avroSerialization).build()
 
     @Bean
     @Qualifier("eventSerializer")
-    fun eventSerializer(builder: AvroSerializer.Builder): Serializer = builder.avroKotlinSerialization(avroKotlinSerialization = avroSerialization).build()
+    fun eventSerializer(builder: AvroSerializer.Builder): Serializer =
+      builder.avroKotlinSerialization(avroKotlinSerialization = avroSerialization).build()
 
     @Bean
     @Qualifier("messageSerializer")
-    fun messageSerializer(builder: AvroSerializer.Builder): Serializer = builder.avroKotlinSerialization(avroKotlinSerialization = avroSerialization).build()
+    fun messageSerializer(builder: AvroSerializer.Builder): Serializer =
+      builder.avroKotlinSerialization(avroKotlinSerialization = avroSerialization).build()
 
     @Bean
     fun schemaResolver() = BankAccountSchemas.schemaResolver
@@ -142,11 +145,13 @@ class BankTestApplication {
 
     @Bean
     @Qualifier(EVENT_SERIALIZER)
-    fun eventSerializer(builder: AvroSerializer.Builder): Serializer = builder.avroKotlinSerialization(avroKotlinSerialization = avroSerialization).build()
+    fun eventSerializer(builder: AvroSerializer.Builder): Serializer =
+      builder.avroKotlinSerialization(avroKotlinSerialization = avroSerialization).build()
 
     @Bean
     @Qualifier(MESSAGE_SERIALIZER)
-    fun messageSerializer(builder: AvroSerializer.Builder): Serializer = builder.avroKotlinSerialization(avroKotlinSerialization = avroSerialization).build()
+    fun messageSerializer(builder: AvroSerializer.Builder): Serializer =
+      builder.avroKotlinSerialization(avroKotlinSerialization = avroSerialization).build()
 
     @Bean
     fun schemaResolver(): AvroSchemaResolver = BankAccountSchemas.schemaResolver

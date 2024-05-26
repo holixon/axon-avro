@@ -2,7 +2,7 @@ package io.holixon.axon.avro.serializer.plugin.ext
 
 import io.holixon.axon.avro.serializer.plugin.AxonAvroSerializerPlugin
 import io.holixon.axon.avro.serializer.plugin.SingleObjectToJsonConverterProvider
-import io.toolisticon.avro.kotlin.codec.SingleObjectToJsonConverter
+import io.toolisticon.kotlin.avro.codec.SingleObjectToJsonConverter
 import org.osgi.framework.BundleContext
 import org.osgi.framework.InvalidSyntaxException
 import org.osgi.framework.ServiceReference

@@ -1,7 +1,6 @@
 package io.holixon.axon.avro.serializer.strategy
 
-import io.toolisticon.avro.kotlin.codec.SpecificRecordCodec
-import org.apache.avro.generic.GenericData
+import io.toolisticon.kotlin.avro.codec.SpecificRecordCodec
 import org.apache.avro.generic.GenericRecord
 import org.apache.avro.specific.SpecificRecordBase
 

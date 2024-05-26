@@ -1,10 +1,8 @@
 package io.holixon.axon.avro.serializer.converter
 
 import com.github.avrokotlin.avro4k.ListRecord
-import io.toolisticon.avro.kotlin.codec.GenericRecordCodec
-import io.toolisticon.avro.kotlin.value.JsonString
-import org.apache.avro.generic.GenericData
-import org.apache.avro.generic.GenericRecord
+import io.toolisticon.kotlin.avro.codec.GenericRecordCodec
+import io.toolisticon.kotlin.avro.value.JsonString
 import org.axonframework.serialization.ContentTypeConverter
 
 class ListRecordToJsonStringConverter : ContentTypeConverter<ListRecord, JsonString> {

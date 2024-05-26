@@ -1,8 +1,7 @@
 package io.holixon.axon.avro.serializer.converter
 
-import io.toolisticon.avro.kotlin.codec.GenericRecordCodec
-import io.toolisticon.avro.kotlin.value.JsonString
-import org.apache.avro.generic.GenericData
+import io.toolisticon.kotlin.avro.codec.GenericRecordCodec
+import io.toolisticon.kotlin.avro.value.JsonString
 import org.apache.avro.generic.GenericRecord
 import org.axonframework.serialization.ContentTypeConverter
 
