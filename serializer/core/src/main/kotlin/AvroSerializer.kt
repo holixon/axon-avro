@@ -3,11 +3,11 @@ package io.holixon.axon.avro.serializer
 import com.github.avrokotlin.avro4k.Avro
 import io.holixon.axon.avro.serializer.converter.*
 import io.holixon.axon.avro.serializer.strategy.*
-import io.toolisticon.avro.kotlin.AvroKotlin
-import io.toolisticon.avro.kotlin.AvroSchemaResolver
-import io.toolisticon.avro.kotlin.AvroSchemaResolverMap
-import io.toolisticon.avro.kotlin.plus
-import io.toolisticon.avro.kotlin.value.SingleObjectEncodedBytes
+import io.toolisticon.kotlin.avro.AvroKotlin
+import io.toolisticon.kotlin.avro.repository.AvroSchemaResolver
+import io.toolisticon.kotlin.avro.repository.AvroSchemaResolverMap
+import io.toolisticon.kotlin.avro.repository.plus
+import io.toolisticon.kotlin.avro.value.SingleObjectEncodedBytes
 import mu.KLogging
 import org.apache.avro.generic.GenericData
 import org.apache.avro.util.ClassUtils
@@ -25,6 +25,12 @@ class AvroSerializer private constructor(
 
 
   companion object : KLogging() {
+
+    val builtInSchemas = listOf(
+      MetaDataStrategy.SCHEMA,
+      InstanceResponseTypeStrategy.SCHEMA,
+      MultipleInstancesResponseTypeStrategy.SCHEMA,
+    )
 
     private val axonSchemaResolver: AvroSchemaResolverMap = AvroSchemaResolverMap(
       listOf(
@@ -106,7 +112,7 @@ class AvroSerializer private constructor(
     internal var revisionResolver: RevisionResolver = AnnotationRevisionResolver()
     internal val contentTypeConverters: MutableList<ContentTypeConverter<*, *>> = mutableListOf()
     internal var avro4k = Avro.default
-    internal var genericDataSupplier: Supplier<GenericData> = Supplier { AvroKotlin.defaultLogicalTypeConversions.genericData }
+    internal var genericDataSupplier: Supplier<GenericData> = Supplier { AvroKotlin.genericData }
 
     fun avroSchemaResolver(avroSchemaResolver: AvroSchemaResolver) = apply {
       _avroSchemaResolver = avroSchemaResolver

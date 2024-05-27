@@ -1,11 +1,12 @@
 package io.holixon.axon.avro.serializer.strategy
 
 import com.github.avrokotlin.avro4k.Avro
-import io.toolisticon.avro.kotlin.model.wrapper.AvroSchema
-import io.toolisticon.avro.kotlin.model.wrapper.AvroSchemaChecks.compatibleToReadFrom
+import io.toolisticon.kotlin.avro.model.wrapper.AvroSchema
+import io.toolisticon.kotlin.avro.model.wrapper.AvroSchemaChecks.compatibleToReadFrom
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import org.apache.avro.generic.GenericData
+import org.apache.avro.generic.GenericRecord
 import kotlin.reflect.full.companionObject
 import kotlin.reflect.full.companionObjectInstance
 import kotlin.reflect.full.functions
@@ -17,7 +18,7 @@ class KotlinxDataClassStrategy(
 
   override fun canDeserialize(serializedType: Class<*>): Boolean = isKotlinxDataClass(serializedType)
 
-  override fun <T : Any> deserialize(serializedType: Class<*>, data: GenericData.Record): T {
+  override fun <T : Any> deserialize(serializedType: Class<*>, data: GenericRecord): T {
     val writerSchema = AvroSchema(data.schema)
 
     val fn = serializedType.kotlin.companionObject?.functions?.find { it.name == "serializer" }!!

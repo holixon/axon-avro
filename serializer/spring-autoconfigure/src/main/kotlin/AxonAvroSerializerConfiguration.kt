@@ -2,7 +2,7 @@ package io.holixon.axon.avro.serializer.spring
 
 import com.github.avrokotlin.avro4k.Avro
 import io.holixon.axon.avro.serializer.AvroSerializer
-import io.toolisticon.avro.kotlin.AvroSchemaResolver
+import io.toolisticon.kotlin.avro.repository.AvroSchemaResolver
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties

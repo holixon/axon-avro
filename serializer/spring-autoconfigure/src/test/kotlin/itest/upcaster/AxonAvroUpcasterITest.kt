@@ -5,8 +5,8 @@ package io.holixon.axon.avro.serializer.spring.itest.upcaster
 import io.holixon.axon.avro.serializer.spring.AxonAvroSerializerConfiguration
 import io.holixon.axon.avro.serializer.spring.AxonAvroSerializerSpringBase.PROFILE_ITEST
 import io.holixon.axon.avro.serializer.spring.container.AxonServerContainerOld
-import io.toolisticon.avro.kotlin.AvroKotlin
-import io.toolisticon.avro.kotlin.model.wrapper.AvroSchema
+import io.toolisticon.kotlin.avro.AvroKotlin
+import io.toolisticon.kotlin.avro.model.wrapper.AvroSchema
 import mu.KLogging
 import org.assertj.core.api.Assertions.assertThat
 import org.awaitility.kotlin.await

@@ -25,6 +25,11 @@
     </dependency>
 
     <dependency>
+      <groupId>io.toolisticon.kotlin.avro</groupId>
+      <artifactId>avro-kotlin-serialization</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>org.axonframework</groupId>
       <artifactId>axon-configuration</artifactId>
       <scope>test</scope>
@@ -36,10 +41,7 @@
       <scope>test</scope>
     </dependency>
 
-    <dependency>
-      <groupId>com.github.avro-kotlin.avro4k</groupId>
-      <artifactId>avro4k-core</artifactId>
-    </dependency>
+
 
   </dependencies>
 

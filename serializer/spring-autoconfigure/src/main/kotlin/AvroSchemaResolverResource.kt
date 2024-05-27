@@ -1,9 +1,7 @@
 package io.holixon.axon.avro.serializer.spring
 
-import io.toolisticon.avro.kotlin.AvroSchemaResolver
-import io.toolisticon.avro.kotlin.value.AvroFingerprint
+import io.toolisticon.kotlin.avro.repository.AvroSchemaResolver
 import org.apache.avro.message.MissingSchemaException
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.notFound
 import org.springframework.http.ResponseEntity.ok

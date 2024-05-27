@@ -1,6 +1,6 @@
 package io.holixon.axon.avro.serializer.converter
 
-import io.toolisticon.avro.kotlin.value.SingleObjectEncodedBytes
+import io.toolisticon.kotlin.avro.value.SingleObjectEncodedBytes
 import org.axonframework.serialization.ContentTypeConverter
 
 class SingleObjectEncodedToByteArrayConverter : ContentTypeConverter<SingleObjectEncodedBytes, ByteArray> {

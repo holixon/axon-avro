@@ -18,7 +18,7 @@ import io.holixon.axon.avro.serializer.spring.EnableAxonAvroSerializer
 import io.swagger.v3.oas.annotations.ExternalDocumentation
 import io.swagger.v3.oas.annotations.OpenAPIDefinition
 import io.swagger.v3.oas.annotations.info.Info
-import io.toolisticon.avro.kotlin.AvroSchemaResolver
+import io.toolisticon.kotlin.avro.repository.AvroSchemaResolver
 import mu.KLogging
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.common.jpa.EntityManagerProvider

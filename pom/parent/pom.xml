@@ -25,8 +25,7 @@
 
     <!-- libs (alphabetical) -->
     <avro.version>1.11.3</avro.version>
-    <avro-kotlin.version>1.11.3.1</avro-kotlin.version>
-    <avro4k.version>1.10.1</avro4k.version>
+    <avro-kotlin.version>1.11.4.2</avro-kotlin.version>
     <axon-bom.version>4.9.4</axon-bom.version>
 
   </properties>
@@ -60,32 +59,18 @@
       </dependency>
 
       <dependency>
+        <groupId>io.toolisticon.kotlin.avro</groupId>
+        <artifactId>avro-kotlin-bom</artifactId>
+        <version>${avro-kotlin.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+
+      <dependency>
         <groupId>io.holixon.axon.avro</groupId>
         <artifactId>axon-avro-lib-test</artifactId>
         <version>${project.version}</version>
         <scope>test</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>io.toolisticon.lib</groupId>
-        <artifactId>avro-kotlin</artifactId>
-        <version>${avro-kotlin.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>com.github.avro-kotlin.avro4k</groupId>
-        <artifactId>avro4k-core</artifactId>
-        <version>${avro4k.version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>org.apache.avro</groupId>
-            <artifactId>avro</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.xerial.snappy</groupId>
-            <artifactId>snappy-java</artifactId>
-          </exclusion>
-        </exclusions>
       </dependency>
     </dependencies>
   </dependencyManagement>

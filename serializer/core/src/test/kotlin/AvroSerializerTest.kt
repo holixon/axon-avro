@@ -2,10 +2,9 @@ package io.holixon.axon.avro.serializer
 
 import bankaccount.event.BankAccountCreated
 import com.github.avrokotlin.avro4k.Avro
-import io.toolisticon.avro.kotlin.avroSchemaResolver
-import io.toolisticon.avro.kotlin.codec.SpecificRecordCodec
-import io.toolisticon.avro.kotlin.model.wrapper.AvroSchema
-import io.toolisticon.avro.kotlin.value.SingleObjectEncodedBytes
+import io.toolisticon.kotlin.avro.AvroKotlin.avroSchemaResolver
+import io.toolisticon.kotlin.avro.codec.SpecificRecordCodec
+import io.toolisticon.kotlin.avro.value.SingleObjectEncodedBytes
 import org.apache.avro.generic.GenericData
 import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.messaging.MetaData
@@ -15,7 +14,7 @@ import org.junit.jupiter.api.Test
 
 
 internal class AvroSerializerTest {
-  private val schemaResolver = avroSchemaResolver(TestFixtures.BankAccountCreatedFixture.SCHEMA)
+  private val schemaResolver = avroSchemaResolver(TestFixtures.BankAccountCreatedFixture.SCHEMA.get())
 
   @Test
   fun `canSerializeTo - genericRecord`() {
@@ -51,7 +50,7 @@ internal class AvroSerializerTest {
 
   @Test
   fun `serialize specific record`() {
-    val schemaResolver = avroSchemaResolver(AvroSchema(BankAccountCreated.getClassSchema()))
+    val schemaResolver = avroSchemaResolver(BankAccountCreated.getClassSchema())
     val serializer = AvroSerializer.builder()
       .avroSchemaResolver(schemaResolver)
       .build()
@@ -70,7 +69,7 @@ internal class AvroSerializerTest {
 
   @Test
   fun `deserialize singleObjectEncoded to specificRecord`() {
-    val schemaResolver = avroSchemaResolver(AvroSchema(BankAccountCreated.getClassSchema()))
+    val schemaResolver = avroSchemaResolver(BankAccountCreated.getClassSchema())
     val serializer = AvroSerializer.builder()
       .avroSchemaResolver(schemaResolver)
       .build()
@@ -100,7 +99,7 @@ internal class AvroSerializerTest {
     val bar = BarString("hello world")
     val avro4k = Avro.default
 
-    val schemaResolver = avroSchemaResolver(AvroSchema(avro4k.schema(BarString.serializer())))
+    val schemaResolver = avroSchemaResolver(avro4k.schema(BarString.serializer()))
     val serializer = AvroSerializer.builder()
       .avroSchemaResolver(schemaResolver)
       .avro4k(avro4k)
@@ -116,8 +115,10 @@ internal class AvroSerializerTest {
 
   @Test
   fun `deserialize serialize MetaData`() {
-    val metaData = MetaData.from(mapOf(
-      "foo" to "bar"
-    ))
+    val metaData = MetaData.from(
+      mapOf(
+        "foo" to "bar"
+      )
+    )
   }
 }

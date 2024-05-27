@@ -1,10 +1,11 @@
 package io.holixon.axon.avro.serializer.strategy
 
 import _ktx.ResourceKtx
-import io.toolisticon.avro.kotlin.AvroKotlin
-import io.toolisticon.avro.kotlin.model.wrapper.AvroSchema
-import io.toolisticon.avro.kotlin.value.Name
+import io.toolisticon.kotlin.avro.AvroKotlin
+import io.toolisticon.kotlin.avro.model.wrapper.AvroSchema
+import io.toolisticon.kotlin.avro.value.Name.Companion.toName
 import org.apache.avro.generic.GenericData
+import org.apache.avro.generic.GenericRecord
 import org.apache.avro.util.Utf8
 import org.axonframework.messaging.responsetypes.MultipleInstancesResponseType
 
@@ -13,15 +14,15 @@ class MultipleInstancesResponseTypeStrategy(
   val genericData: GenericData
 ) : AvroDeserializationStrategy, AvroSerializationStrategy {
   companion object {
-    val SCHEMA = AvroSchema(resource = ResourceKtx.resourceUrl("schema/AvroMultipleInstancesResponseType.avsc"))
+    val SCHEMA = AvroSchema.of(resource = ResourceKtx.resourceUrl("schema/AvroMultipleInstancesResponseType.avsc"))
     const val FIELD = "expectedResponseType"
-    val FIELD_SCHEMA = SCHEMA.getField(Name(FIELD))!!.schema
+    val FIELD_SCHEMA = SCHEMA.getField(FIELD.toName())!!.schema
   }
 
 
   override fun canDeserialize(serializedType: Class<*>): Boolean = MultipleInstancesResponseType::class.java == serializedType
 
-  override fun <T : Any> deserialize(serializedType: Class<*>, data: GenericData.Record): T {
+  override fun <T : Any> deserialize(serializedType: Class<*>, data: GenericRecord): T {
     val className = data.get(FIELD) as Utf8
 
     return MultipleInstancesResponseType(Class.forName(className.toString())) as T
@@ -29,7 +30,7 @@ class MultipleInstancesResponseTypeStrategy(
 
   override fun canSerialize(serializedType: Class<*>): Boolean = MultipleInstancesResponseType::class.java == serializedType
 
-  override fun serialize(data: Any): GenericData.Record {
+  override fun serialize(data: Any): GenericRecord {
     require(data is MultipleInstancesResponseType<*>)
     return AvroKotlin.createGenericRecord(SCHEMA) {
       put(FIELD, data.expectedResponseType.canonicalName)

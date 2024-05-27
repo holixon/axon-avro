@@ -1,13 +1,13 @@
 package io.holixon.axon.avro.serializer.spring.itest.upcaster
 
-import io.toolisticon.avro.kotlin.avroSchemaResolver
-import io.toolisticon.avro.kotlin.model.wrapper.AvroSchema
+import io.toolisticon.kotlin.avro.model.wrapper.AvroSchema
+import io.toolisticon.kotlin.avro.repository.avroSchemaResolver
 import org.apache.avro.Schema
 import upcaster.itest.DummyEvent
 
 object DummyEvents {
 
-  val SCHEMA_EVENT_01 : Schema = Schema.Parser().parse(
+  val SCHEMA_EVENT_01: Schema = Schema.Parser().parse(
     """
       {
         "type": "record",
@@ -27,9 +27,9 @@ object DummyEvents {
     """.trimIndent()
   )
 
-  val SCHEMA_EVENT_10 : Schema = DummyEvent.getClassSchema()
+  val SCHEMA_EVENT_10: Schema = DummyEvent.getClassSchema()
 
-  val registry = avroSchemaResolver(listOf( SCHEMA_EVENT_01, SCHEMA_EVENT_10).map { AvroSchema(it) })
+  val registry = avroSchemaResolver(listOf(SCHEMA_EVENT_01, SCHEMA_EVENT_10).map { AvroSchema(it) })
 }
 
 // FIXME reimplement compatibility checks
