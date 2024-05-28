@@ -35,15 +35,12 @@ class KotlinxDataClassStrategy(
 
   override fun canSerialize(serializedType: Class<*>): Boolean = isKotlinxDataClass(serializedType)
 
-  override fun serialize(data: Any): GenericData.Record {
+  override fun serialize(data: Any): GenericRecord {
     val fn = data::class.companionObject?.functions?.find { it.name == "serializer" }!!
     @Suppress("UNCHECKED_CAST")
     val kserializer = fn.call(data::class.companionObjectInstance) as KSerializer<Any>
 
-    return avro4k.toRecord(kserializer, data).let {
-      // TODO: we could return interface GenericRecord and not do a deep copy/conversion here
-      genericData.deepCopy(it.schema, it) as GenericData.Record
-    }
+    return avro4k.toRecord(kserializer, data)
   }
 
   private fun isKotlinxDataClass(serializedType: Class<*>) : Boolean {

@@ -10,6 +10,7 @@ import io.toolisticon.kotlin.avro.repository.plus
 import io.toolisticon.kotlin.avro.value.SingleObjectEncodedBytes
 import mu.KLogging
 import org.apache.avro.generic.GenericData
+import org.apache.avro.generic.GenericRecord
 import org.apache.avro.util.ClassUtils
 import org.axonframework.serialization.*
 import java.util.function.Supplier
@@ -57,6 +58,8 @@ class AvroSerializer private constructor(
           registerConverter(GenericRecordToSingleObjectEncodedConverter())
           registerConverter(SingleObjectEncodedToByteArrayConverter())
           registerConverter(GenericRecordToJsonStringConverter())
+          registerConverter(ListRecordToSingleObjectEncodedConverter())
+          registerConverter(ListRecordToJsonStringConverter())
           registerConverter(SingleObjectEncodedToGenericRecordConverter(schemaResolver))
           registerConverter(JsonStringToStringConverter())
 
@@ -149,7 +152,7 @@ class AvroSerializer private constructor(
       val genericRecord = strategy.serialize(data)
       @Suppress("UNCHECKED_CAST")
       when (expectedRepresentation) {
-        GenericData.Record::class.java -> genericRecord as T
+        GenericRecord::class.java -> genericRecord as T
         else -> converter.convert(genericRecord, expectedRepresentation)
       }
     } else {
@@ -169,12 +172,12 @@ class AvroSerializer private constructor(
     val strategy = deserializationStrategies.firstOrNull { it.canDeserialize(serializedType) }
 
     @Suppress("UNCHECKED_CAST")
-    return strategy?.deserialize(serializedType, converter.convert(serializedObject, GenericData.Record::class.java).data)
+    return strategy?.deserialize(serializedType, converter.convert(serializedObject, GenericRecord::class.java).data)
       ?: converter.convert(serializedObject.data, serializedType) as T
   }
 
   override fun <T : Any> canSerializeTo(expectedRepresentation: Class<T>): Boolean {
-    return GenericData.Record::class.java == expectedRepresentation
+    return GenericRecord::class.java == expectedRepresentation
       || String::class.java == expectedRepresentation
       || converter.canConvert(SingleObjectEncodedBytes::class.java, expectedRepresentation)
   }

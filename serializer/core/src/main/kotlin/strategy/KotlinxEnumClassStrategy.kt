@@ -42,10 +42,7 @@ class KotlinxEnumClassStrategy(
     @Suppress("UNCHECKED_CAST")
     val kserializer = fn.call(data::class.companionObjectInstance) as KSerializer<Any>
 
-    return avro4k.toRecord(kserializer, data).let {
-      // TODO: we could return interface GenericRecord and not do a deep copy/conversion here
-      genericData.deepCopy(it.schema, it) as GenericData.Record
-    }
+    return avro4k.toRecord(kserializer, data)
   }
 
   private fun isKotlinxEnumClass(serializedType: Class<*>): Boolean {

@@ -6,6 +6,7 @@ import io.toolisticon.kotlin.avro.AvroKotlin.avroSchemaResolver
 import io.toolisticon.kotlin.avro.codec.SpecificRecordCodec
 import io.toolisticon.kotlin.avro.value.SingleObjectEncodedBytes
 import org.apache.avro.generic.GenericData
+import org.apache.avro.generic.GenericRecord
 import org.assertj.core.api.Assertions.assertThat
 import org.axonframework.messaging.MetaData
 import org.axonframework.serialization.SimpleSerializedObject
@@ -23,7 +24,7 @@ internal class AvroSerializerTest {
       .avroSchemaResolver(schemaResolver)
       .build()
 
-    assertThat(serializer.canSerializeTo(GenericData.Record::class.java)).isTrue()
+    assertThat(serializer.canSerializeTo(GenericRecord::class.java)).isTrue()
   }
 
   @Test
