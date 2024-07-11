@@ -19,7 +19,7 @@
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>axon-avro-lib-fixture-events</artifactId>
+      <artifactId>axon-avro-lib-fixture-events-avro-java</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>

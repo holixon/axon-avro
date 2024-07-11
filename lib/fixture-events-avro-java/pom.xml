@@ -9,7 +9,7 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>axon-avro-lib-fixture-events</artifactId>
+  <artifactId>axon-avro-lib-fixture-events-avro-java</artifactId>
   <name>Lib: Test fixture events</name>
 
   <properties>

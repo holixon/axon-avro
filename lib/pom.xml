@@ -23,7 +23,6 @@
     <module>fixture-events-avro-java</module>
     <module>fixture-events-manual</module>
     <module>fixture-application</module>
-    <module>comparison-tests-non-avro</module>
-    <module>comparison-tests-avro</module>
+    <module>comparison-tests</module>
   </modules>
 </project>

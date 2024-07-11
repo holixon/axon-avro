@@ -12,4 +12,11 @@
   <artifactId>axon-avro-lib-fixture-events-manual</artifactId>
   <name>Lib: Test fixture events manual</name>
 
+  <dependencies>
+    <dependency>
+      <groupId>io.toolisticon.kotlin.avro</groupId>
+      <artifactId>avro-kotlin-serialization</artifactId>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
 </project>

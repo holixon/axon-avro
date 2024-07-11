@@ -1,5 +1,8 @@
 package bankaccount.event
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class MoneyDeposited(
   val accountId: String,
   val amount: Int

@@ -9,8 +9,8 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>axon-avro-lib-comparison-tests-non-avro</artifactId>
-  <name>Lib: comparison test non-avro</name>
+  <artifactId>axon-avro-lib-comparison-tests-manual</artifactId>
+  <name>Lib: comparison test</name>
 
   <properties>
     <jackson-avro-module.version>0.1.3</jackson-avro-module.version>
@@ -20,12 +20,6 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>axon-avro-lib-fixture-application</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>axon-avro-lib-fixture-events-manual</artifactId>
       <version>${project.version}</version>
     </dependency>
 
@@ -47,6 +41,11 @@
     <dependency>
       <groupId>org.axonframework</groupId>
       <artifactId>axon-spring-boot-starter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>axon-avro-serializer-spring-autoconfigure</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -84,4 +83,38 @@
       <artifactId>jackson-module-kotlin</artifactId>
     </dependency>
   </dependencies>
+
+
+  <profiles>
+    <profile>
+      <id>avro-java</id>
+      <activation>
+        <property>
+          <name>avro-java</name>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>axon-avro-lib-fixture-events-avro-java</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>avro</id>
+      <activation>
+        <property>
+          <name>!avro-java</name>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>axon-avro-lib-fixture-events-manual</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
 </project>

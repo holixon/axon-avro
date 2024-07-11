@@ -85,4 +85,7 @@ plugins:
 
 nav:
   - Home: index.md
+  - Reference:
+      - How to use: reference/index.md
+      - Disk Usage: reference/disk_usage.md
 

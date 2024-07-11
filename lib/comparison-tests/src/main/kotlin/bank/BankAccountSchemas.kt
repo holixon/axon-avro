@@ -3,9 +3,7 @@ package bank
 import bankaccount.command.CreateBankAccount
 import bankaccount.command.DepositMoney
 import bankaccount.command.WithdrawMoney
-import bankaccount.event.BankAccountCreated
-import bankaccount.event.MoneyDeposited
-import bankaccount.event.MoneyWithdrawn
+import bankaccount.event.BankAccountEvents
 import bankaccount.query.*
 import com.github.avrokotlin.avro4k.Avro
 import io.toolisticon.kotlin.avro.model.wrapper.AvroSchema
@@ -20,11 +18,6 @@ enum class BankAccountSchemas(val schema: AvroSchema) {
   SCHEMA_WITHDRAW_MONEY(AvroSchema(avro4k.schema(WithdrawMoney.serializer()))),
   SCHEMA_DEPOSIT_MONEY(AvroSchema(avro4k.schema(DepositMoney.serializer()))),
 
-  // Events
-  SCHEMA_BANK_ACCOUNT_CREATED(AvroSchema(BankAccountCreated.getClassSchema())),
-  SCHEMA_MONEY_WITHDRAWN(AvroSchema(MoneyWithdrawn.getClassSchema())),
-  SCHEMA_MONEY_DEPOSITED(AvroSchema(MoneyDeposited.getClassSchema())),
-
   // Query
   SCHEMA_CURRENT_BALANCE_QUERY(AvroSchema(avro4k.schema(CurrentBalanceQuery.serializer()))),
   SCHEMA_FIND_ALL_QUERY(AvroSchema(avro4k.schema(FindAllQuery.serializer()))),
@@ -36,10 +29,7 @@ enum class BankAccountSchemas(val schema: AvroSchema) {
   ;
 
   companion object {
-
-    val schemaResolver = avroSchemaResolver(entries.map { it.schema })
-
+    val schemaResolver = avroSchemaResolver(entries.map { it.schema } + BankAccountEvents.getSchemas())
   }
-
 }
 
