@@ -20,7 +20,10 @@
   </properties>
 
   <modules>
-    <module>fixtures</module>
-    <module>load-tests</module>
+    <module>fixture-events-avro-java</module>
+    <module>fixture-events-manual</module>
+    <module>fixture-application</module>
+    <module>comparison-tests-non-avro</module>
+    <module>comparison-tests-avro</module>
   </modules>
 </project>

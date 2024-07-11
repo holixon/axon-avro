@@ -48,7 +48,13 @@
 
     <dependency>
       <groupId>io.holixon.axon.avro</groupId>
-      <artifactId>axon-avro-lib-fixtures</artifactId>
+      <artifactId>axon-avro-lib-fixture-events</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.holixon.axon.avro</groupId>
+      <artifactId>axon-avro-lib-fixture-application</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>

@@ -1,6 +1,7 @@
-.docker/axonserver/data/
-.docker/axonserver/events/
-.docker/axonserver/plugins/
+.docker/data/
+.docker/events/
+.docker/log/
+.docker/plugins/
 
 .attach_*
 *.iml

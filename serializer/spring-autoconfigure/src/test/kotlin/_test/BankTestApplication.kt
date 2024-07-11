@@ -120,6 +120,7 @@ class BankTestApplication {
   @PropertySource("classpath:profiles/server-enabled.properties")
   class AvroServerConfiguration : ProfileConfiguration("avro", true) {
 
+    /*
     @Bean
     fun storageEngine(
       emp: EntityManagerProvider,
@@ -132,6 +133,7 @@ class BankTestApplication {
       .snapshotSerializer(eventSerializer)
       .transactionManager(txManager)
       .build()
+    */
 
     @Bean
     @Primary
@@ -186,4 +188,7 @@ class BankTestApplication {
   }
 }
 
-fun main() = runApplication<BankTestApplication>().let { }
+fun main() {
+  System.setProperty("disable-axoniq-console-message", "true")
+  runApplication<BankTestApplication>()
+}
