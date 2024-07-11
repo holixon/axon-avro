@@ -1,0 +1,7 @@
+logging:
+  level:
+    bankaccount.projection: ERROR
+spring:
+  docker:
+    compose:
+      file: ./lib/load-tests/plain-axonserver.yaml

@@ -1,8 +1,8 @@
 version: "3.9"
 
 services:
-  axonserver:
-    image: axoniq/axonserver:2023.2.2-jdk-17
+  axonserver_with_plugin:
+    image: axoniq/axonserver:2023.2.2-jdk-17-dev
     container_name: axon-avro-axonserver
     ports:
       - "8024:8024"

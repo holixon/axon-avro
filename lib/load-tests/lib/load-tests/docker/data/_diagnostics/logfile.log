@@ -1,0 +1,12 @@
+2024-07-11 18:38:20.229 |  INFO |                      main | i.a.a.e.c.i.MessagingClusterServer       | Axon Server Cluster Server started on port: 8224 - no SSL
+2024-07-11 18:38:20.461 |  INFO |                      main | io.axoniq.axonserver.grpc.Gateway        | Axon Server Gateway started on port: 8124 - no SSL
+2024-07-11 18:38:20.476 |  INFO |                      main | o.s.b.w.embedded.tomcat.TomcatWebServer  | Tomcat started on port(s): 8024 (http) with context path ''
+2024-07-11 18:38:20.508 |  INFO |                      main | io.axoniq.axonserver.AxonServer          | Started AxonServer in 17.409 seconds (JVM running for 18.364)
+2024-07-11 18:38:25.984 |  INFO | ngApplicationShutdownHook | io.axoniq.axonserver.grpc.Gateway        | Axon Server Gateway stopped
+2024-07-11 18:38:25.986 |  INFO | ngApplicationShutdownHook | i.a.a.e.c.i.MessagingClusterServer       | Axon Server Cluster Server stopped
+2024-07-11 18:40:03.369 |  INFO |                      main | i.a.a.e.c.i.MessagingClusterServer       | Axon Server Cluster Server started on port: 8224 - no SSL
+2024-07-11 18:40:03.545 |  INFO |                      main | io.axoniq.axonserver.grpc.Gateway        | Axon Server Gateway started on port: 8124 - no SSL
+2024-07-11 18:40:03.568 |  INFO |                      main | o.s.b.w.embedded.tomcat.TomcatWebServer  | Tomcat started on port(s): 8024 (http) with context path ''
+2024-07-11 18:40:03.613 |  INFO |                      main | io.axoniq.axonserver.AxonServer          | Started AxonServer in 19.335 seconds (JVM running for 20.495)
+2024-07-11 18:40:08.530 |  INFO | ngApplicationShutdownHook | io.axoniq.axonserver.grpc.Gateway        | Axon Server Gateway stopped
+2024-07-11 18:40:08.532 |  INFO | ngApplicationShutdownHook | i.a.a.e.c.i.MessagingClusterServer       | Axon Server Cluster Server stopped
