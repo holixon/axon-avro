@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import io.toolisticon.jackson.module.JacksonAvroModule
+import org.zalando.jackson.datatype.money.MoneyModule
 
 object BankAccountApi {
 
@@ -16,6 +17,7 @@ object BankAccountApi {
     registerKotlinModule()
     setSerializationInclusion(JsonInclude.Include.NON_NULL)
     registerModules(JacksonAvroModule())
+    registerModules(MoneyModule())
   }
 
 }
