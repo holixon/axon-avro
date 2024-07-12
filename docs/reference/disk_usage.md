@@ -26,136 +26,260 @@ in any productive systems due to security considerations, we excluded it from th
 
 #### Timings
 
-1. Time: 23221ms
-2. Time: 25597ms
-3. Time: 24300ms
-4. Time: 22654ms
-5. Time: 21925ms
+1. Time: 40690ms
+2. Time: 40438ms
+3. Time: 40162ms
+4. Time: 40310ms
+5. Time: 40308ms
 
-Resulting in an average of 23539ms.
+Resulting in an average of 40381ms.
 
 #### Disk space usage
 
 ```
--rw-r--r-- 1 root root 1000000 Jul 11 22:27 00000000000000000000.events
--rw-r--r-- 1 root root 1000000 Jul 11 22:29 00000000000000002409.events
--rw-r--r-- 1 root root 1000000 Jul 11 22:30 00000000000000004818.events
--rw-r--r-- 1 root root 1000000 Jul 11 22:31 00000000000000007227.events
--rw-r--r-- 1 root root 1000000 Jul 11 22:32 00000000000000009636.events
+-rw-r--r-- 1 root root 1000000 Jul 12 22:46 00000000000000000000.events
+-rw-r--r-- 1 root root 1000000 Jul 12 22:47 00000000000000000746.events
+-rw-r--r-- 1 root root 1000000 Jul 12 22:47 00000000000000001492.events
+-rw-r--r-- 1 root root 1000000 Jul 12 22:48 00000000000000002238.events
+-rw-r--r-- 1 root root 1000000 Jul 12 22:48 00000000000000002984.events
+-rw-r--r-- 1 root root 1000000 Jul 12 22:48 00000000000000003730.events
+-rw-r--r-- 1 root root 1000000 Jul 12 22:49 00000000000000004476.events
+-rw-r--r-- 1 root root 1000000 Jul 12 22:49 00000000000000005222.events
+-rw-r--r-- 1 root root 1000000 Jul 12 22:50 00000000000000005968.events
+-rw-r--r-- 1 root root 1000000 Jul 12 22:50 00000000000000006714.events
+-rw-r--r-- 1 root root 1000000 Jul 12 22:50 00000000000000007460.events
+-rw-r--r-- 1 root root 1000000 Jul 12 22:51 00000000000000008206.events
+-rw-r--r-- 1 root root 1000000 Jul 12 22:51 00000000000000008952.events
+-rw-r--r-- 1 root root 1000000 Jul 12 22:51 00000000000000009698.events
 ```
 
 #### Representation in the event store
 
-BankAccountCreated:
-```xml
+Just for reference, this is how it would look like if we are not using Moneta library, but just encode amount as Integer.
+
+```xml 
 <bankaccount.event.BankAccountCreated>
   <accountId>55eeba20-cdae-40fd-b418-b0f7b38cb676</accountId>
   <initialBalance>100</initialBalance>
 </bankaccount.event.BankAccountCreated>
 ```
 
+BankAccountCreated:
+```xml
+<bankaccount.event.BankAccountCreated>
+  <accountId>bda57038-0f52-46aa-ab1f-8ee4d0b81768</accountId>
+  <initialBalance>
+    <currency class="org.javamoney.moneta.spi.JDKCurrencyAdapter">
+      <baseCurrency>EUR</baseCurrency>
+      <context>
+        <data>
+          <entry>
+            <string>provider</string>
+            <string>java.util.Currency</string>
+          </entry>
+        </data>
+      </context>
+    </currency>
+    <monetaryContext>
+      <data>
+        <entry>
+          <string>amountType</string>
+          <java-class>org.javamoney.moneta.Money</java-class>
+        </entry>
+        <entry>
+          <string>precision</string>
+          <int>256</int>
+        </entry>
+        <entry>
+          <string>java.lang.Class</string>
+          <java-class>org.javamoney.moneta.Money</java-class>
+        </entry>
+        <entry>
+          <string>java.math.RoundingMode</string>
+          <java.math.RoundingMode>HALF_EVEN</java.math.RoundingMode>
+        </entry>
+      </data>
+    </monetaryContext>
+    <number>100</number>
+  </initialBalance>
+</bankaccount.event.BankAccountCreated>
+```
+
 MoneyDeposited
 ```xml
 <bankaccount.event.MoneyDeposited>
-  <accountId>55eeba20-cdae-40fd-b418-b0f7b38cb676</accountId>
-  <amount>11</amount>
+  <accountId>bda57038-0f52-46aa-ab1f-8ee4d0b81768</accountId>
+  <amount>
+    <currency class="org.javamoney.moneta.spi.JDKCurrencyAdapter">
+      <baseCurrency>EUR</baseCurrency>
+      <context>
+        <data>
+          <entry>
+            <string>provider</string>
+            <string>java.util.Currency</string>
+          </entry>
+        </data>
+      </context>
+    </currency>
+    <monetaryContext>
+      <data>
+        <entry>
+          <string>amountType</string>
+          <java-class>org.javamoney.moneta.Money</java-class>
+        </entry>
+        <entry>
+          <string>precision</string>
+          <int>256</int>
+        </entry>
+        <entry>
+          <string>java.lang.Class</string>
+          <java-class>org.javamoney.moneta.Money</java-class>
+        </entry>
+        <entry>
+          <string>java.math.RoundingMode</string>
+          <java.math.RoundingMode>HALF_EVEN</java.math.RoundingMode>
+        </entry>
+      </data>
+    </monetaryContext>
+    <number>19</number>
+  </amount>
 </bankaccount.event.MoneyDeposited>
 ```
 
 MoneyWithdrawn
 ```xml
 <bankaccount.event.MoneyWithdrawn>
-  <accountId>55eeba20-cdae-40fd-b418-b0f7b38cb676</accountId>
-  <amount>3</amount>
+  <accountId>bda57038-0f52-46aa-ab1f-8ee4d0b81768</accountId>
+  <amount>
+    <currency class="org.javamoney.moneta.spi.JDKCurrencyAdapter">
+      <baseCurrency>EUR</baseCurrency>
+      <context>
+        <data>
+          <entry>
+            <string>provider</string>
+            <string>java.util.Currency</string>
+          </entry>
+        </data>
+      </context>
+    </currency>
+    <monetaryContext>
+      <data>
+        <entry>
+          <string>amountType</string>
+          <java-class>org.javamoney.moneta.Money</java-class>
+        </entry>
+        <entry>
+          <string>precision</string>
+          <int>256</int>
+        </entry>
+        <entry>
+          <string>java.lang.Class</string>
+          <java-class>org.javamoney.moneta.Money</java-class>
+        </entry>
+        <entry>
+          <string>java.math.RoundingMode</string>
+          <java.math.RoundingMode>HALF_EVEN</java.math.RoundingMode>
+        </entry>
+      </data>
+    </monetaryContext>
+    <number>9</number>
+  </amount>
 </bankaccount.event.MoneyWithdrawn>
 ```
 ### Jackson JSON
 
 #### Timings
 
-1. Time: 24300ms
-2. Time: 18681ms
-3. Time: 17774ms
-4. Time: 16740ms
-5. Time: 17603ms
+1. Time: 25297ms
+2. Time: 25351ms
+3. Time: 25070ms
+4. Time: 25425ms
+5. Time: 26140ms
 
-Resulting in an average of 19019ms.
+Resulting in an average of 25456ms.
 
 #### Disk usage
 
 ```
--rw-r--r-- 1 root root 1000000 Jul 11 22:42 00000000000000000000.events
--rw-r--r-- 1 root root 1000000 Jul 11 22:44 00000000000000003096.events
--rw-r--r-- 1 root root 1000000 Jul 11 22:45 00000000000000006192.events
--rw-r--r-- 1 root root 1000000 Jul 11 22:45 00000000000000009288.events
-
+-rw-r--r-- 1 root root 1000000 Jul 12 22:25 00000000000000000000.events
+-rw-r--r-- 1 root root 1000000 Jul 12 22:26 00000000000000002817.events
+-rw-r--r-- 1 root root 1000000 Jul 12 22:29 00000000000000005634.events
+-rw-r--r-- 1 root root 1000000 Jul 12 22:29 00000000000000008451.events
 ```
+
+In order to be able to serialize Money type, an additional `jackson-datatype-money` library was required
+and the corresponding module needed to be registered. 
 
 BankAccountCreated:
 ```json
-{"accountId":"4633c9ec-d244-41b6-9721-653234cc876d","initialBalance":100}
+{"accountId":"702bdae0-d507-4664-8ee8-d8d7e3ff5778","initialBalance":{"amount":100.00,"currency":"EUR"}}
 ```
 MoneyDeposited:
 ```json
-{"accountId":"4633c9ec-d244-41b6-9721-653234cc876d","amount":16}
+{"accountId":"702bdae0-d507-4664-8ee8-d8d7e3ff5778","amount":{"amount":19.00,"currency":"EUR"}}
 ```
 MoneyWithdrawn:
 ```json
-{"accountId":"4633c9ec-d244-41b6-9721-653234cc876d","amount":5}
+{"accountId":"702bdae0-d507-4664-8ee8-d8d7e3ff5778","amount":{"amount":10.00,"currency":"EUR"}}
 ```
 
 ## Jackson CBOR
 
 #### Timings
 
-1. Time: 17347ms
-2. Time: 16690ms
-3. Time: 16163ms
-4. Time: 16364ms
-5. Time: 16674ms
+1. Time: 26427ms
+2. Time: 25224ms
+3. Time: 25002ms
+4. Time: 25120ms
+5. Time: 25343ms
 
-Resulting in an average of 16647ms.
+Resulting in an average of 25423ms.
 
 #### Disk usage
 
 ```
--rw-r--r-- 1 root root 1000000 Jul 11 23:28 00000000000000000000.events
--rw-r--r-- 1 root root 1000000 Jul 11 23:29 00000000000000003150.events
--rw-r--r-- 1 root root 1000000 Jul 11 23:30 00000000000000006300.events
--rw-r--r-- 1 root root 1000000 Jul 11 23:30 00000000000000009450.events
-
+-rw-r--r-- 1 root root 1000000 Jul 12 22:13 00000000000000000000.events
+-rw-r--r-- 1 root root 1000000 Jul 12 22:17 00000000000000002904.events
+-rw-r--r-- 1 root root 1000000 Jul 12 22:18 00000000000000005808.events
+-rw-r--r-- 1 root root 1000000 Jul 12 22:18 00000000000000008712.events
 ```
+In order to be able to serialize Money type, an additional `jackson-datatype-money` library was required
+and the corresponding module needed to be registered.
 
 BankAccountCreated
 ```
-�iaccountIdx$c915f303-8e46-48c1-b7be-4d1ab9b6c304ninitialBalanced�
+�iaccountIdx$9b4b8c26-d16f-4ce3-b5ab-62beb9b711d1ninitialBalance�famountĂ!'hcurrencycEUR��
 ```
 
 MoneyDeposited
 ```
-�iaccountIdx$c915f303-8e46-48c1-b7be-4d1ab9b6c304famount�
+�iaccountIdx$9b4b8c26-d16f-4ce3-b5ab-62beb9b711d1famount�famountĂ!�hcurrencycEUR��
 ```
 
 MoneyWithdrawn
 ```
-�iaccountIdx$c915f303-8e46-48c1-b7be-4d1ab9b6c304famount�
+�iaccountIdx$9b4b8c26-d16f-4ce3-b5ab-62beb9b711d1famount�famountĂ!�hcurrencycEUR��
 ```
 
 ### Avro with Java generated classes
 
 #### Timings
 
-1. Time:
-2. Time:
-3. Time:
-4. Time:
-5. Time:
+1. Time: 135915ms
+2. Time: 136152ms
+3. Time: 136598ms
+4. Time: 135525ms
+5. Time: 136245ms
 
-Resulting in an average of ms.
+Resulting in an average of 136087ms.
 
 #### Disk usage
 
 ```
+-rw-r--r-- 1 root root 1000000 Jul 12 23:37 00000000000000000000.events
+-rw-r--r-- 1 root root 1000000 Jul 12 23:42 00000000000000003165.events
+-rw-r--r-- 1 root root 1000000 Jul 12 23:46 00000000000000006330.events
+-rw-r--r-- 1 root root 1000000 Jul 12 23:47 00000000000000009495.events
 
 ```
 
@@ -163,19 +287,38 @@ Resulting in an average of ms.
 
 #### Timings
 
-1. Time:
-2. Time:
-3. Time:
-4. Time:
-5. Time:
+1. Time: 82828ms
+2. Time: 81669ms
+3. Time: 81324ms
+4. Time: 82468ms
+5. Time: 82523ms
 
-Resulting in an average of ms.
+Resulting in an average of 82162 ms.
 
 #### Disk usage
 
 ```
-
+-rw-r--r-- 1 root root 1000000 Jul 12 21:59 00000000000000000000.events
+-rw-r--r-- 1 root root 1000000 Jul 12 22:02 00000000000000003165.events
+-rw-r--r-- 1 root root 1000000 Jul 12 22:04 00000000000000006330.events
+-rw-r--r-- 1 root root 1000000 Jul 12 22:05 00000000000000009495.events
 ```
+
+BankAccountCreated
+```
+�K��X{lH27cd7b01-1515-4d4f-998e-4df0e08e44a7100,00 EUR
+```
+
+MoneyDeposited
+```
+�mN;�Z�ӦH27cd7b01-1515-4d4f-998e-4df0e08e44a712,00 EUR
+```
+
+MoneyWithdrawn
+```
+�VFtDj�xH27cd7b01-1515-4d4f-998e-4df0e08e44a76,00 EUR
+```
+
 
 
 ## How to compare / anatomy of the test application
