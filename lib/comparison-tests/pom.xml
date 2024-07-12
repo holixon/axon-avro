@@ -9,7 +9,7 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>axon-avro-lib-comparison-tests-manual</artifactId>
+  <artifactId>axon-avro-lib-comparison-tests</artifactId>
   <name>Lib: comparison test</name>
 
   <properties>

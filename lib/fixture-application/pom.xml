@@ -80,5 +80,11 @@
       <artifactId>jackson-avro-module</artifactId>
       <version>${jackson-avro-module.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.zalando</groupId>
+      <artifactId>jackson-datatype-money</artifactId>
+      <version>1.3.0</version>
+    </dependency>
+
   </dependencies>
 </project>
