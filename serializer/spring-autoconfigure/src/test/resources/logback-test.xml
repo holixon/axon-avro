@@ -14,4 +14,6 @@
 
   <logger name="org.testcontainers" level="WARN"/>
   <logger name="tc.axonserver" level="WARN"/>
+  <logger name="org.springframework.core.annotation.AnnotationTypeMapping" level="ERROR"/>
+  <logger name="io.toolisticon.kotlin.avro.serialization" level="TRACE"/>
 </configuration>

@@ -20,18 +20,11 @@ class AvroSerializer private constructor(
   private val converter: Converter,
   private val revisionResolver: RevisionResolver,
   private val serializationStrategies: List<AvroSerializationStrategy>,
-  private val deserializationStrategies: List<AvroDeserializationStrategy>,
-  private val schemaResolver: AvroSchemaResolver
+  private val deserializationStrategies: List<AvroDeserializationStrategy>
 ) : Serializer {
 
 
   companion object : KLogging() {
-
-    val builtInSchemas = listOf(
-      MetaDataStrategy.SCHEMA,
-      InstanceResponseTypeStrategy.SCHEMA,
-      MultipleInstancesResponseTypeStrategy.SCHEMA,
-    )
 
     private val axonSchemaResolver: AvroSchemaResolverMap = AvroSchemaResolverMap(
       listOf(
@@ -88,7 +81,6 @@ class AvroSerializer private constructor(
       return AvroSerializer(
         converter = converter,
         revisionResolver = builder.revisionResolver,
-        schemaResolver = schemaResolver,
         serializationStrategies = listOf(
           metaDataStrategy,
           instanceResponseTypeStrategy,
