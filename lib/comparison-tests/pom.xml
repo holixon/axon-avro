@@ -52,8 +52,6 @@
       <artifactId>spring-boot-docker-compose</artifactId>
       <optional>true</optional>
     </dependency>
-
-
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-annotations</artifactId>

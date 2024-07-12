@@ -1,11 +1,14 @@
 package bankaccount.event
 
+import bankaccount.conversions.MoneyLogicalType
 import kotlinx.serialization.Serializable
+import org.javamoney.moneta.Money
 
 @Serializable
 data class BankAccountCreated(
   val accountId: String,
-  val initialBalance: Int
+  @Serializable(with = MoneyLogicalType.MoneySerializer::class)
+  val initialBalance: Money
 ) {
   companion object {
     @JvmStatic
@@ -15,7 +18,7 @@ data class BankAccountCreated(
   class Builder {
 
     private lateinit var accountIdP: String
-    private var initialBalanceP: Int = 0
+    private var initialBalanceP: Money = Money.of(0, "EUR")
 
     fun build() = BankAccountCreated(
       accountId = accountIdP,
@@ -27,7 +30,7 @@ data class BankAccountCreated(
       return this
     }
 
-    fun setInitialBalance(balance: Int): Builder {
+    fun setInitialBalance(balance: Money): Builder {
       this.initialBalanceP = balance
       return this
     }
