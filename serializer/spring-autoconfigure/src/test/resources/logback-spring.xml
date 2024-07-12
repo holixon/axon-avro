@@ -5,10 +5,8 @@
     <appender-ref ref="STDOUT"/>
   </root>
 
-
-  <!--
   <logger name="org.testcontainers" level="WARN"/>
   <logger name="tc.axonserver" level="WARN"/>
   <logger name="org.springframework.core.annotation.AnnotationTypeMapping" level="ERROR"/>
-  -->
+
 </configuration>

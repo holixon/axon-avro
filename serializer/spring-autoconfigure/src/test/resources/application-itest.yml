@@ -33,5 +33,7 @@ logging:
     org.springframework.core.annotation: ERROR
     org.springframework.boot.test.context: WARN
     org.springframework.test.context: WARN
+    org.springframework.core.annotation.AnnotationTypeMapping: ERROR
+    # io.holixon.axon.avro.serializer.AvroSerializer: DEBUG
     tc.axonserver: WARN # disable redirected logs from container
     tc.testcontainers: WARN
