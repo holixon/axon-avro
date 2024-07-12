@@ -41,8 +41,8 @@ class BankAccount {
   fun handle(cmd: WithdrawMoney) {
     require(cmd.amount.currency == balance.currency) { "This bank account only supports ${balance.currency}, but a withdraw currency was ${cmd.amount.currency}" }
 
-    if (cmd.amount > balance) {
-      throw IllegalStateException(String.format("Insufficient Balance: %d, cmd=%s", balance, cmd))
+    if (cmd.amount.isGreaterThan(balance)) {
+      throw IllegalStateException(String.format("Insufficient Balance: %s, cmd=%s", balance.toString(), cmd))
     }
     if (cmd.amount.isLessThanOrEqualTo(ZERO)) {
       throw IllegalArgumentException("Amount has to be > 0, cmd=$cmd")
