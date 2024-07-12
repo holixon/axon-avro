@@ -25,7 +25,7 @@
 
     <!-- libs (alphabetical) -->
     <avro.version>1.11.3</avro.version>
-    <avro-kotlin.version>1.11.4.3</avro-kotlin.version>
+    <avro-kotlin.version>1.11.4.2</avro-kotlin.version>
     <axon-bom.version>4.9.4</axon-bom.version>
 
   </properties>
@@ -71,18 +71,6 @@
         <artifactId>axon-avro-lib-test</artifactId>
         <version>${project.version}</version>
         <scope>test</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>io.toolisticon.kotlin.avro</groupId>
-        <artifactId>avro-kotlin</artifactId>
-        <version>${avro-kotlin.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.toolisticon.kotlin.avro</groupId>
-        <artifactId>avro-kotlin-serialization</artifactId>
-        <version>${avro-kotlin.version}</version>
       </dependency>
 
     </dependencies>
