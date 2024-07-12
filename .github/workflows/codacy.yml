@@ -13,17 +13,18 @@
 
 name: Codacy Security Scan
 
+# FIXME re-enable again
 on:
   push:
     branches:
-    - 'develop'
-    - 'master'
+    - '_develop'
+    - '_master'
   pull_request:
     # The branches below must be a subset of the branches above
     branches:
-    - 'develop'
-  schedule:
-    - cron: '28 0 * * 2'
+    - '_develop'
+#  schedule:
+#    - cron: '28 0 * * 2'
 
 permissions:
   contents: read
