@@ -18,9 +18,6 @@ class ListRecordToSingleObjectEncodedConverter : ContentTypeConverter<ListRecord
   override fun convert(original: ListRecord): SingleObjectEncodedBytes {
     // TODO: we (sh|c)ould make genericData/conversions configurable ... maybe.
     logger.trace { "Generic record: $original" }
-    return GenericRecordCodec.encodeSingleObject(
-      record = original,
-      genericData = AvroKotlin.genericData
-    )
+    return GenericRecordCodec.encodeSingleObject(record = original, genericData = AvroKotlin.genericData)
   }
 }

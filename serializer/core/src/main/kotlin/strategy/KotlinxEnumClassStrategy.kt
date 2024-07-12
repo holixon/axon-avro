@@ -6,8 +6,7 @@ import org.apache.avro.generic.GenericData
 import org.apache.avro.generic.GenericRecord
 
 class KotlinxEnumClassStrategy(
-  private val avroKotlinSerialization: AvroKotlinSerialization,
-  private val genericData: GenericData
+  private val avroKotlinSerialization: AvroKotlinSerialization
 ) : AvroSerializationStrategy, AvroDeserializationStrategy {
 
   override fun canSerialize(serializedType: Class<*>): Boolean = isKotlinxEnumClass(serializedType)
@@ -15,12 +14,11 @@ class KotlinxEnumClassStrategy(
 
   @Suppress("UNCHECKED_CAST")
   override fun <T : Any> deserialize(serializedType: Class<*>, data: GenericRecord): T {
-    return avroKotlinSerialization.fromRecord(data, serializedType.kotlin) as T
+    return avroKotlinSerialization.fromRecord(record = data, type = serializedType.kotlin) as T
   }
 
-
   override fun serialize(data: Any): GenericRecord {
-    return avroKotlinSerialization.toRecord(data)
+    return avroKotlinSerialization.toRecord(data = data)
   }
 
   private fun isKotlinxEnumClass(serializedType: Class<*>) : Boolean {

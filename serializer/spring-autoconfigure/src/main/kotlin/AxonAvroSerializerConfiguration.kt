@@ -24,7 +24,8 @@ open class AxonAvroSerializerConfiguration {
    */
   @Bean
   @ConditionalOnMissingBean(AvroSerializer.Builder::class)
-  fun defaultAxonSerializerBuilder(schemaResolver: AvroSchemaResolver): AvroSerializer.Builder = AvroSerializer.builder()
+  fun defaultAxonSerializerBuilder(schemaResolver: AvroSchemaResolver): AvroSerializer.Builder = AvroSerializer
+    .builder()
     .avroSchemaResolver(schemaResolver)
     .avroKotlinSerialization(AvroKotlinSerialization()) // TODO: use correct setup with registered serializers
 
