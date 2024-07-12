@@ -1,7 +1,10 @@
-If your application is using Event Sourcing as persistence strategy, the total disk space usage of your event store might be an interesting 
-parameter. Assuming that you are using some event store technology (Axon Server or any other Event Store of your choice), this value depends
-on the serialization format. Currently, Axon Framework supports the following serialization formats: Java Binary, JSON via Jackson, 
+If your application is using Event Sourcing as persistence strategy, the total disk space usage of your event store and the serialization 
+speed might be an interesting parameters. Assuming that you are using some event store technology (Axon Server or any other Event Store of your choice), 
+this values depends on the serialization format. Currently, Axon Framework supports the following serialization formats: Java Binary, JSON via Jackson, 
 CBOR via Jackson and XML via XStream. If you are planing to use this extension, you are extending this list by Avro Single Object Encoded.
+
+In order to use Avro Encoding, you have to rely on either KotlinX Serialization based on avro4k or on Avro Java library using a generator creating
+you classes from you Avro schema which are subclassing `SpecificRecordBase`.
 
 In this section, we publish results we conducted during comparison of the formats above. Since Java Binary serialization should not be used
 in any productive systems due to security considerations, we excluded it from the test and conducted comparison on XML, JSON, CBOR and Avro.
@@ -18,9 +21,25 @@ in any productive systems due to security considerations, we excluded it from th
 - For Axon Server we used a docker-version version `axoniq/axonserver:2023.2.6-jdk-17` with small event segment files 977kb (1000000 bytes)
 - The test application and Axon Server were running on the same machine
 - Measured time for each run (The test was executed on Ubuntu 22.04.4 LTS running on a Lenovo P1 with Intel® Core™ i7-8850H CPU @ 2.60GHz × 12, 32,0 GiB, SSD M.2 PCIe NVMe)
-- Check file system and calculate storage requirements
+- Checked file system and calculate storage requirements
+- We intentionally used a special type (`Money`) to simulate a slightly more complex scenario than just plain events with native types supported by any format
+
 
 ## Test results
+
+| Format       | Average run (ms) | Time Factor | Average Event size (bytes) | Size Factor | Notes                                    |
+|--------------|------------------|-------------|----------------------------|-------------|------------------------------------------|
+| XStream      | 40381            | 1.588       | 1340                       | 4.253       | No additional configuration.             |
+| Jackson JSON | 25456            | 1.001       | 355                        | 1.227       | Custom Object Mapper settings for Money. |
+| Jackson CBOR | 25423            | 1.000       | 344                        | 1.092       | Custom Object Mapper settings for Money. |
+| Avro KotlinX | 82162            | 3.232       | 315                        | 1.000       | Custom type conversions for Money.       |
+| Avro Java    | 136087           | 5.323       | 315                        | 1.000       | Custom type conversions for Money.       |
+
+
+For Avro we were using Single Object Encoded format (binary format with schema reference) for both KotlinX Serialized and Java generated 
+(`SpecificRecordBase`) classes. This results in the identical representation (with same disk space consumption). 
+
+You can find the detailed information about the test runs below.
 
 ### XStream
 
@@ -280,8 +299,23 @@ Resulting in an average of 136087ms.
 -rw-r--r-- 1 root root 1000000 Jul 12 23:42 00000000000000003165.events
 -rw-r--r-- 1 root root 1000000 Jul 12 23:46 00000000000000006330.events
 -rw-r--r-- 1 root root 1000000 Jul 12 23:47 00000000000000009495.events
-
 ```
+
+BankAccountCreated
+```
+�K��X{lH27cd7b01-1515-4d4f-998e-4df0e08e44a7100,00 EUR
+```
+
+MoneyDeposited
+```
+�mN;�Z�ӦH27cd7b01-1515-4d4f-998e-4df0e08e44a712,00 EUR
+```
+
+MoneyWithdrawn
+```
+�VFtDj�xH27cd7b01-1515-4d4f-998e-4df0e08e44a76,00 EUR
+```
+
 
 ### Avro with KotlinX serialized classes
 
