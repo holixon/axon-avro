@@ -24,5 +24,6 @@
     <module>fixture-events-manual</module>
     <module>fixture-application</module>
     <module>comparison-tests</module>
+    <module>logical-types</module>
   </modules>
 </project>

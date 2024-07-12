@@ -1,8 +1,8 @@
 package io.holixon.axon.avro.serializer.spring
 
-import com.github.avrokotlin.avro4k.Avro
 import io.holixon.axon.avro.serializer.AvroSerializer
 import io.toolisticon.kotlin.avro.repository.AvroSchemaResolver
+import io.toolisticon.kotlin.avro.serialization.AvroKotlinSerialization
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -26,7 +26,7 @@ open class AxonAvroSerializerConfiguration {
   @ConditionalOnMissingBean(AvroSerializer.Builder::class)
   fun defaultAxonSerializerBuilder(schemaResolver: AvroSchemaResolver): AvroSerializer.Builder = AvroSerializer.builder()
     .avroSchemaResolver(schemaResolver)
-    .avro4k(Avro.default) // TODO: use correct setup with registered serializers
+    .avroKotlinSerialization(AvroKotlinSerialization()) // TODO: use correct setup with registered serializers
 
 
   /**

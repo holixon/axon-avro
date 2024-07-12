@@ -1,16 +1,15 @@
 package io.holixon.axon.avro.serializer
 
 import bankaccount.event.BankAccountCreated
-import com.github.avrokotlin.avro4k.Avro
 import io.toolisticon.kotlin.avro.AvroKotlin.avroSchemaResolver
 import io.toolisticon.kotlin.avro.codec.SpecificRecordCodec
+import io.toolisticon.kotlin.avro.serialization.AvroKotlinSerialization
 import io.toolisticon.kotlin.avro.value.SingleObjectEncodedBytes
-import org.apache.avro.generic.GenericData
 import org.apache.avro.generic.GenericRecord
 import org.assertj.core.api.Assertions.assertThat
-import org.axonframework.messaging.MetaData
 import org.axonframework.serialization.SimpleSerializedObject
 import org.axonframework.serialization.SimpleSerializedType
+import org.javamoney.moneta.Money
 import org.junit.jupiter.api.Test
 
 
@@ -58,14 +57,14 @@ internal class AvroSerializerTest {
 
     val data = BankAccountCreated.newBuilder()
       .setAccountId("1")
-      .setInitialBalance(10)
+      .setInitialBalance(Money.of(10, "EUR"))
       .build()
 
     val serialized = serializer.serialize(data, SingleObjectEncodedBytes::class.java)
 
     val bytes = serialized.data
 
-    assertThat(SpecificRecordCodec.specificRecordSingleObjectDecoder(schemaResolver).decode(serialized.data)).isEqualTo(data)
+    assertThat(SpecificRecordCodec.specificRecordSingleObjectDecoder(schemaResolver).decode(bytes)).isEqualTo(data)
   }
 
   @Test
@@ -75,10 +74,10 @@ internal class AvroSerializerTest {
       .avroSchemaResolver(schemaResolver)
       .build()
 
-    val data = BankAccountCreated.newBuilder()
-      .setAccountId("1")
-      .setInitialBalance(10)
-      .build()
+//    val data = BankAccountCreated.newBuilder()
+//      .setAccountId("1")
+//      .setInitialBalance(Money.of(10, "EUR"))
+//      .build()
 
     val serializedObject = SimpleSerializedObject(
       TestFixtures.BankAccountCreatedFixture.SINGLE_OBJECT_ENCODED,
@@ -91,19 +90,19 @@ internal class AvroSerializerTest {
     assertThat(deserialized).isInstanceOf(BankAccountCreated::class.java)
     with(deserialized as BankAccountCreated) {
       assertThat(accountId).isEqualTo("1")
-      assertThat(initialBalance).isEqualTo(10)
+      assertThat(initialBalance).isEqualTo(Money.of(1, "EUR"))
     }
   }
 
   @Test
   fun `serialize and deserialize kotlinx data class`() {
     val bar = BarString("hello world")
-    val avro4k = Avro.default
+    val avro = AvroKotlinSerialization()
 
-    val schemaResolver = avroSchemaResolver(avro4k.schema(BarString.serializer()))
+    val schemaResolver = avroSchemaResolver(avro.schema(BarString::class).get())
     val serializer = AvroSerializer.builder()
       .avroSchemaResolver(schemaResolver)
-      .avro4k(avro4k)
+      .avroKotlinSerialization(AvroKotlinSerialization())
       .build()
 
     val serialized = serializer.serialize(bar, ByteArray::class.java)
@@ -112,14 +111,5 @@ internal class AvroSerializerTest {
 
     assertThat(deserialized).isInstanceOf(BarString::class.java)
     assertThat(deserialized).hasToString(bar.toString())
-  }
-
-  @Test
-  fun `deserialize serialize MetaData`() {
-    val metaData = MetaData.from(
-      mapOf(
-        "foo" to "bar"
-      )
-    )
   }
 }

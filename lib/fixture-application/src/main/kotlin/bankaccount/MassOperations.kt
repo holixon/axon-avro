@@ -5,6 +5,7 @@ import bankaccount.command.DepositMoney
 import bankaccount.command.WithdrawMoney
 import mu.KLogging
 import org.axonframework.commandhandling.gateway.CommandGateway
+import org.javamoney.moneta.Money
 import java.time.Instant
 import java.util.*
 import kotlin.random.Random
@@ -21,16 +22,16 @@ open class MassOperations(
     (1..count).forEach {
       val accountId = UUID.randomUUID().toString()
       commandGateway.sendAndWait<Void>(
-        CreateBankAccount(accountId = accountId, initialBalance = 100)
+        CreateBankAccount(accountId = accountId, initialBalance = Money.of(100, "EUR"))
       )
       logger.info { "Created account $it: $accountId" }
       if (numberOfTransfers > 0) {
         repeat(numberOfTransfers) {
           commandGateway.sendAndWait<Void>(
-            DepositMoney(accountId = accountId, amount = Random.nextInt(10, 20))
+            DepositMoney(accountId = accountId, amount = Money.of(Random.nextInt(10, 20), "EUR"))
           )
           commandGateway.sendAndWait<Void>(
-            WithdrawMoney(accountId = accountId, amount = Random.nextInt(1, 11))
+            WithdrawMoney(accountId = accountId, amount = Money.of(Random.nextInt(1, 11), "EUR"))
           )
         }
       }

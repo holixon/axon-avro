@@ -1,7 +1,8 @@
 package bankaccount.query
 
-import bankaccount.projection.CurrentBalanceProjection.BankAccountAuditEvent
+import bankaccount.event.BankAccountAuditEvent
 import bankaccount.query.BankAccountAuditQuery.BankAccountAuditEvents
+import kotlinx.serialization.Serializable
 import org.axonframework.messaging.responsetypes.ResponseTypes
 import org.axonframework.queryhandling.QueryGateway
 import java.util.concurrent.CompletableFuture
@@ -14,22 +15,11 @@ interface BankAccountAuditQuery : Function<String, BankAccountAuditEvents?> {
 
   fun findByAccountId(accountId: String): CompletableFuture<BankAccountAuditEvents>
 
-  class FindBankAccountAuditEventByAccountId(val accountId: String)
+  @Serializable
+  data class FindBankAccountAuditEventByAccountId(val accountId: String)
 
-  class BankAccountAuditEvents(events: List<BankAccountAuditEvent>) {
-    private val events: List<BankAccountAuditEvent> = events
-
-    fun getEvents(): List<BankAccountAuditEvent> {
-      return events
-    }
-
-    @Override
-    override fun toString(): String {
-      return "BankAccountAuditEvents{" +
-        "events=" + events +
-        '}'
-    }
-  }
+  @Serializable
+  data class BankAccountAuditEvents(val events: List<BankAccountAuditEvent>)
 
   companion object {
     fun create(queryGateway: QueryGateway): BankAccountAuditQuery = object : BankAccountAuditQuery {

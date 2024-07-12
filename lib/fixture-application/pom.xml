@@ -19,10 +19,17 @@
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>logical-types</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>axon-avro-lib-fixture-events-avro-java</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
+
+
     <dependency>
       <groupId>io.toolisticon.kotlin.avro</groupId>
       <artifactId>avro-kotlin-serialization</artifactId>
@@ -43,6 +50,7 @@
       <artifactId>axon-eventsourcing</artifactId>
       <scope>provided</scope>
     </dependency>
+
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-annotations</artifactId>
@@ -67,12 +75,10 @@
       <groupId>com.fasterxml.jackson.module</groupId>
       <artifactId>jackson-module-kotlin</artifactId>
     </dependency>
-
     <dependency>
       <groupId>io.toolisticon.jackson.module</groupId>
       <artifactId>jackson-avro-module</artifactId>
       <version>${jackson-avro-module.version}</version>
     </dependency>
   </dependencies>
-
 </project>

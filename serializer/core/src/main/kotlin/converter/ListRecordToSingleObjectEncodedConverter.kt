@@ -9,18 +9,18 @@ import org.axonframework.serialization.ContentTypeConverter
 
 class ListRecordToSingleObjectEncodedConverter : ContentTypeConverter<ListRecord, SingleObjectEncodedBytes> {
 
-    companion object : KLogging()
+  companion object : KLogging()
 
-    override fun expectedSourceType(): Class<ListRecord> = ListRecord::class.java
+  override fun expectedSourceType(): Class<ListRecord> = ListRecord::class.java
 
-    override fun targetType(): Class<SingleObjectEncodedBytes> = SingleObjectEncodedBytes::class.java
+  override fun targetType(): Class<SingleObjectEncodedBytes> = SingleObjectEncodedBytes::class.java
 
-    override fun convert(original: ListRecord): SingleObjectEncodedBytes {
-        // TODO: we (sh|c)ould make genericData/conversions configurable ... maybe.
-        logger.trace { "Generic record: $original" }
-        return GenericRecordCodec.encodeSingleObject(
-            record = original,
-            genericData = AvroKotlin.genericData
-        )
-    }
+  override fun convert(original: ListRecord): SingleObjectEncodedBytes {
+    // TODO: we (sh|c)ould make genericData/conversions configurable ... maybe.
+    logger.trace { "Generic record: $original" }
+    return GenericRecordCodec.encodeSingleObject(
+      record = original,
+      genericData = AvroKotlin.genericData
+    )
+  }
 }
