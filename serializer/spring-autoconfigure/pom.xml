@@ -47,8 +47,14 @@
 
 
     <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>axon-avro-lib-fixture-events-avro-java</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>io.holixon.axon.avro</groupId>
-      <artifactId>axon-avro-lib-fixtures</artifactId>
+      <artifactId>axon-avro-lib-fixture-application</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
@@ -94,7 +100,5 @@
       <artifactId>h2</artifactId>
       <scope>test</scope>
     </dependency>
-
   </dependencies>
-
 </project>

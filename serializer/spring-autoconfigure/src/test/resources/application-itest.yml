@@ -26,14 +26,14 @@ springdoc:
 
 logging:
   level:
-    root: info
-    io.axoniq:
-      console.framework.client: warn
-      axonserver.connector: error
-    org.axonframework:
-      eventhandling: error
-    org.testcontainers: warn
-    org.springframework:
-      core.annotation: error
-      boot.test.context: warn
-      test.context: warn
+    root: INFO
+    io.axoniq.axonserver.connector: ERROR
+    org.axonframework.eventhandling: ERROR
+    org.testcontainers: WARN
+    org.springframework.core.annotation: ERROR
+    org.springframework.boot.test.context: WARN
+    org.springframework.test.context: WARN
+    org.springframework.core.annotation.AnnotationTypeMapping: ERROR
+    # io.holixon.axon.avro.serializer.AvroSerializer: DEBUG
+    tc.axonserver: WARN # disable redirected logs from container
+    tc.testcontainers: WARN

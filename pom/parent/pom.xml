@@ -25,7 +25,7 @@
 
     <!-- libs (alphabetical) -->
     <avro.version>1.11.3</avro.version>
-    <avro-kotlin.version>1.11.4.3</avro-kotlin.version>
+    <avro-kotlin.version>1.11.4.4</avro-kotlin.version>
     <axon-bom.version>4.9.4</axon-bom.version>
 
   </properties>
@@ -72,6 +72,7 @@
         <version>${project.version}</version>
         <scope>test</scope>
       </dependency>
+
     </dependencies>
   </dependencyManagement>
 
@@ -155,4 +156,28 @@
     </plugins>
   </build>
 
+  <profiles>
+    <!-- TODO remove this as soon as the new version of parent with patched verify cycle is released and used -->
+    <profile>
+      <id>itest</id>
+      <build>
+        <defaultGoal>verify</defaultGoal>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>verify</id>
+                <goals>
+                  <goal>verify</goal>
+                </goals>
+                <phase>verify</phase>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

@@ -10,9 +10,7 @@ import org.apache.avro.util.Utf8
 import org.axonframework.messaging.responsetypes.MultipleInstancesResponseType
 
 @Suppress("UNCHECKED_CAST")
-class MultipleInstancesResponseTypeStrategy(
-  val genericData: GenericData
-) : AvroDeserializationStrategy, AvroSerializationStrategy {
+class MultipleInstancesResponseTypeStrategy : AvroDeserializationStrategy, AvroSerializationStrategy {
   companion object {
     val SCHEMA = AvroSchema.of(resource = ResourceKtx.resourceUrl("schema/AvroMultipleInstancesResponseType.avsc"))
     const val FIELD = "expectedResponseType"

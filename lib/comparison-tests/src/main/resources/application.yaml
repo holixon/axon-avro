@@ -1,0 +1,4 @@
+logging:
+  level:
+    bankaccount.projection: ERROR
+#    io.holixon.axon.avro.serializer.AvroSerializer: INFO

@@ -12,6 +12,10 @@
   <artifactId>axon-avro-serializer-core</artifactId>
 
   <dependencies>
+    <dependency>
+      <groupId>io.toolisticon.kotlin.avro</groupId>
+      <artifactId>avro-kotlin-serialization</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>org.axonframework</groupId>
@@ -25,23 +29,21 @@
     </dependency>
 
     <dependency>
-      <groupId>io.toolisticon.kotlin.avro</groupId>
-      <artifactId>avro-kotlin-serialization</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>org.axonframework</groupId>
       <artifactId>axon-configuration</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>io.holixon.axon.avro</groupId>
-      <artifactId>axon-avro-lib-fixtures</artifactId>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>axon-avro-lib-fixture-events-avro-java</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
-
-
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <scope>test</scope>
+    </dependency>
 
   </dependencies>
 

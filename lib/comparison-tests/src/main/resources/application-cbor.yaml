@@ -1,0 +1,5 @@
+axon:
+  serializer:
+    general: cbor
+    events: cbor
+    messages: cbor

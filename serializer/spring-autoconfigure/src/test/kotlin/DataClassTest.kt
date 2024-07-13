@@ -9,6 +9,7 @@ internal class DataClassTest {
 
   @Test
   fun `delivers schema`() {
-    assertThat(Avro.default.schema(CreateBankAccount.serializer())).isNotNull
+    val schema = Avro.default.schema(CreateBankAccount.serializer())
+    assertThat(schema).isNotNull
   }
 }

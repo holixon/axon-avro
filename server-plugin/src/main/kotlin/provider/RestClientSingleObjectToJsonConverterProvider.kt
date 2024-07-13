@@ -60,10 +60,7 @@ class RestClientSingleObjectToJsonConverterProvider(
       val contentTypeHeader = response.headers().firstValue("Content-Type").get()
       require(contentTypeHeader == "application/json") { "Expected application/json content type, but got $contentTypeHeader" }
 
-      val schemaJson: String = response.body()
-      val jsonString = JsonString.of(schemaJson)
-
-      AvroSchema.of(jsonString)
+      AvroSchema.of(JsonString.of(response.body()))
     } catch (e: Exception) {
       throw IllegalStateException("Error while retrieving Avro Schema from registry: $uri", e)
     }

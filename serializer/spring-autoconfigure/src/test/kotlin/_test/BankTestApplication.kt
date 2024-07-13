@@ -32,6 +32,7 @@ import org.axonframework.modelling.saga.repository.jpa.SagaEntry
 import org.axonframework.queryhandling.QueryGateway
 import org.axonframework.serialization.Serializer
 import org.axonframework.serialization.json.JacksonSerializer
+import org.javamoney.moneta.Money
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.domain.EntityScan
@@ -98,27 +99,6 @@ class BankTestApplication {
   @Profile(PROFILES.AVRO_NO_SERVER)
   @PropertySource("classpath:profiles/server-disabled.properties")
   class AvroNoServerConfiguration : ProfileConfiguration("avro", false) {
-    @Bean
-    @Primary
-    fun defaultSerializer(builder: AvroSerializer.Builder): Serializer = builder.build()
-
-    @Bean
-    @Qualifier("eventSerializer")
-    fun eventSerializer(builder: AvroSerializer.Builder): Serializer = builder.build()
-
-    @Bean
-    @Qualifier("messageSerializer")
-    fun messageSerializer(builder: AvroSerializer.Builder): Serializer = builder.build()
-
-    @Bean
-    fun schemaResolver() = BankAccountSchemas.schemaResolver
-  }
-
-  @Configuration
-  @EnableAxonAvroSerializer
-  @Profile(PROFILES.AVRO_SERVER)
-  @PropertySource("classpath:profiles/server-enabled.properties")
-  class AvroServerConfiguration : ProfileConfiguration("avro", true) {
 
     @Bean
     fun storageEngine(
@@ -133,6 +113,32 @@ class BankTestApplication {
       .transactionManager(txManager)
       .build()
 
+
+    @Bean
+    @Primary
+    fun defaultSerializer(builder: AvroSerializer.Builder): Serializer =
+      builder.avroKotlinSerialization(avroKotlinSerialization = avroSerialization).build()
+
+    @Bean
+    @Qualifier("eventSerializer")
+    fun eventSerializer(builder: AvroSerializer.Builder): Serializer =
+      builder.avroKotlinSerialization(avroKotlinSerialization = avroSerialization).build()
+
+    @Bean
+    @Qualifier("messageSerializer")
+    fun messageSerializer(builder: AvroSerializer.Builder): Serializer =
+      builder.avroKotlinSerialization(avroKotlinSerialization = avroSerialization).build()
+
+    @Bean
+    fun schemaResolver() = BankAccountSchemas.schemaResolver
+  }
+
+  @Configuration
+  @EnableAxonAvroSerializer
+  @Profile(PROFILES.AVRO_SERVER)
+  @PropertySource("classpath:profiles/server-enabled.properties")
+  class AvroServerConfiguration : ProfileConfiguration("avro", true) {
+
     @Bean
     @Primary
     fun defaultSerializer(builder: AvroSerializer.Builder): Serializer = JacksonSerializer.builder()
@@ -140,11 +146,13 @@ class BankTestApplication {
 
     @Bean
     @Qualifier(EVENT_SERIALIZER)
-    fun eventSerializer(builder: AvroSerializer.Builder): Serializer = builder.build()
+    fun eventSerializer(builder: AvroSerializer.Builder): Serializer =
+      builder.avroKotlinSerialization(avroKotlinSerialization = avroSerialization).build()
 
     @Bean
     @Qualifier(MESSAGE_SERIALIZER)
-    fun messageSerializer(builder: AvroSerializer.Builder): Serializer = builder.build()
+    fun messageSerializer(builder: AvroSerializer.Builder): Serializer =
+      builder.avroKotlinSerialization(avroKotlinSerialization = avroSerialization).build()
 
     @Bean
     fun schemaResolver(): AvroSchemaResolver = BankAccountSchemas.schemaResolver
@@ -171,8 +179,8 @@ class BankTestApplication {
   ) {
 
     @PostMapping("/accounts")
-    fun createAccount(id: String, amount: Int): String {
-      return commandGateway.sendAndWait(CreateBankAccount(id, amount))
+    fun createAccount(id: String, amount: Int, currency: String): String {
+      return commandGateway.sendAndWait(CreateBankAccount(id, Money.of(amount, currency)))
     }
 
     @GetMapping("/accounts")
@@ -186,4 +194,8 @@ class BankTestApplication {
   }
 }
 
-fun main() = runApplication<BankTestApplication>().let { }
+fun main() {
+  System.setProperty("disable-axoniq-console-message", "true")
+  runApplication<BankTestApplication>()
+}
+
