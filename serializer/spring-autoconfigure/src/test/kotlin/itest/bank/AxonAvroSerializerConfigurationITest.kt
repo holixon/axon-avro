@@ -4,9 +4,12 @@ package io.holixon.axon.avro.serializer.spring.itest.bank
 
 import bankaccount.command.CreateBankAccount
 import bankaccount.command.DepositMoney
+import bankaccount.event.BankAccountCreated
 import bankaccount.query.BankAccountAuditQuery
+import bankaccount.query.CurrentBalance
 import bankaccount.query.CurrentBalanceQueries
 import io.holixon.axon.avro.serializer.AvroSerializer
+import io.holixon.axon.avro.serializer.spring.AvroSchemaScan
 import io.holixon.axon.avro.serializer.spring.AxonAvroSerializerConfiguration.Companion.EVENT_SERIALIZER
 import io.holixon.axon.avro.serializer.spring.AxonAvroSerializerConfiguration.Companion.MESSAGE_SERIALIZER
 import io.holixon.axon.avro.serializer.spring.AxonAvroSerializerSpringBase.PROFILE_ITEST

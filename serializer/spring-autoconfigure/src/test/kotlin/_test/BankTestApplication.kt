@@ -5,20 +5,19 @@ package io.holixon.axon.avro.serializer.spring._test
 import bankaccount.BankAccount
 import bankaccount.BankAccountApi
 import bankaccount.command.CreateBankAccount
+import bankaccount.event.BankAccountCreated
 import bankaccount.projection.CurrentBalanceProjection
-import bankaccount.query.BankAccountAuditQuery
-import bankaccount.query.CurrentBalanceQueries
-import bankaccount.query.CurrentBalanceResult
-import bankaccount.query.CurrentBalanceResultList
+import bankaccount.query.*
 import io.holixon.axon.avro.serializer.AvroSerializer
+import io.holixon.axon.avro.serializer.spring.AvroSchemaScan
 import io.holixon.axon.avro.serializer.spring.AxonAvroSerializerConfiguration.Companion.EVENT_SERIALIZER
 import io.holixon.axon.avro.serializer.spring.AxonAvroSerializerConfiguration.Companion.MESSAGE_SERIALIZER
 import io.holixon.axon.avro.serializer.spring.AxonAvroSerializerSpringBase
+import io.holixon.axon.avro.serializer.spring.AxonAvroSerializerSpringBase.avroSerialization
 import io.holixon.axon.avro.serializer.spring.EnableAxonAvroSerializer
 import io.swagger.v3.oas.annotations.ExternalDocumentation
 import io.swagger.v3.oas.annotations.OpenAPIDefinition
 import io.swagger.v3.oas.annotations.info.Info
-import io.toolisticon.kotlin.avro.repository.AvroSchemaResolver
 import mu.KLogging
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.common.jpa.EntityManagerProvider
@@ -42,6 +41,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.web.bind.annotation.*
 
+
 @SpringBootApplication
 @ComponentScan(basePackageClasses = [BankAccount::class, BankTestApplication::class])
 @ActiveProfiles(AxonAvroSerializerSpringBase.PROFILE_ITEST)
@@ -61,6 +61,7 @@ class BankTestApplication {
     const val JACKSON_NO_SERVER = "jackson-no-server"
     const val JACKSON_SERVER = "jackson-server"
     const val AVRO_SERVER = "avro-server"
+    const val AVRO_NO_SERVER_WITHOUT_SCAN = "avro-no-server-without-scan"
     const val AVRO_NO_SERVER = "avro-no-server"
   }
 
@@ -98,6 +99,7 @@ class BankTestApplication {
   @EnableAxonAvroSerializer
   @Profile(PROFILES.AVRO_NO_SERVER)
   @PropertySource("classpath:profiles/server-disabled.properties")
+  @AvroSchemaScan(basePackageClasses = [CreateBankAccount::class, BankAccountCreated::class, CurrentBalanceQuery::class])
   class AvroNoServerConfiguration : ProfileConfiguration("avro", false) {
 
     @Bean
@@ -129,14 +131,50 @@ class BankTestApplication {
     fun messageSerializer(builder: AvroSerializer.Builder): Serializer =
       builder.avroKotlinSerialization(avroKotlinSerialization = avroSerialization).build()
 
+  }
+
+  @Configuration
+  @EnableAxonAvroSerializer
+  @Profile(PROFILES.AVRO_NO_SERVER_WITHOUT_SCAN)
+  @PropertySource("classpath:profiles/server-disabled.properties")
+  class AvroNoServerWithoutScanConfiguration : ProfileConfiguration("avro", false) {
+
     @Bean
-    fun schemaResolver() = BankAccountSchemas.schemaResolver
+    fun storageEngine(
+      emp: EntityManagerProvider,
+      txManager: TransactionManager,
+      @Qualifier(EVENT_SERIALIZER)
+      eventSerializer: Serializer
+    ): EventStorageEngine = JpaEventStorageEngine.builder()
+      .entityManagerProvider(emp)
+      .eventSerializer(eventSerializer)
+      .snapshotSerializer(eventSerializer)
+      .transactionManager(txManager)
+      .build()
+
+
+    @Bean
+    @Primary
+    fun defaultSerializer(builder: AvroSerializer.Builder): Serializer =
+      builder.avroKotlinSerialization(avroKotlinSerialization = avroSerialization).build()
+
+    @Bean
+    @Qualifier("eventSerializer")
+    fun eventSerializer(builder: AvroSerializer.Builder): Serializer =
+      builder.avroKotlinSerialization(avroKotlinSerialization = avroSerialization).build()
+
+    @Bean
+    @Qualifier("messageSerializer")
+    fun messageSerializer(builder: AvroSerializer.Builder): Serializer =
+      builder.avroKotlinSerialization(avroKotlinSerialization = avroSerialization).build()
+
   }
 
   @Configuration
   @EnableAxonAvroSerializer
   @Profile(PROFILES.AVRO_SERVER)
   @PropertySource("classpath:profiles/server-enabled.properties")
+  @AvroSchemaScan(basePackageClasses = [CreateBankAccount::class, BankAccountCreated::class, CurrentBalanceQuery::class])
   class AvroServerConfiguration : ProfileConfiguration("avro", true) {
 
     @Bean
@@ -153,9 +191,6 @@ class BankTestApplication {
     @Qualifier(MESSAGE_SERIALIZER)
     fun messageSerializer(builder: AvroSerializer.Builder): Serializer =
       builder.avroKotlinSerialization(avroKotlinSerialization = avroSerialization).build()
-
-    @Bean
-    fun schemaResolver(): AvroSchemaResolver = BankAccountSchemas.schemaResolver
   }
 
 
