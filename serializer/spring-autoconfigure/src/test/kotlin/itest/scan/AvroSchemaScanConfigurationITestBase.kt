@@ -22,6 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT
 import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.ConfigurableApplicationContext
+import org.springframework.context.annotation.Configuration
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import org.testcontainers.junit.jupiter.Testcontainers
@@ -67,6 +68,32 @@ abstract class AvroSchemaScanConfigurationITestBase {
     }
   }
 
+  @ContextConfiguration(
+    classes = [
+      MultiAnnotationsScanningITest.TestConfiguration1::class,
+      MultiAnnotationsScanningITest.TestConfiguration2::class
+    ]
+  )
+  class MultiAnnotationsScanningITest : AvroSchemaScanConfigurationITestBase() {
+
+    @AvroSchemaScan(basePackages = ["test.fixture"])
+    @Configuration
+    class TestConfiguration1
+
+    @AvroSchemaScan(basePackages = ["test.fixture2"])
+    @Configuration
+    class TestConfiguration2
+
+    @Autowired
+    lateinit var avroSchemas: List<AvroSchema>
+
+    @Test
+    fun `should find schemas in packages by class mixing kotlinx with specific record base`() {
+      assertThat(avroSchemas).isNotNull
+      assertThat(avroSchemas).hasSize(2) // both generated
+    }
+  }
+
   @AvroSchemaScan(basePackageClasses = [DummyEventWithMoney::class])
   class PackageClassesWithMixedTypesScanningITest : AvroSchemaScanConfigurationITestBase() {
 
@@ -105,4 +132,5 @@ abstract class AvroSchemaScanConfigurationITestBase {
       assertThat(avroSchemas).hasSize(3) // one generated two from DummyEvents.kt
     }
   }
+
 }

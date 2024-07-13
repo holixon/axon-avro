@@ -31,6 +31,7 @@ class AvroSchemaScannerConfiguration {
   @Bean
   @ConditionalOnMissingBean
   fun defaultAvroSchemaResolver(schemas: List<AvroSchema>): AvroSchemaResolver {
+    require(schemas.isNotEmpty()) { "Could not find any Avro Schemas. At least one schema is required for the resolver." }
     return io.toolisticon.kotlin.avro.repository.avroSchemaResolver(schemas)
   }
 
