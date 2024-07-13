@@ -23,11 +23,13 @@
       <version>${project.version}</version>
     </dependency>
 
+    <!--
     <dependency>
       <groupId>io.toolisticon.kotlin.avro</groupId>
       <artifactId>avro-kotlin-serialization</artifactId>
       <scope>provided</scope>
     </dependency>
+    -->
     <dependency>
       <groupId>io.toolisticon.jackson.module</groupId>
       <artifactId>jackson-avro-module</artifactId>

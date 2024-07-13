@@ -25,7 +25,7 @@
 
     <!-- libs (alphabetical) -->
     <avro.version>1.11.3</avro.version>
-    <avro-kotlin.version>1.11.4.4-SNAPSHOT</avro-kotlin.version>
+    <avro-kotlin.version>1.11.4.4</avro-kotlin.version>
     <axon-bom.version>4.9.4</axon-bom.version>
 
   </properties>
