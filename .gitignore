@@ -2,6 +2,7 @@
 .docker/events/
 .docker/log/
 .docker/plugins/
+.docker/axonserver/
 
 .attach_*
 *.iml
