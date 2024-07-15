@@ -1,0 +1,16 @@
+{
+  "type": "record",
+  "namespace": "io.holixon.axon.avro.serializer.spring.itest.scan",
+  "name": "SampleEvent",
+  "doc": "used for testing too",
+  "revision": "4711",
+  "fields": [
+    {
+      "name": "value",
+      "type": {
+        "type": "string",
+        "avro.java.string": "String"
+      }
+    }
+  ]
+}
