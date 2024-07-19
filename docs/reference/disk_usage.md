@@ -379,3 +379,16 @@ Every start of application will produce one run (2010 events). In our tests we r
 - Jackson CBOR: start `bank.ComparisonApplication` with Spring profile `cbor`
 - Avro KotlinX Serialization: start `bank.ComparisonApplication` with Spring profile `avro`
 - Avro Java generated classes: activate Maven profile `avro-java`, rebuild the application and start `bank.ComparisonApplication` with Spring profile `avro`  
+
+## Additional Test run
+
+Macbook Pro 2021, Apple M1  Pro, 32GB. The overall performance is better, but the relative time factors are almost constant.
+
+
+| Format       | Average run (ms) | Time Factor | Average Event size (bytes) | Size Factor | Notes                                    |
+|--------------|------------------|-------------|---------------------------|-------------|------------------------------------------|
+| XStream      | 18142            | 1.703       | 21.3                      | 4.253       | No additional configuration.             |
+| Jackson JSON | 10714            | 1.006       | 15.3                      | 1.227       | Custom Object Mapper settings for Money. |
+| Jackson CBOR | 10651            | 1.000       | 15.4                      | 1.092       | Custom Object Mapper settings for Money. |
+| Avro KotlinX | 37087            | 3.482       | 15.4 (du -s / #events)    | 1.000       | Custom type conversions for Money.       |
+| Avro Java    | 56570            | 5.311       | 15.4                      | 1.000       | Custom type conversions for Money.       |
