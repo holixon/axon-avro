@@ -672,6 +672,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#additional-test-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      Additional Test run
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1154,6 +1163,62 @@ versions of event classes.</p>
 <li>Avro KotlinX Serialization: start <code>bank.ComparisonApplication</code> with Spring profile <code>avro</code></li>
 <li>Avro Java generated classes: activate Maven profile <code>avro-java</code>, rebuild the application and start <code>bank.ComparisonApplication</code> with Spring profile <code>avro</code>  </li>
 </ul>
+<h2 id="additional-test-run">Additional Test run<a class="headerlink" href="#additional-test-run" title="Permanent link">#</a></h2>
+<p>Macbook Pro 2021, Apple M1  Pro, 32GB. The overall performance is better, but the relative time factors are almost constant.</p>
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th>Average run (ms)</th>
+<th>Time Factor</th>
+<th>Average Event size (bytes)</th>
+<th>Size Factor</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>XStream</td>
+<td>18142</td>
+<td>1.703</td>
+<td>21.3</td>
+<td>4.253</td>
+<td>No additional configuration.</td>
+</tr>
+<tr>
+<td>Jackson JSON</td>
+<td>10714</td>
+<td>1.006</td>
+<td>15.3</td>
+<td>1.227</td>
+<td>Custom Object Mapper settings for Money.</td>
+</tr>
+<tr>
+<td>Jackson CBOR</td>
+<td>10651</td>
+<td>1.000</td>
+<td>15.4</td>
+<td>1.092</td>
+<td>Custom Object Mapper settings for Money.</td>
+</tr>
+<tr>
+<td>Avro KotlinX</td>
+<td>37087</td>
+<td>3.482</td>
+<td>15.4 (du -s / #events)</td>
+<td>1.000</td>
+<td>Custom type conversions for Money.</td>
+</tr>
+<tr>
+<td>Avro Java</td>
+<td>56570</td>
+<td>5.311</td>
+<td>15.4</td>
+<td>1.000</td>
+<td>Custom type conversions for Money.</td>
+</tr>
+</tbody>
+</table>
 
 
 
