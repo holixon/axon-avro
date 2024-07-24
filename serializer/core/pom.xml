@@ -13,11 +13,6 @@
 
   <dependencies>
     <dependency>
-      <groupId>io.toolisticon.kotlin.avro</groupId>
-      <artifactId>avro-kotlin-serialization</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>org.axonframework</groupId>
       <artifactId>axon-messaging</artifactId>
       <scope>provided</scope>
@@ -44,17 +39,43 @@
       <artifactId>slf4j-simple</artifactId>
       <scope>test</scope>
     </dependency>
-
   </dependencies>
 
   <build>
     <plugins>
       <plugin>
+        <!-- kotlin compiler -->
+        <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-maven-plugin</artifactId>
+        <configuration>
+          <jvmTarget>${java.version}</jvmTarget>
+          <args>
+            <arg>-Xjsr305=strict</arg>
+          </args>
+          <compilerPlugins>
+            <plugin>spring</plugin>
+            <plugin>jpa</plugin>
+            <plugin>no-arg</plugin>
+            <plugin>all-open</plugin>
+            <plugin>kotlinx-serialization</plugin>
+          </compilerPlugins>
+          <pluginOptions>
+            <option>all-open:annotation=org.axonframework.eventhandling.EventHandler</option>
+            <option>all-open:annotation=org.axonframework.queryhandling.QueryHandler</option>
+          </pluginOptions>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-maven-serialization</artifactId>
+            <version>${kotlin.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+      <plugin>
         <groupId>org.apache.avro</groupId>
         <artifactId>avro-maven-plugin</artifactId>
       </plugin>
-
     </plugins>
   </build>
-
 </project>

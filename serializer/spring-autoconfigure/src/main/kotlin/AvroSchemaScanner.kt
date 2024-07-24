@@ -1,8 +1,7 @@
 package io.holixon.axon.avro.serializer.spring
 
-import com.github.avrokotlin.avro4k.Avro
 import io.toolisticon.kotlin.avro.model.wrapper.AvroSchema
-import kotlinx.serialization.KSerializer
+import io.toolisticon.kotlin.avro.serialization.AvroKotlinSerialization
 import kotlinx.serialization.Serializable
 import mu.KLogging
 import org.apache.avro.specific.SpecificRecordBase
@@ -10,14 +9,12 @@ import org.springframework.context.annotation.ClassPathScanningCandidateComponen
 import org.springframework.core.io.ResourceLoader
 import org.springframework.core.type.filter.AnnotationTypeFilter
 import org.springframework.core.type.filter.AssignableTypeFilter
-import kotlin.reflect.full.companionObject
-import kotlin.reflect.full.companionObjectInstance
 
 internal class AvroSchemaScanner(
   private val resourceLoader: ResourceLoader,
   private val detectKotlinXSerialization: Boolean,
   private val detectSpecificRecordBase: Boolean,
-  private val avro4k: Avro = Avro.default,
+  private val avro: AvroKotlinSerialization = AvroKotlinSerialization(),
 ) {
 
   companion object : KLogging()
@@ -49,7 +46,7 @@ internal class AvroSchemaScanner(
           logger.info { "Found specific record of type: ${specificRecordClass.name} with schema $schema" }
           schema
         } else if (candidateClass.isAnnotationPresent(Serializable::class.java) && candidateClass.kotlin.isData) {
-          val schema = candidateClass.getSerializerSchema()
+          val schema = avro.schema(candidateClass.kotlin)
           logger.info { "Found KotlinX Serialized data class ${candidateClass.name} with schema $schema" }
           schema
         } else {
@@ -69,8 +66,4 @@ internal class AvroSchemaScanner(
     return AvroSchema(schema)
   }
 
-  private fun Class<*>.getSerializerSchema(): AvroSchema {
-    val serializer = this.kotlin.companionObject?.members?.first { it.name == "serializer" }?.call(this.kotlin.companionObjectInstance) as KSerializer<*>
-    return AvroSchema(avro4k.schema(serializer))
-  }
 }

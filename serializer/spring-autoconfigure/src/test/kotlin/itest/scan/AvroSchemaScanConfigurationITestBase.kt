@@ -103,7 +103,7 @@ abstract class AvroSchemaScanConfigurationITestBase {
     @Test
     fun `should find schemas in packages by class mixing kotlinx with specific record base`() {
       assertThat(avroSchemas).isNotNull
-      assertThat(avroSchemas).hasSize(3) // one generated two from DummyEvents.kt
+      assertThat(avroSchemas).hasSize(3) // one generated two from DummyEventsTest.kt
     }
   }
 
@@ -116,7 +116,7 @@ abstract class AvroSchemaScanConfigurationITestBase {
     @Test
     fun `should find schemas in packages by class mixing kotlinx with specific record base`() {
       assertThat(avroSchemas).isNotNull
-      assertThat(avroSchemas).hasSize(3) // one generated two from DummyEvents.kt
+      assertThat(avroSchemas).hasSize(3) // one generated two from DummyEventsTest.kt
     }
   }
 
@@ -129,7 +129,7 @@ abstract class AvroSchemaScanConfigurationITestBase {
     @Test
     fun `should find schemas in packages by class mixing kotlinx with specific record base`() {
       assertThat(avroSchemas).isNotNull
-      assertThat(avroSchemas).hasSize(3) // one generated two from DummyEvents.kt
+      assertThat(avroSchemas).hasSize(3) // one generated two from DummyEventsTest.kt
     }
   }
 
