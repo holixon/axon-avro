@@ -25,9 +25,8 @@
 
     <!-- libs (alphabetical) -->
     <avro.version>1.11.3</avro.version>
-    <avro-kotlin.version>1.11.4.4</avro-kotlin.version>
+    <avro-kotlin.version>1.11.5.0</avro-kotlin.version>
     <axon-bom.version>4.10.0</axon-bom.version>
-
   </properties>
 
   <modules>
@@ -102,8 +101,6 @@
           <artifactId>kotlin-maven-plugin</artifactId>
           <configuration>
             <jvmTarget>${java.version}</jvmTarget>
-            <apiVersion>1.9</apiVersion>
-            <languageVersion>1.9</languageVersion>
             <args>
               <arg>-Xjsr305=strict</arg>
             </args>

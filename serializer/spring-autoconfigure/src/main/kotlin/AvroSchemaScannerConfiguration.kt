@@ -2,6 +2,7 @@ package io.holixon.axon.avro.serializer.spring
 
 import io.toolisticon.kotlin.avro.model.wrapper.AvroSchema
 import io.toolisticon.kotlin.avro.repository.AvroSchemaResolver
+import io.toolisticon.kotlin.avro.repository.AvroSchemaResolverMap
 import org.springframework.beans.factory.BeanFactory
 import org.springframework.boot.autoconfigure.AutoConfigurationPackages
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
@@ -30,9 +31,9 @@ class AvroSchemaScannerConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
-  fun defaultAvroSchemaResolver(schemas: List<AvroSchema>): AvroSchemaResolver {
+  fun defaultAvroSchemaResolver(schemas: List<AvroSchema>): AvroSchemaResolverMap {
     require(schemas.isNotEmpty()) { "Could not find any Avro Schemas. At least one schema is required for the resolver." }
-    return io.toolisticon.kotlin.avro.repository.avroSchemaResolver(schemas)
+    return AvroSchemaResolverMap(schemas.associateBy { it.fingerprint })
   }
 
 }

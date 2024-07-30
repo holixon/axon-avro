@@ -1,12 +1,16 @@
 package io.holixon.axon.avro.serializer
 
 import io.holixon.axon.avro.serializer.converter.*
-import io.holixon.axon.avro.serializer.strategy.*
+import io.holixon.axon.avro.serializer.strategy.InstanceResponseTypeStrategy
+import io.holixon.axon.avro.serializer.strategy.MetaDataStrategy
+import io.holixon.axon.avro.serializer.strategy.MultipleInstancesResponseTypeStrategy
 import io.toolisticon.kotlin.avro.AvroKotlin
-import io.toolisticon.kotlin.avro.repository.AvroSchemaResolver
 import io.toolisticon.kotlin.avro.repository.AvroSchemaResolverMap
-import io.toolisticon.kotlin.avro.repository.plus
 import io.toolisticon.kotlin.avro.serialization.AvroKotlinSerialization
+import io.toolisticon.kotlin.avro.serialization.strategy.GenericRecordSerializationStrategy
+import io.toolisticon.kotlin.avro.serialization.strategy.KotlinxDataClassStrategy
+import io.toolisticon.kotlin.avro.serialization.strategy.KotlinxEnumClassStrategy
+import io.toolisticon.kotlin.avro.serialization.strategy.SpecificRecordBaseStrategy
 import io.toolisticon.kotlin.avro.value.SingleObjectEncodedBytes
 import mu.KLogging
 import org.apache.avro.generic.GenericData
@@ -19,10 +23,8 @@ import java.util.function.Supplier
 class AvroSerializer private constructor(
   private val converter: Converter,
   private val revisionResolver: RevisionResolver,
-  private val serializationStrategies: List<AvroSerializationStrategy>,
-  private val deserializationStrategies: List<AvroDeserializationStrategy>
+  private val serializationStrategies: List<GenericRecordSerializationStrategy>,
 ) : Serializer {
-
 
   companion object : KLogging() {
 
@@ -38,12 +40,7 @@ class AvroSerializer private constructor(
     fun builder() = Builder()
 
     operator fun invoke(builder: Builder): AvroSerializer {
-
-      val schemaResolver = if (builder.builderAvroSchemaResolver is AvroSchemaResolverMap) {
-        builder.builderAvroSchemaResolver + axonSchemaResolver
-      } else {
-        builder.builderAvroSchemaResolver + axonSchemaResolver
-      }
+      axonSchemaResolver.values.forEach(builder.avroKotlinSerialization::registerSchema)
 
       val converter = if (builder.converter is ChainingConverter) {
         logger.debug { "" }
@@ -71,7 +68,7 @@ class AvroSerializer private constructor(
           registerConverter(ListRecordToSingleObjectEncodedConverter())
 
           registerConverter(ByteArrayToSingleObjectEncodedConverter())
-          registerConverter(SingleObjectEncodedToGenericRecordConverter(schemaResolver))
+          registerConverter(SingleObjectEncodedToGenericRecordConverter(builder.avroKotlinSerialization))
 
           // JSON handling in inverted order: GenericRecord -> String
           registerConverter(JsonStringToStringConverter())
@@ -108,29 +105,16 @@ class AvroSerializer private constructor(
           multipleInstancesResponseTypeStrategy,
           specificRecordBaseStrategy
         ),
-        deserializationStrategies = listOf(
-          instanceResponseTypeStrategy,
-          kotlinxDataClassStrategy,
-          kotlinxEnumClassStrategy,
-          metaDataStrategy,
-          multipleInstancesResponseTypeStrategy,
-          specificRecordBaseStrategy
-        ),
       )
     }
   }
 
   class Builder {
-    internal lateinit var builderAvroSchemaResolver: AvroSchemaResolver
+    internal var avroKotlinSerialization = AvroKotlinSerialization()
     internal var converter: Converter = ChainingConverter()
     internal var revisionResolver: RevisionResolver = AnnotationRevisionResolver()
     internal val contentTypeConverters: MutableList<ContentTypeConverter<*, *>> = mutableListOf()
-    internal var avroKotlinSerialization = AvroKotlinSerialization()
     internal var genericDataSupplier: Supplier<GenericData> = Supplier { AvroKotlin.genericData }
-
-    fun avroSchemaResolver(avroSchemaResolver: AvroSchemaResolver) = apply {
-      builderAvroSchemaResolver = avroSchemaResolver
-    }
 
     fun addContentTypeConverter(contentTypeConverter: ContentTypeConverter<*, *>) = apply {
       this.contentTypeConverters.add(contentTypeConverter)
@@ -145,19 +129,16 @@ class AvroSerializer private constructor(
     }
 
     fun build(): AvroSerializer {
-      require(this::builderAvroSchemaResolver.isInitialized) { "AvroSchemaResolver must be provided." }
-
       return AvroSerializer(this)
     }
   }
-
 
   override fun <T : Any> serialize(data: Any?, expectedRepresentation: Class<T>): SerializedObject<T> {
     requireNotNull(data) {
       "Can't serialize null."
     }
 
-    val strategy = serializationStrategies.firstOrNull { it.canSerialize(data::class.java) }.also {
+    val strategy = serializationStrategies.firstOrNull { it.test(data::class) }.also {
       if (it != null) {
         logger.debug { "Using strategy ${it::class.java.name} for ${data::class.java}." }
       } else {
@@ -186,7 +167,7 @@ class AvroSerializer private constructor(
   override fun <S : Any, T : Any> deserialize(serializedObject: SerializedObject<S>): T {
     val serializedType = classForType(serializedObject.type)
 
-    val strategy = deserializationStrategies.firstOrNull { it.canDeserialize(serializedType) }.also {
+    val strategy = serializationStrategies.firstOrNull { it.test(serializedType.kotlin) }.also {
       if (it != null) {
         logger.debug { "Using strategy ${it::class.java.name} for $serializedType." }
       } else {
@@ -197,7 +178,7 @@ class AvroSerializer private constructor(
     @Suppress("UNCHECKED_CAST", "IfThenToElvis")
     return if (strategy != null) {
       strategy.deserialize(
-        serializedType = serializedType,
+        serializedType = serializedType.kotlin,
         data = converter.convert(serializedObject, GenericRecord::class.java).data
       )
     } else {
