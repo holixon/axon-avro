@@ -16,7 +16,13 @@ open class MassOperations(
 
   companion object : KLogging()
 
-  open fun createAccounts(count: Int, numberOfTransfers: Int = 0) {
+  /**
+   * Create accounts, execute number of transfers and measures time.
+   * @param count number of accounts to create.
+   * @param numberOfTransfers number of deposit/withdraw operations to run on each account.
+   * @return execution time in milliseconds.
+   */
+  open fun createAccounts(count: Int, numberOfTransfers: Int = 0): Long {
     val start = Instant.now()
     logger.info { "Creating $count accounts." }
     (1..count).forEach {
@@ -39,6 +45,7 @@ open class MassOperations(
     val end = Instant.now()
     val time: Long = end.toEpochMilli().minus(start.toEpochMilli())
     logger.info { "Creating $count accounts finished, it took ${time}ms." }
+    return time
   }
 
 }

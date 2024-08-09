@@ -1,0 +1,31 @@
+name: CI for special branches
+
+on:
+  push:
+    branches:
+      - 'feature/comparison'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 17
+          cache: maven
+
+      - name: Prepare Maven Wrapper
+        run: chmod +x ./mvnw
+
+      - name: Build with Maven
+        run: ./mvnw clean verify -U -B -DskipTest=true -ntp -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.httpconnectionManager.ttlSeconds=120
+
+      - name: Run comparison tests
+        run: |
+          chmod +x ./lib/comparison-tests/comparison
+          ./lib/comparison-tests/comparison all
