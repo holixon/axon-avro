@@ -1,3 +1,54 @@
+server:
+  tomcat:
+    mbeanregistry:
+      enabled: true
+
+axon:
+  avro:
+    serializer:
+      rest-enabled: true
+
+  metrics:
+    auto-configuration:
+      enabled: true
+    micrometer:
+      dimensional: true
+
+management:
+  server:
+    port: ${MANAGEMENT_PORT:9005}
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+    health:
+      show-components: always
+      show-details: always
+      probes:
+        enabled: true
+    info:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  metrics:
+    enable:
+      jvm: true
+      tomcat: true
+      cache: true
+      logback: true
+      process: true
+    use-global-registry: false
+    tags:
+      application: ${spring.application.name}
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+
 logging:
   level:
     bankaccount.projection: ERROR

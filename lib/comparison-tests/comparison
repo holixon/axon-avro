@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+
+HERE=`dirname $0`
+
+case $1 in
+
+"run-docker")
+  docker rm axon-avro-comparison
+  docker run -d --name axon-avro-comparison -p "8024:8024" -p "8124:8124" \
+    -v "$HERE/docker/config:/axonserver/config:ro" \
+    -v "$HERE/docker/events:/axonserver/events" \
+    -v "$HERE/docker/data:/axonserver/data" \
+    -v "$HERE/docker/log:/axonserver/log" \
+    -v "$HERE/docker/plugins:/axonserver/plugins" \
+    axoniq/axonserver:2023.2.8-jdk-17
+
+  until (curl --silent http://localhost:8024/actuator/health/readiness | grep --quiet '{"status":"UP",' || false); do
+    printf '.'
+    sleep 5
+  done
+  ;;
+
+"stop-docker")
+  docker stop axon-avro-comparison
+  ;;
+
+"purge-events")
+  curl -X 'DELETE' 'http://localhost:8024/v1/public/purge-events?targetContext=default' -H 'accept: */*'
+  ;;
+
+"run-avro")
+  java -Dterminate=true -Dspring.profiles.active=avro -jar lib/comparison-tests/target/comparison-tests.jar
+  echo " " >> execution-result.md
+  echo "\`\`\`bash" >> execution-result.md
+  ls -r lib/comparison-tests/docker/events/default/*.events >> execution-result.md
+  echo "\`\`\`" >> execution-result.md
+  echo " " >> execution-result.md
+  ;;
+
+"run-jackson")
+  java -Dterminate=true -Dspring.profiles.active=jackson -jar lib/comparison-tests/target/comparison-tests.jar
+  echo " " >> execution-result.md
+  echo "\`\`\`bash" >> execution-result.md
+  ls -r lib/comparison-tests/docker/events/default/*.events >> execution-result.md
+  echo "\`\`\`" >> execution-result.md
+  echo " " >> execution-result.md
+  ;;
+
+"run-xstream")
+  java -Dterminate=true -Dspring.profiles.active=xstream -jar lib/comparison-tests/target/comparison-tests.jar
+  echo " " >> execution-result.md
+  echo "\`\`\`bash" >> execution-result.md
+  ls -r lib/comparison-tests/docker/events/default/*.events >> execution-result.md
+  echo "\`\`\`" >> execution-result.md
+  echo " " >> execution-result.md
+  ;;
+
+"run-cbor")
+  java -Dterminate=true -Dspring.profiles.active=cbor -jar lib/comparison-tests/target/comparison-tests.jar
+  echo " " >> execution-result.md
+  echo "\`\`\`bash" >> execution-result.md
+  ls -r lib/comparison-tests/docker/events/default/*.events >> execution-result.md
+  echo "\`\`\`" >> execution-result.md
+  echo " " >> execution-result.md
+  ;;
+
+all)
+  $0 run-docker
+
+  $0 run-avro
+  $0 purge-events
+
+  $0 run-xstream
+  $0 purge-events
+
+  $0 run-jackson
+  $0 purge-events
+
+  $0 run-cbor
+  $0 purge-events
+
+  $0 stop-docker
+  ;;
+
+*)
+  echo "Usage $0 all"
+  ;;
+esac
