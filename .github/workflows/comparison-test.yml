@@ -1,4 +1,4 @@
-name: CI for special branches
+name: Comparison Test
 
 on:
   push:
