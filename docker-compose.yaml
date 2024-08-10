@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   axonserver:
     image: axoniq/axonserver:2023.2.6-jdk-17
