@@ -5,9 +5,6 @@ import io.holixon.axon.avro.serializer._test.barStringSchema
 import io.toolisticon.kotlin.avro.serialization.AvroKotlinSerialization
 import io.toolisticon.kotlin.avro.serialization.isKotlinxDataClass
 import io.toolisticon.kotlin.avro.serialization.isSerializable
-import io.toolisticon.kotlin.avro.serialization.kserializer
-import kotlinx.serialization.InternalSerializationApi
-import kotlinx.serialization.serializer
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -30,9 +27,9 @@ internal class AvroKotlinSerializationTest {
     assertThat(avro[barStringSchema.fingerprint]).isEqualTo(schema)
 
     val data = BarString("foo")
-    val encoded = avro.singleObjectEncoder<BarString>().encode(data)
+    val encoded = avro.encodeToSingleObjectEncoded(data)
 
-    val decoded = avro.singleObjectDecoder<BarString>().decode(encoded)
+    val decoded = avro.decodeFromSingleObjectEncoded<BarString>(encoded)
 
     assertThat(decoded).isEqualTo(data)
   }
@@ -42,7 +39,7 @@ internal class AvroKotlinSerializationTest {
   fun `barString is kotlinx serializable`() {
     assertThat(BarString::class.isSerializable()).isTrue()
     assertThat(BarString::class.isKotlinxDataClass()).isTrue()
-    assertThat(BarString::class.kserializer()).isNotNull
+    assertThat(avro.serializer(BarString::class)).isNotNull
     assertThat(avro.schema(BarString::class)).isNotNull
   }
 }
