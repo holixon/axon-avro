@@ -23,6 +23,22 @@
     <module>pom/parent</module>
   </modules>
 
+  <properties/>
+
+  <!-- this is the maven root, all dependencies have to be declared in the concrete modules -->
+  <dependencyManagement/>
+
+  <!-- this is the maven root, all dependencies have to be declared in the concrete modules -->
+  <dependencies/>
+
+  <build>
+    <pluginManagement>
+      <!-- plugins for other modules can be managed here -->
+    </pluginManagement>
+    <!-- this is the maven root, all plugins have to be declared in the concrete modules -->
+    <plugins/>
+  </build>
+
   <licenses>
     <license>
       <name>Apache License, Version 2.0</name>
