@@ -2,27 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://www.holixon.io/axon-avro/snapshot/index.html</loc>
-         <lastmod>2024-08-26</lastmod>
+         <lastmod>2024-08-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.holixon.io/axon-avro/snapshot/developer-guide/contribution.html</loc>
-         <lastmod>2024-08-26</lastmod>
+         <lastmod>2024-08-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.holixon.io/axon-avro/snapshot/developer-guide/project-setup.html</loc>
-         <lastmod>2024-08-26</lastmod>
+         <lastmod>2024-08-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.holixon.io/axon-avro/snapshot/reference/index.html</loc>
-         <lastmod>2024-08-26</lastmod>
+         <lastmod>2024-08-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.holixon.io/axon-avro/snapshot/reference/disk_usage.html</loc>
-         <lastmod>2024-08-26</lastmod>
+         <lastmod>2024-08-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
