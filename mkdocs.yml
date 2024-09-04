@@ -89,5 +89,9 @@ nav:
   - Features:
       - Avro Axon Serializer: features/serializer.md
       - Avro Axon Server Plugin: features/server-plugin.md
-
-
+  - Reference:
+      - How to use: reference/index.md
+      - Disk Usage: reference/disk_usage.md
+  - Developer Guide:
+      - Contribution: developer-guide/contribution.md
+      - Project Setup: developer-guide/project-setup.md

@@ -1,6 +1,8 @@
-.docker/axonserver/data/
-.docker/axonserver/events/
-.docker/axonserver/plugins/
+.docker/data/
+.docker/events/
+.docker/log/
+.docker/plugins/
+.docker/axonserver/
 
 .attach_*
 *.iml
@@ -15,10 +17,14 @@ target/
 pom.xml.versionsBackup
 
 **/.tmp/
-.repository
+
+# https://github.com/takari/maven-wrapper#usage-without-binary-jar
+.mvn/wrapper/maven-wrapper.jar
 
 javacore.*.txt
 Snap.*.trc
 
 _old/
+
+execution-result.md
 

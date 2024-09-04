@@ -2,11 +2,12 @@ package io.holixon.axon.avro.serializer.plugin.provider
 
 import io.holixon.axon.avro.serializer.plugin.AxonAvroSerializerPluginProperties
 import io.holixon.axon.avro.serializer.plugin.AxonAvroSerializerPluginPropertiesForContextResolver
-import io.holixon.axon.avro.serializer.plugin.SingleObjectToJsonConverter
 import io.holixon.axon.avro.serializer.plugin.SingleObjectToJsonConverterProvider
-import io.toolisticon.avro.kotlin.model.wrapper.AvroSchema
-import io.toolisticon.avro.kotlin.value.AvroFingerprint
-import io.toolisticon.avro.kotlin.value.JsonString
+import io.toolisticon.kotlin.avro.AvroKotlin
+import io.toolisticon.kotlin.avro.codec.SingleObjectToJsonConverter
+import io.toolisticon.kotlin.avro.model.wrapper.AvroSchema
+import io.toolisticon.kotlin.avro.value.AvroFingerprint
+import io.toolisticon.kotlin.avro.value.JsonString
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
@@ -28,7 +29,8 @@ class RestClientSingleObjectToJsonConverterProvider(
           val properties = axonAvroSerializerPluginPropertiesForContextResolver.getAxonAvroProperties(contextName)
           getSchema(properties, key)
         }
-      }
+      },
+      genericData = AvroKotlin.genericData
     )
   }
 
@@ -58,7 +60,7 @@ class RestClientSingleObjectToJsonConverterProvider(
       val contentTypeHeader = response.headers().firstValue("Content-Type").get()
       require(contentTypeHeader == "application/json") { "Expected application/json content type, but got $contentTypeHeader" }
 
-      AvroSchema(JsonString(response.body()))
+      AvroSchema.of(JsonString.of(response.body()))
     } catch (e: Exception) {
       throw IllegalStateException("Error while retrieving Avro Schema from registry: $uri", e)
     }

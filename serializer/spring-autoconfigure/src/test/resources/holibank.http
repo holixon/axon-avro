@@ -15,19 +15,19 @@ Accept: application/json
 %}
 
 ### Create account 1
-POST http://localhost:10119/bank/accounts?id=1&amount=100
+POST http://localhost:10119/bank/accounts?id=1&amount=100&currency=EUR
 
 > {%
   client.test("Request executed successfully", function () {
-    client.assert(response.status === 201, "Response status is not 201, but " + response.status);
+    client.assert(response.status === 200, "Response status is not 200, but " + response.status);
   });
 %}
 
 ### Create account 2
-POST http://localhost:10119/bank/accounts?id=2&amount=99
+POST http://localhost:10119/bank/accounts?id=2&amount=99&currency=EUR
 
 > {%
   client.test("Request executed successfully", function () {
-    client.assert(response.status === 201, "Response status is not 201, but " + response.status);
+    client.assert(response.status === 200, "Response status is not 200, but " + response.status);
   });
 %}

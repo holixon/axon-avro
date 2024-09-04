@@ -4,9 +4,11 @@ package io.holixon.axon.avro.serializer.spring.itest.upcaster
 
 import io.holixon.axon.avro.serializer.spring.AxonAvroSerializerConfiguration
 import io.holixon.axon.avro.serializer.spring.AxonAvroSerializerSpringBase.PROFILE_ITEST
+import io.holixon.axon.avro.serializer.spring.TestFixtures
+import io.holixon.axon.avro.serializer.spring.TestFixtures.DummyEvents
 import io.holixon.axon.avro.serializer.spring.container.AxonServerContainerOld
-import io.toolisticon.avro.kotlin.AvroKotlin
-import io.toolisticon.avro.kotlin.model.wrapper.AvroSchema
+import io.toolisticon.kotlin.avro.AvroKotlin
+import io.toolisticon.kotlin.avro.model.wrapper.AvroSchema
 import mu.KLogging
 import org.assertj.core.api.Assertions.assertThat
 import org.awaitility.kotlin.await
@@ -73,11 +75,11 @@ internal class AxonAvroUpcasterITest {
       @Bean
       fun dummyEventUpcaster() = object : SingleEventUpcaster() {
         override fun canUpcast(intermediateRepresentation: IntermediateEventRepresentation): Boolean {
-         TODO() // TODO: solve revision resolution - return intermediateRepresentation.type.name == DummyEvents.SCHEMA_EVENT_01.fullName && intermediateRepresentation.type.revision == DummyEvents.SCHEMA_EVENT_01.avroSchemaRevision
+          TODO() // TODO: solve revision resolution - return intermediateRepresentation.type.name == DummyEvents.SCHEMA_EVENT_01.fullName && intermediateRepresentation.type.revision == DummyEvents.SCHEMA_EVENT_01.avroSchemaRevision
         }
 
         override fun doUpcast(intermediateRepresentation: IntermediateEventRepresentation): IntermediateEventRepresentation {
-            TODO() // TODO: solve revision resolution -
+          TODO() // TODO: solve revision resolution -
 //          return intermediateRepresentation.upcast(
 //              // SimpleSerializedType(DummyEvents.SCHEMA_EVENT_10.fullName, DummyEvents.SCHEMA_EVENT_10.avroSchemaRevision),
 //            GenericData.Record::class.java,
@@ -103,7 +105,7 @@ internal class AxonAvroUpcasterITest {
 
   @Test
   internal fun `upcast from 01 to 10 by adding value10`() {
-    val event01 = AvroKotlin.createGenericRecord(AvroSchema( DummyEvents.SCHEMA_EVENT_01)) {
+    val event01 = AvroKotlin.createGenericRecord(DummyEvents.SCHEMA_EVENT_01) {
       put("value01", "foo")
     }
 

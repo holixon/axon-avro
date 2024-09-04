@@ -1,16 +1,16 @@
-version: "3.9"
-
 services:
   axonserver:
-    image: axoniq/axonserver:2023.2.2-jdk-17
-    container_name: axon-avro-axonserver
+    image: axoniq/axonserver:2023.2.6-jdk-17
+    container_name: axon-avro-store
     ports:
       - "8024:8024"
       - "8124:8124"
     volumes:
-      - .docker/axonserver/config:/axonserver/config:ro
-      - .docker/axonserver/data:/axonserver/data
-      - .docker/axonserver/events:/axonserver/events
-      - .docker/axonserver/plugins:/axonserver/plugins
+      - .docker/config:/axonserver/config:ro
+      - .docker/data:/axonserver/data
+      - .docker/events:/axonserver/events
+      - .docker/log:/axonserver/log
+      - .docker/plugins:/axonserver/plugins
     extra_hosts:
       - "host.docker.internal:host-gateway"
+

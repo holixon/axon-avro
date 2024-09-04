@@ -1,0 +1,38 @@
+name: Comparison Test
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/comparison
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 17
+          cache: maven
+
+      - name: Prepare Maven Wrapper
+        run: chmod +x ./mvnw
+
+      - name: Build with Maven
+        run: ./mvnw clean verify -U -B -DskipTest=true -T4 -ntp -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.httpconnectionManager.ttlSeconds=120
+
+      - name: Run comparison tests
+        run: |
+          chmod +x ./lib/comparison-tests/comparison
+          ./lib/comparison-tests/comparison all
+
+      - name: Archive execution result
+        uses: actions/upload-artifact@v4
+        with:
+          name: comparison-report
+          path: execution-result.md

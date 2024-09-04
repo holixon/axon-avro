@@ -10,9 +10,9 @@ import io.holixon.axon.avro.serializer.plugin.ext.data
 import io.holixon.axon.avro.serializer.plugin.ext.findSingleObjectToJsonConverterProvider
 import io.holixon.axon.avro.serializer.plugin.ext.isDashboardRequest
 import io.holixon.axon.avro.serializer.plugin.ext.usingSingleObjectJsonConverterInContext
-import io.toolisticon.avro.kotlin.value.ByteArrayValue
-import io.toolisticon.avro.kotlin.value.JsonString
-import io.toolisticon.avro.kotlin.value.SingleObjectEncodedBytes
+import io.toolisticon.kotlin.avro.value.ByteArrayValue
+import io.toolisticon.kotlin.avro.value.JsonString
+import io.toolisticon.kotlin.avro.value.SingleObjectEncodedBytes
 import mu.KLogging
 import org.osgi.framework.FrameworkUtil
 
@@ -20,6 +20,7 @@ import org.osgi.framework.FrameworkUtil
 /**
  * If the event payload is single-object-encoded, replace the payload bytes with the json representation of the event.
  */
+@Suppress("UNUSED_PARAMETER")
 class AvroSingleObjectEncodedToJsonReadEventInterceptor(configurationHandler: AxonAvroSerializerPluginConfigurationListener) :
   ReadEventInterceptor {
 
@@ -35,7 +36,7 @@ class AvroSingleObjectEncodedToJsonReadEventInterceptor(configurationHandler: Ax
     val payloadBytes = event.payload.data.toByteArray()
 
     return try {
-      val singleObjectEncodedBytes = SingleObjectEncodedBytes(ByteArrayValue(payloadBytes))
+      val singleObjectEncodedBytes = SingleObjectEncodedBytes.of(ByteArrayValue(payloadBytes))
 
       logger.trace { "Event: $event" }
       logger.trace { "ExecutionContextData: ${executionContext.data()}" }

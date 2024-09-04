@@ -1,7 +1,7 @@
 package io.holixon.axon.avro.serializer.converter
 
-import io.toolisticon.avro.kotlin.value.ByteArrayValue
-import io.toolisticon.avro.kotlin.value.SingleObjectEncodedBytes
+import io.toolisticon.kotlin.avro.value.ByteArrayValue
+import io.toolisticon.kotlin.avro.value.SingleObjectEncodedBytes
 import org.axonframework.serialization.ContentTypeConverter
 
 class ByteArrayToSingleObjectEncodedConverter : ContentTypeConverter<ByteArray, SingleObjectEncodedBytes> {
@@ -9,5 +9,5 @@ class ByteArrayToSingleObjectEncodedConverter : ContentTypeConverter<ByteArray, 
 
   override fun targetType(): Class<SingleObjectEncodedBytes> = SingleObjectEncodedBytes::class.java
 
-  override fun convert(original: ByteArray): SingleObjectEncodedBytes = SingleObjectEncodedBytes(bytes = ByteArrayValue(original))
+  override fun convert(original: ByteArray): SingleObjectEncodedBytes = SingleObjectEncodedBytes.of(bytes = ByteArrayValue(original))
 }

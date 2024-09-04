@@ -1,8 +1,9 @@
 package io.holixon.axon.avro.serializer.spring
 
-import com.github.avrokotlin.avro4k.Avro
 import io.holixon.axon.avro.serializer.AvroSerializer
-import io.toolisticon.avro.kotlin.AvroSchemaResolver
+import io.toolisticon.kotlin.avro.repository.AvroSchemaResolver
+import io.toolisticon.kotlin.avro.repository.AvroSchemaResolverMap
+import io.toolisticon.kotlin.avro.serialization.AvroKotlinSerialization
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -19,15 +20,27 @@ open class AxonAvroSerializerConfiguration {
     const val DEFAULT_SERIALIZER = "defaultSerializer"
   }
 
+  @Bean
+  @ConditionalOnMissingBean(AvroKotlinSerialization::class)
+  fun avroKotlinSerialization(schemaResolver: AvroSchemaResolverMap): AvroKotlinSerialization {
+    // TODO: use correct setup with registered serializers
+    val avro = AvroKotlinSerialization()
+    schemaResolver.values.forEach(avro::registerSchema)
+
+    return avro
+  }
+
   /**
    * Bean factory for the serializer builder.
    */
   @Bean
   @ConditionalOnMissingBean(AvroSerializer.Builder::class)
-  fun defaultAxonSerializerBuilder(schemaResolver: AvroSchemaResolver): AvroSerializer.Builder = AvroSerializer.builder()
-    .avroSchemaResolver(schemaResolver)
-    .avro4k(Avro.default) // TODO: use correct setup with registered serializers
+  fun defaultAxonSerializerBuilder(avro: AvroKotlinSerialization): AvroSerializer.Builder {
 
+    return AvroSerializer
+      .builder()
+      .avroKotlinSerialization(avro)
+  }
 
   /**
    * Bean factory for the serializer.
@@ -39,5 +52,5 @@ open class AxonAvroSerializerConfiguration {
 
   @Bean
   @ConditionalOnProperty(value = ["\${axon.avro.serializer.rest-enabled}"], havingValue = "true", matchIfMissing = true)
-  fun schemaResolverRestResource(schemaResolver: AvroSchemaResolver) = AvroSchemaResolverResource(schemaResolver = schemaResolver)
+  fun schemaResolverRestResource(avro: AvroKotlinSerialization) = AvroSchemaResolverResource(schemaResolver = avro)
 }

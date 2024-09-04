@@ -15,8 +15,8 @@
 
   <dependencies>
     <dependency>
-      <groupId>io.toolisticon.lib</groupId>
-      <artifactId>avro-kotlin</artifactId>
+      <groupId>io.toolisticon.kotlin.avro</groupId>
+      <artifactId>avro-kotlin-serialization</artifactId>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
@@ -64,9 +64,9 @@
               org.osgi.framework;
               com.google.protobuf.*;
               java.net.*;
+              org.apache.avro.*;
               io.toolisticon.avro.kotlin.*;
               mu.*;
-              org.apache.avro.*;
               <!--
               org.xml.sax.*;
               javax.xml.parsers.*;

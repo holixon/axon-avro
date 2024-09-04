@@ -1,6 +1,6 @@
 package io.holixon.axon.avro.serializer.converter
 
-import io.toolisticon.avro.kotlin.value.JsonString
+import io.toolisticon.kotlin.avro.value.JsonString
 import org.axonframework.serialization.ContentTypeConverter
 
 
