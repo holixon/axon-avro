@@ -13,6 +13,5 @@ An ecosystem for using Apache Avro as serialization format for Axon messages.
 We plan to have several modules here:
 
 * Axon Serializer
-* Registry abstractions and implementations
 * Axon Server Plugin
 * Generators: for code generation around Avro
