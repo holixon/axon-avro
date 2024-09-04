@@ -1,7 +1,6 @@
 package io.holixon.axon.avro.serializer.spring
 
 import io.toolisticon.kotlin.avro.model.wrapper.AvroSchema
-import io.toolisticon.kotlin.avro.repository.AvroSchemaResolver
 import io.toolisticon.kotlin.avro.repository.AvroSchemaResolverMap
 import org.springframework.beans.factory.BeanFactory
 import org.springframework.boot.autoconfigure.AutoConfigurationPackages
@@ -22,11 +21,12 @@ class AvroSchemaScannerConfiguration {
     } else {
       packages
     }
-    return AvroSchemaScanner(
+    return AvroSchemaKClassScanner(
       detectKotlinXSerialization = true, // FIXME
       detectSpecificRecordBase = true, // FIXME
       resourceLoader = resourceLoader
     ).scan(packagesToScan)
+      .map { it.first }
   }
 
   @Bean

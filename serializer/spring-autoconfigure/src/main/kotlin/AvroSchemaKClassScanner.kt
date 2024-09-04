@@ -9,8 +9,9 @@ import org.springframework.context.annotation.ClassPathScanningCandidateComponen
 import org.springframework.core.io.ResourceLoader
 import org.springframework.core.type.filter.AnnotationTypeFilter
 import org.springframework.core.type.filter.AssignableTypeFilter
+import kotlin.reflect.KClass
 
-internal class AvroSchemaScanner(
+internal class AvroSchemaKClassScanner(
   private val resourceLoader: ResourceLoader,
   private val detectKotlinXSerialization: Boolean,
   private val detectSpecificRecordBase: Boolean,
@@ -20,7 +21,7 @@ internal class AvroSchemaScanner(
   companion object : KLogging()
 
   private val candidateProvider = ClassPathScanningCandidateComponentProvider(false).apply {
-    resourceLoader = this@AvroSchemaScanner.resourceLoader
+    resourceLoader = this@AvroSchemaKClassScanner.resourceLoader
     if (detectSpecificRecordBase) {
       addIncludeFilter(AssignableTypeFilter(SpecificRecordBase::class.java))
     }
@@ -29,11 +30,11 @@ internal class AvroSchemaScanner(
     }
   }
 
-  fun scan(packageNames: List<String>): List<AvroSchema> {
+  fun scan(packageNames: List<String>): List<Pair<AvroSchema, KClass<*>>> {
     return packageNames.map { packageName -> scan(packageName) }.flatten()
   }
 
-  private fun scan(packageName: String): List<AvroSchema> {
+  private fun scan(packageName: String): List<Pair<AvroSchema, KClass<*>>> {
     val candidates = candidateProvider.findCandidateComponents(packageName)
     return candidates.mapNotNull { candidate ->
       logger.trace { "Analyzing candidate: $candidate" }
@@ -44,11 +45,11 @@ internal class AvroSchemaScanner(
           val specificRecordClass = candidateClass as Class<SpecificRecordBase>
           val schema = specificRecordClass.getClassSchema()
           logger.info { "Found specific record of type: ${specificRecordClass.name} with schema $schema" }
-          schema
+          schema to candidateClass.kotlin
         } else if (candidateClass.isAnnotationPresent(Serializable::class.java) && candidateClass.kotlin.isData) {
           val schema = avro.schema(candidateClass.kotlin)
           logger.info { "Found KotlinX Serialized data class ${candidateClass.name} with schema $schema" }
-          schema
+          schema to candidateClass.kotlin
         } else {
           logger.debug { "Ignoring schema $candidate for $packageName." }
           null
