@@ -27,6 +27,7 @@
     <avro.version>1.12.0</avro.version>
     <avro-kotlin.version>1.12.2.1-SNAPSHOT</avro-kotlin.version>
     <axon-bom.version>4.10.0</axon-bom.version>
+    <kotlin-code-generation.version>0.0.6</kotlin-code-generation.version>
   </properties>
 
   <modules>
@@ -34,6 +35,7 @@
     <module>../../lib</module>
     <module>../../serializer</module>
     <module>../../server-plugin</module>
+    <module>../../axon-avro-generation</module>
     <module>../coverage-aggregator</module>
   </modules>
 
@@ -61,6 +63,14 @@
         <groupId>io.toolisticon.kotlin.avro</groupId>
         <artifactId>avro-kotlin-bom</artifactId>
         <version>${avro-kotlin.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+
+      <dependency>
+        <groupId>io.toolisticon.kotlin.generation</groupId>
+        <artifactId>kotlin-code-generation-bom</artifactId>
+        <version>${kotlin-code-generation.version}</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>

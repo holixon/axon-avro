@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>io.holixon.axon.avro</groupId>
+    <artifactId>axon-avro-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <relativePath>../pom/parent/pom.xml</relativePath>
+  </parent>
+
+  <artifactId>axon-avro-generation</artifactId>
+
+  <name>${project.artifactId}</name>
+  <description>Axon Avro Generation - strategies and processors for avro-kotlin-generator.</description>
+
+  <dependencies>
+    <dependency>
+      <groupId>io.toolisticon.kotlin.avro</groupId>
+      <artifactId>avro-kotlin-generator</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.axonframework</groupId>
+      <artifactId>axon-messaging</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.axonframework</groupId>
+      <artifactId>axon-modelling</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.axonframework</groupId>
+      <artifactId>axon-eventsourcing</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.toolisticon.kotlin.avro.test</groupId>
+      <artifactId>avro-kotlin-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.toolisticon.kotlin.generation</groupId>
+      <artifactId>kotlin-code-generation-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+</project>

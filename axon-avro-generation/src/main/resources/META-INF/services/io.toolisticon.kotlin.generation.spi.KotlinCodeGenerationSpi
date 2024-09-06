@@ -1,0 +1,21 @@
+################################################################################
+# strategies
+################################################################################
+
+io.holixon.axon.avro.generation.strategy.AxonCommandHandlerProtocolInterfaceStrategy
+io.holixon.axon.avro.generation.strategy.AxonEventHandlerInterfaceStrategy
+io.holixon.axon.avro.generation.strategy.AxonEventSourcingHandlerProtocolInterfaceStrategy
+io.holixon.axon.avro.generation.strategy.AxonQueryProtocolExtensionsStrategy
+io.holixon.axon.avro.generation.strategy.AxonQueryProtocolInterfaceStrategy
+
+################################################################################
+# processors
+################################################################################
+
+io.holixon.axon.avro.generation.processor.AxonRevisionAnnotationProcessor
+io.holixon.axon.avro.generation.processor.AxonTargetIdentifierAnnotationProcessor
+
+################################################################################
+# logical types
+################################################################################
+
