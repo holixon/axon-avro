@@ -23,7 +23,10 @@
     <module>pom/parent</module>
   </modules>
 
-  <properties/>
+  <properties>
+    <kotlin.compiler.apiVersion>1.9</kotlin.compiler.apiVersion>
+    <kotlin.compiler.languageVersion>1.9</kotlin.compiler.languageVersion>
+  </properties>
 
   <!-- this is the maven root, all dependencies have to be declared in the concrete modules -->
   <dependencyManagement/>
