@@ -71,7 +71,6 @@
     <dependency>
       <groupId>jakarta.annotation</groupId>
       <artifactId>jakarta.annotation-api</artifactId>
-      <version>2.1.1</version>
     </dependency>
 
     <!-- TEST -->
@@ -126,16 +125,6 @@
             <groupId>io.holixon.axon.avro</groupId>
             <artifactId>axon-avro-generation</artifactId>
             <version>${project.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.avro</groupId>
-            <artifactId>avro</artifactId>
-            <version>${avro.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>com.github.avro-kotlin.avro4k</groupId>
-            <artifactId>avro4k-core</artifactId>
-            <version>2.0.0</version>
           </dependency>
         </dependencies>
       </plugin>
