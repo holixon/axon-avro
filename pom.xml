@@ -26,6 +26,11 @@
   <properties>
     <kotlin.compiler.apiVersion>1.9</kotlin.compiler.apiVersion>
     <kotlin.compiler.languageVersion>1.9</kotlin.compiler.languageVersion>
+
+    <avro.version>1.12.0</avro.version>
+    <avro-kotlin.version>1.12.3.0</avro-kotlin.version>
+    <axon-bom.version>4.10.0</axon-bom.version>
+    <kotlin-code-generation.version>0.0.6</kotlin-code-generation.version>
   </properties>
 
   <!-- this is the maven root, all dependencies have to be declared in the concrete modules -->
@@ -41,6 +46,23 @@
     <!-- this is the maven root, all plugins have to be declared in the concrete modules -->
     <plugins/>
   </build>
+
+  <profiles>
+    <profile>
+      <!--
+      Example module, should be skipped during release
+      -->
+      <id>examples</id>
+      <activation>
+        <property>
+          <name>!skipExamples</name>
+        </property>
+      </activation>
+      <modules>
+        <module>_examples</module>
+      </modules>
+    </profile>
+  </profiles>
 
   <licenses>
     <license>
