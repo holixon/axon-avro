@@ -1,9 +1,7 @@
 package holi.bank
 
 import holi.bank.BankAccountContextCommandHandlers.BankAccountAggregateCommandHandlers
-import holi.bank.BankAccountContextCommandHandlers.BankAccountAggregateCommandHandlers.BankAccountAggregateFactory
 import holi.bank.BankAccountContextEventSourcingHandlers.BankAccountAggregateSourcingHandlers
-import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.modelling.command.AggregateIdentifier
 import org.axonframework.modelling.command.AggregateLifecycle
 import org.axonframework.spring.stereotype.Aggregate
@@ -16,23 +14,18 @@ class BankAccountAggregate() : BankAccountAggregateCommandHandlers, BankAccountA
   internal lateinit var accountId: String
   internal var balance: Int = -1
 
-  companion object : BankAccountAggregateFactory {
-
+  companion object {
     private const val INITIAL_BALANCE_MIN = 20
-
-    @JvmStatic
-    @CommandHandler // need to duplicate command handler
-    @Throws(IllegalInitialBalance::class)
-    override fun createBankAccount(command: CreateBankAccountCommand): BankAccountAggregate {
-      if (command.initialBalance < INITIAL_BALANCE_MIN) {
-        throw IllegalInitialBalance("Initial balance of the account must exceed ${INITIAL_BALANCE_MIN}, but it was ${command.initialBalance}.")
-      }
-      AggregateLifecycle.apply(BankAccountCreatedEvent(command.accountId, command.initialBalance))
-
-      return BankAccountAggregate()
-    }
-
   }
+
+  override fun createBankAccount(command: CreateBankAccountCommand): String {
+    if (command.initialBalance < INITIAL_BALANCE_MIN) {
+      throw IllegalInitialBalance("Initial balance of the account must exceed ${INITIAL_BALANCE_MIN}, but it was ${command.initialBalance}.")
+    }
+    AggregateLifecycle.apply(BankAccountCreatedEvent(command.accountId, command.initialBalance))
+    return command.accountId
+  }
+
 
   override fun depositMoney(command: DepositMoneyCommand) {
     AggregateLifecycle.apply(MoneyDepositedEvent(this.accountId, command.amount))
@@ -56,4 +49,5 @@ class BankAccountAggregate() : BankAccountAggregateCommandHandlers, BankAccountA
   override fun onMoneyWithdrawnEvent(event: MoneyWithdrawnEvent) {
     this.balance -= event.amount
   }
+
 }
