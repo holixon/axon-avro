@@ -15,6 +15,18 @@
   <name>${project.artifactId}</name>
   <description>Axon Avro Generation - strategies and processors for avro-kotlin-generator.</description>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.jmolecules</groupId>
+        <artifactId>jmolecules-bom</artifactId>
+        <version>2023.1.2</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
     <dependency>
       <groupId>io.toolisticon.kotlin.avro</groupId>
@@ -43,6 +55,25 @@
     <dependency>
       <groupId>io.toolisticon.kotlin.generation</groupId>
       <artifactId>kotlin-code-generation-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+
+    <dependency>
+      <groupId>org.jmolecules</groupId>
+      <artifactId>kmolecules-ddd</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jmolecules</groupId>
+      <artifactId>jmolecules-cqrs-architecture</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jmolecules</groupId>
+      <artifactId>jmolecules-events</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>

@@ -9,15 +9,17 @@ import org.axonframework.modelling.command.TargetAggregateIdentifier
 import org.axonframework.serialization.Revision
 
 @OptIn(ExperimentalKotlinPoetApi::class)
-data class RevisionAnnotation(
-  val value: String,
-) : KotlinAnnotationSpecSupplier {
-  override fun spec(): KotlinAnnotationSpec = buildAnnotation(Revision::class) {
-    addMember(FORMAT_STRING, value)
-  }
-}
+object AxonFrameworkAnnotations {
 
-@OptIn(ExperimentalKotlinPoetApi::class)
-data object TargetAggregateIdentifierAnnotation : KotlinAnnotationSpecSupplier {
-  override fun spec(): KotlinAnnotationSpec = buildAnnotation(TargetAggregateIdentifier::class)
+  data class RevisionAnnotation(
+    val value: String,
+  ) : KotlinAnnotationSpecSupplier {
+    override fun spec(): KotlinAnnotationSpec = buildAnnotation(Revision::class) {
+      addMember(FORMAT_STRING, value)
+    }
+  }
+
+  data object TargetAggregateIdentifierAnnotation : KotlinAnnotationSpecSupplier {
+    override fun spec(): KotlinAnnotationSpec = buildAnnotation(TargetAggregateIdentifier::class)
+  }
 }
