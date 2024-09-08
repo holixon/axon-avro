@@ -11,6 +11,7 @@ enum class RecordMetaDataType {
   Command,
   Query,
   QueryResult,
+  Undefined,
   ;
 
   val decapitalizedName = name.replaceFirstChar { c -> c.lowercase(Locale.getDefault()) }

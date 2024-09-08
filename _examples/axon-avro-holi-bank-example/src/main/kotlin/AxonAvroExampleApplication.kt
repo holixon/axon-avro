@@ -12,9 +12,12 @@ import org.axonframework.queryhandling.QueryGateway
 import org.axonframework.serialization.Serializer
 import org.axonframework.serialization.json.JacksonSerializer
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.event.ApplicationStartedEvent
 import org.springframework.boot.runApplication
+import org.springframework.context.ApplicationContext
+import org.springframework.context.ApplicationContextAware
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
@@ -55,9 +58,11 @@ class AxonAvroExampleApplication {
   class ExampleRunner(
     val commandGateway: CommandGateway,
     val queryGateway: QueryGateway
-  ) {
+  ) : ApplicationContextAware {
 
     companion object : KLogging()
+
+    private lateinit var applicationContext: ApplicationContext
 
     @EventListener
     fun runExample(event: ApplicationStartedEvent) {
@@ -124,7 +129,7 @@ class AxonAvroExampleApplication {
 
            Transactions for account $bankAccountId:
 
-${transactions.items.joinToString( separator = "\n")}
+${transactions.items.joinToString(separator = "\n")}
 
          ================================================================================
       """.trimIndent()
@@ -138,6 +143,13 @@ ${transactions.items.joinToString( separator = "\n")}
           ===============================================================================
         """.trimIndent()
       }
+
+      SpringApplication.exit(applicationContext, { 0 })
     }
+
+    override fun setApplicationContext(applicationContext: ApplicationContext) {
+      this.applicationContext = applicationContext
+    }
+
   }
 }
