@@ -4,9 +4,11 @@ import com.github.avrokotlin.avro4k.ListRecord
 import io.toolisticon.kotlin.avro.AvroKotlin
 import io.toolisticon.kotlin.avro.codec.GenericRecordCodec
 import io.toolisticon.kotlin.avro.value.SingleObjectEncodedBytes
+import kotlinx.serialization.ExperimentalSerializationApi
 import mu.KLogging
 import org.axonframework.serialization.ContentTypeConverter
 
+@OptIn(ExperimentalSerializationApi::class)
 class ListRecordToSingleObjectEncodedConverter : ContentTypeConverter<ListRecord, SingleObjectEncodedBytes> {
 
   companion object : KLogging()
