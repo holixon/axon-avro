@@ -12,17 +12,13 @@ mermaid:
     fontSize: 64px
   theme: forest
 ---
-<!-- slide template="[[tpl-title]]" bg="[[bg-ranked-web.png]]" -->
+<!-- slide template="[[tpl-title]]" bg="" -->
 
 ::: title
 # Meet AVRO!
 :::
 
 The future of serialization for CQRS/ES systems using axon
-
---
-
-![[__DRAFT.md]]
 
 ---
 
@@ -77,23 +73,7 @@ About Holisticon
 
 ---
 
-![[_Architecture]]
-
----
-
-![[_BoundedContexts.md]]
-
----
-
-![[_Patterns.md]]
-
----
-
-![[_Solutions.md]]
-
----
-
-![[_AxonServer.md]]
+![[_Problem-Solution.md]]
 
 ---
 
