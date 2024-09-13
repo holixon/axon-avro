@@ -1,0 +1,1 @@
+jgivenReport.setMetaData({"created":"Sep 22, 2023, 3:43:39 PM","version":"1.3.0-b044f8ab","title":"Ranked test-reports","data":["data0.js"],"showThumbnails":true} );
