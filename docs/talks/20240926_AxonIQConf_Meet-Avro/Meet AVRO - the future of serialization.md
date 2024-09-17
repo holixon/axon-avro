@@ -1,7 +1,7 @@
 ---
 title: Meet AVRO - The future of serialization for CQRS/ES systems with axon
 center: true
-theme: ranked
+theme: holisticon
 highlightTheme: vs2015
 transition: slide
 width: "1920"
