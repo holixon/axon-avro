@@ -3,9 +3,10 @@ package io.holixon.axon.avro.generation
 import com.squareup.kotlinpoet.ExperimentalKotlinPoetApi
 import io.toolisticon.kotlin.avro.generator.AvroKotlinGenerator
 import io.toolisticon.kotlin.avro.generator.spi.AvroCodeGenerationSpiRegistry
-import io.toolisticon.kotlin.generation.spec.KotlinFileSpec
+import io.toolisticon.kotlin.generation.spec.KotlinFileSpecList
 import io.toolisticon.kotlin.generation.test.KotlinCodeGenerationTest
 import io.toolisticon.kotlin.generation.test.model.KotlinCompilationCommand
+import io.toolisticon.kotlin.generation.test.model.requireOk
 import mu.KLogging
 import org.assertj.core.api.Assertions.assertThat
 import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
@@ -19,14 +20,14 @@ class BankAccountProtocolGeneratorTest {
 
   private val declaration = TestFixtures.parseProtocol("BankAccountProtocol.avpr")
   private val outputDirectory = generatedTestSourcesDirectory()
-  private var files: List<KotlinFileSpec> = emptyList()
+  private var files: KotlinFileSpecList = KotlinFileSpecList.EMPTY
 
   @BeforeEach
   fun generate() {
     val spi = AvroCodeGenerationSpiRegistry.load()
     val generator = AvroKotlinGenerator(registry = spi, properties = TestFixtures.DEFAULT_PROPERTIES)
 
-    files = generator.generate(declaration)
+    files = KotlinFileSpecList(generator.generate(declaration))
     files.forEach {
       val written = it.get().writeTo(outputDirectory)
       logger.info("Generated file://${written.absolutePath}")
@@ -42,12 +43,10 @@ class BankAccountProtocolGeneratorTest {
   fun `should compile generated code`() {
     println("Compiling....")
     val result = KotlinCodeGenerationTest.compile(
-      KotlinCompilationCommand(
-        fileSpecs = files
-      )
+      KotlinCompilationCommand(files)
     )
     println("Compilation ready.")
-    result.shouldBeOk()
+    result.requireOk()
     /*
     result.result.messages.lines()
       .filter { line -> line.endsWith(".kt") }
