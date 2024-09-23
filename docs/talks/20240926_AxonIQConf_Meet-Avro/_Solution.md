@@ -1,7 +1,23 @@
-<!-- slide template="[[tpl-intermediate]]" bg="[[holisticon-bg.svg]]" -->
+<!-- slide template="[[tpl-intermediate-subtitle]]" bg="[[holisticon-bg.svg]]" -->
+
+::: title
+DDD & CQRS/ES
+:::
+
+::: subtitle
+The Solution
+:::
+
+--
+
+<!-- slide template="[[tpl-intermediate-subtitle]]" bg="[[holisticon-bg.svg]]" -->
 
 ::: title
 Apache AVRO
+:::
+
+::: subtitle
++ _with some engineering, kotlin and fairy dust_
 :::
 
 --

@@ -3,14 +3,13 @@
 </grid>
 
 <grid drag="100 60" drop="0 12" align="center">
- <% content %>
+  <% content %>
 </grid>
 
 <grid drag="47 20" drop="5 75" align="topleft">
-<%? left %>
+  <%? left %>
 </grid>
 
 <grid drag="47 20" drop="52 75" align="topleft">
-<%? right %>
+  <%? right %>
 </grid>
-

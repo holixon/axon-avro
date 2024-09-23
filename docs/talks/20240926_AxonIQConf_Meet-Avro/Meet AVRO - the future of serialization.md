@@ -12,17 +12,21 @@ mermaid:
     fontSize: 64px
   theme: forest
 ---
-<!-- slide template="[[tpl-title]]" bg="" -->
+<!-- slide template="[[tpl-title]]" bg="[[holisticon-bg.svg]]" -->
 
 ::: title
-# Meet AVRO!
+![[avro-logo.png]]
+
+Meet AVRO!
 :::
 
-The future of serialization for CQRS/ES systems using axon
+::: subtitle
+The future of serialization for CQRS/ES systems using Axon Framework.
+:::
 
 ---
 
-<!-- slide template="[[tpl-col-1-1-footer]]" -->
+<!-- slide template="[[tpl-col-1-1-footer]]" bg="[[holisticon-bg.svg]]" -->
 
 ::: title
 Who are we?
@@ -32,19 +36,19 @@ Who are we?
 - Consultants @ holisticon
 - Backend developers, software architects
 - DDD, CQRS/ES, Axon Framework, Spring, Kotlin, Java
-::: 
+:::
 
 ::: left
-![[simon-zambrovski-comic.png]]
+![[simon-zambrovski-comic-gr.png]]
 :::
 
 ::: right
-![[jan-galinski-comic.png]]
-::: 
+![[jan-galinski-comic-gr.png]]
+:::
 
 --
 
-<!-- slide template="[[tpl-col-1-1]]" -->
+<!-- slide template="[[tpl-col-1-1]]" bg="[[holisticon-bg.svg]]" -->
 
 ::: title
 About Holisticon
@@ -56,16 +60,31 @@ About Holisticon
   - Hannover
   - Lissabon
 - Founded 2007
-- **AxonIQ Partner** 
+- **AxonIQ Partner**
 - Cool crew (~100 people)
 - Kununu Best Employer 2023 in Germany
-- And yes ...
-  + we are hiring 
++ And yes ...
+  + we are hiring
 :::
 
 ::: right
 ![[about-holisticon.png|900]]
 :::
+
+---
+![[_Challenges.md]]
+---
+![[_Solution.md]]
+---
+
+
+<!-- slide template="[[tpl-col-1-1]]" bg="[[holisticon-bg.svg]]" -->
+
+::: title
+DDD & CQRS/ES - The challenges
+:::
+
+
 
 ---
 
