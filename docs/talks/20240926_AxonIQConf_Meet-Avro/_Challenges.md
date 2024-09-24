@@ -50,14 +50,16 @@ IT Challenges
 
 + Your system will consist of multiple **micro-services** _(polyglot?)_ 
 + You will need to **share** your `commands`, `events` and `queries` between services and teams.
-  + You must always use the latest revisions
-+ The semantics of your messages and the **axon framework** require you to implement specific `command`- `event`- and `query` handlers
+  + You must always use the latest **revisions**
+  + You must share **serialization** details as well
++ The semantics of your messages and the **axon framework** require you to implement specific handler functions
 + You must not make any **mistakes**!
 :::
 
 ::: right
 ### Operation
 
++ No overhead: high **performance** serialization
 + Long term storage: You want to have a **compact storage format** that does not waste precious disk space
 + If business changes events, you will have to develop smart **upcasting**, keeping compatibility
   + _`Upcasters` need to be **distributed** as well_
