@@ -127,7 +127,7 @@ How can our `AXON-AVRO` help?
   + auto configurable 
   + about as fast as `jackson`
 + **Compact storage** via `Single Object Encoded` bytes 
-  + reduce disk usage by min 10% < `json cbor`
+  + reduce disk usage by min 10% < `jackson cbor`
 + Axon dashboard **plugin** to read events as `json`
 
 ### QA
