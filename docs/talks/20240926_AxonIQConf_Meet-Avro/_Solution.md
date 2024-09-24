@@ -9,6 +9,17 @@ The Solution
 :::
 
 --
+<!-- slide template="[[tpl-intermediate-subtitle]]" bg="[[holisticon-bg.svg]]" -->
+
+::: title
+Apache `AVRO`
+:::
+
+::: subtitle
+plus our `axon-avro` extension
+:::
+
+--
 <!-- slide template="[[tpl-col-1-1]]" bg="[[holisticon-bg.svg]]" -->
 
 ::: title
