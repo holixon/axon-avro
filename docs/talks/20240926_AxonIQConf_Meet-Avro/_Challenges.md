@@ -9,7 +9,6 @@ The Challenges
 :::
 
 --
-
 <!-- slide template="[[tpl-col-1-1]]" bg="[[holisticon-bg.svg]]" -->
 
 ::: title
@@ -20,23 +19,21 @@ Business Challenges
 
 ### Design
 
-+ Messages are first class citizens
-+ Your system behavior and state is expressed by `commands`, `events` and `queries`
-  + Messages have semantics (a `command` triggers an `event`, a `response` answers a `query`)
-+ Business and IT need to communicate in terms of _messages_ and _UBL_
++ Messages are **first class citizens** _(Event Storming)_
++ Your system **behavior** and state is expressed by `commands`, `events` and `queries`
+  + `Messages` have **semantics** (a `command` triggers an `event`, a `response` answers a `query`)
++ Business and IT need to **communicate** in terms of `messages` and **UBL**
   + Your Business does not work with `String` and `Integer`, it uses `CustomerId` and `Amount`
-+ _You do not want to rely on first-class-citizens in your systems to be done right by some developer hacking in one IDE_
-
 :::
 
 ::: right
-
 ### Evolution
 
-+ `Events` are stored long term in an append only store
-+ You will need to identify and read `events` years from now
-+ If you are forced to change an event you need to to know if it is still compatible to the previos version
-
++ You will need to **identify** and read `events` years from now
+  + `Events` are stored **long term** in an append only store
++ If you are forced to change an `event` you need to know if it is still **compatible** to the previous version
++ <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
++ _You do not want to rely on some developer **hacking** everything correctly in some IDE_
 :::
 
 --
@@ -51,26 +48,21 @@ IT Challenges
 
 ### Development
 
-+ Your system will consist of multiple micro-services
-+ You will need to share your `commands`, `events` and `queries` between services and teams.
-+ The semantics of your messages and the axon framework require you to implement specific command- event- and query handlers
-+ You must not make any mistakes
-+ You must always use the latest models
-
-
++ Your system will consist of multiple **micro-services** _(polyglot?)_ 
++ You will need to **share** your `commands`, `events` and `queries` between services and teams.
+  + You must always use the latest revisions
++ The semantics of your messages and the **axon framework** require you to implement specific `command`- `event`- and `query` handlers
++ You must not make any **mistakes**!
 :::
 
 ::: right
-
 ### Operation
 
-+ `Events` are stored long term in an append only store
-+ You want to have a compact storage format that does not waste precious disk space
-+ If business changes events, you will have to develop smart upcasting, keeping compatibility
-+ Upcasters need to be distributed as well
++ Long term storage: You want to have a **compact storage format** that does not waste precious disk space
++ If business changes events, you will have to develop smart **upcasting**, keeping compatibility
+  + _`Upcasters` need to be **distributed** as well_
 
 ### QA
 
-+ You need to test handlers, messages and upcasters
-
++ You need to **test** `handlers`, `messages` and `upcasters`
 :::

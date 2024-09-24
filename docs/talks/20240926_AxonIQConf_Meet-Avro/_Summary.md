@@ -39,27 +39,17 @@ Questions
 :::
 
 ::: left
+### Links
 
-### Interested?
-
-> ![[qr-code-axon-avro.png|500]]
+![[qr-code-axon-avro.png|500]]
 
 <pre>https://github.com/holixon/axon-avro</pre>
 <pre>https://holisticon.de/</pre>
 <pre>https://about.me/zambrovski</pre>
 <pre>https://about.me/jangalinski</pre>
-
-
 :::
 
 ::: right
-
-<i class="fas fa-question-circle fa-8x"></i>
-
 ### Anything you want to ask?
-
-- [holisticon.de/](https://holisticon.de/)
-- [about.me/zambrovski](https://about.me/zambrovski)
-- [about.me/jangalinski](https://about.me/jangalinski)
-
+<i class="fas fa-question-circle fa-8x"></i>
 :::

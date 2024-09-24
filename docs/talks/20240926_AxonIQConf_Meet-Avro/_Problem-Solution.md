@@ -1,28 +1,3 @@
-<!-- slide template="[[tpl-intermediate]]" bg="[[holisticon-bg.svg]]" -->
-
-::: title
-Serialization - What we want?
-:::
-
---
-
-<!-- slide template="[[tpl-col-1-1]]" bg="[[holisticon-bg.svg]]" -->
-
-::: title
-Schema first
-:::
-
-::: left
-
-### <i class="fas fa-question-circle fa-1x"></i> Problem
-
-- Business Events
-- You want schema based messages (especially events)
-- _you do not want to rely on first-class-citizens in your systems to be done right by some developer hacking in one IDE_
-- Long-lived - understand what's in an event years from now
-
-:::
-
 
 ::: right
 
@@ -32,29 +7,9 @@ Schema first
 - directly expressed with business using event storming/modelling
 - schema hash encoded in message - able to look-up building plan of message from registry
 
-:::
-
-
---
-
-<!-- slide template="[[tpl-col-1-1]]" bg="[[holisticon-bg.svg]]" -->
-
-::: title
-Schema Evolution
-:::
-
-::: left
-
-### <i class="fas fa-question-circle fa-1x"></i> Problem
-
 - Schema Evolution/Upcasting
 - not from one class to another class but from one schema to another schema
 - mental model mismatch
-
-:::
-
-
-::: right
 
 ### Solution <i class="fas fa-exclamation-circle fa-1x"></i>
 
