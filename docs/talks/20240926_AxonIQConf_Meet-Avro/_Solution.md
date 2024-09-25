@@ -46,8 +46,8 @@ What is Apache `AVRO`?
 * Created in 2011, as part of Hadoop ecosystem
 * Platform independent - FE/BE, LLM, Messaging, ...
 * Schema-First approach for types and protocols
-  * Defines a type system _(int, string, long, array, record, ...)_
-  * Defines serialization encodings  _(JSON, Binary, Single Object Encoding)_
+  * Defines a **Type system**  _(int, string, long, array, record, ...)_
+  * Defines **serialization encodings**  _(JSON, Binary, Single Object Encoding)_
 ::: 
 
 --
@@ -72,28 +72,28 @@ How can Apache `AVRO` help you?
 
 ### Design
 
-+ **Schema-First** Approach
++ Apply **Schema-First** approach
   + Directly express your `commands`, `events` and `queries` via `schema` declaration
-+ Describe context behavior as **Protocol**s  
-  + simple `messages` abstraction for `request`, `response` and `error`
-+ centralized **Schema-Registry**
-+ UBL supported by **Logical Types**
-  + define custom value types (`CustomerId`, ...)
-+ Extensible `schema` declaration
-  + Express (non)technical properties inside the schema 
++ Specify context behavior by **Protocol**s  
+  + Use `messages` abstraction for `request`, `response` and `error`
++ Use central **Schema-Registry**
++ Build your UBL using **Logical Types**
+  + Define custom value types (`CustomerId`, ...)
++ Extend `schema` declaration
+  + Express additional properties inside the schema 
 
 :::
 
 ::: right
 ### Evolution
 
-+ Schema **compatibility** matrix
-  + different levels of forward/backward compatibility
-  + separation of `writer` and `reader` **schema**
++ Schema **(in)compatibility** matrix
+  + Different levels of forward/backward compatibility
+  + Separation of `writer` and `reader` **schema**
 + Schema **fingerprint** embedded in messages
-  + ability to look up the `writer-schema`
+  + Ability to look up the `writer-schema`
 + Simplified **upcasting**
-  + definition of **default** values for new properties
+  + **Defaults**  for can be defined for new properties
   + **Conflicts** can be determined on `schema` level
   + The **intermediate representation** _(`GenericRecord`)_ understands the underlying `schema` (no mental model mismatch)
 :::
@@ -111,10 +111,10 @@ How can our `AXON-AVRO` help?
 + Do not share versioned **libraries** between teams, use **schema registry**
 <!--  + centralized `schema` declarations, always access the latest revision -->
 + Generate **Core API**
-  + (data) classes for `commands`, `events`, `queries`, `responses` and `errors` 
+  + (data) Classes for `commands`, `events`, `queries`, `responses` and `errors` 
 + Generate **Command Model**
   + `interfaces` for `CommandHandler` and `EventSourcingHandler` functions
-  + custom `CommandGateway` for type safe publishing
+  + Custom `CommandGateway` for type safe publishing
 + Generate **Query Model**
   + `interfaces` for `QueryHandler` functions
   + `QueryGateway` extensions for type safe and reliant `query`/`response` clients
@@ -123,14 +123,14 @@ How can our `AXON-AVRO` help?
 ::: right
 ### Operation
 
-+ Pluggable `AVRO` serializer
-  + auto configurable 
-  + about as fast as `jackson`
-+ **Compact storage** via `Single Object Encoded` bytes 
-  + reduce disk usage by min 10% < `jackson cbor`
-+ Axon dashboard **plugin** to read events as `json`
++ Use pluggable `AVRO` serializer
+  + Auto configurable 
+  + At least as fast as `jackson`
++ **Compact storage** via `Single Object Encoded` bytes encoding
+  + Reduce disk usage by at least 10% < `jackson cbor`
++ Axon Dashboard Server **plugin** to read events as `json`
 
 ### QA
 
-+ Avoid making any **mistakes** because boilerplate is derived from `schema`!
++ Avoid making any **mistakes** because boilerplate is generated from `schema`
 :::

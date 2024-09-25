@@ -260,7 +260,7 @@ ul li::marker {
   display: block;
   padding: 5px;
   overflow: auto;
-  max-height: 400px;
+  max-height: 800px;
   word-wrap: normal;
 }
 .reveal .code-wrapper {
