@@ -17,7 +17,6 @@ class BankAccountProjection : BankAccountContextAllEventHandlers, BankAccountPro
     return Optional.ofNullable(balances[query.accountId])
   }
 
-
   override fun findAllMoneyTransfersForAccountId(query: FindAllMoneyTransfersByAccountIdQuery): MoneyTransfers {
     return MoneyTransfers(transfers[query.accountId] ?: emptyList())
   }
