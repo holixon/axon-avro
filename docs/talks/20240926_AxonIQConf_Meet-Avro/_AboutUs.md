@@ -19,26 +19,5 @@ Who are we?
 :::
 
 --
+<!-- slide  bg="[[about-holisticon-slide.png]]" -->
 
-<!-- slide template="[[tpl-col-1-1]]" bg="[[holisticon-bg.svg]]" -->
-
-::: title
-About Holisticon
-:::
-
-::: left
-- IT & Management Consulting
-  - Hamburg
-  - Hannover
-  - Lissabon
-- Founded 2007
-- **AxonIQ Partner**
-- Cool crew (~100 people)
-- Kununu Best Employer 2023 in Germany
-+ And yes ...
-  + we are hiring
-    :::
-
-::: right
-![[about-holisticon.png|900]]
-:::
