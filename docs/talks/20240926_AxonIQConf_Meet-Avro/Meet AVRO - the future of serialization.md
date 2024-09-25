@@ -2,7 +2,7 @@
 title: Meet AVRO - The future of serialization for CQRS/ES systems with axon
 center: true
 theme: holisticon
-highlightTheme: vs2015
+highlightTheme: zenburn
 transition: slide
 width: "1920"
 height: "1080"
@@ -18,7 +18,7 @@ subtitle: Schema-First, lightning fast message serialization with decreased disk
 ::: title
 ![[avro-logo.png]]
 
-Meet `AVRO`!
+Meet Apache AVRO
 :::
 
 ::: subtitle

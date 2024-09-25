@@ -18,24 +18,27 @@ Summary
 ::: left
 ### What we showed today
 
-+ Apache `AVRO` is a powerful schema first **serialization** platform
 + Schema-First is a good idea for DDD/UBL and **Business/IT-Alignment**
++ Apache `AVRO` is a powerful schema-first **serialization** platform
 + **Code-Generation** improves your life by avoiding boilerplate and bugs 
-+ **Prototype** implementation of `axon-avro` - needs to improve
+	+ Pluggable Kotlin generator
++ **Prototype** implementation of `axon-avro` extension
+	+ Axon Framework Serializer
+	+ Axon Server Plugin
 :::
 
 ::: right
 ### What we do next
 
 + Implement missing MUST **features**
-  + custom logical (value) types
-  + registry support
+  + Custom logical (value) types generator support
+  + Improved registry support
 + Explore/implement optional ideas
   + **jMolecules** support - annotated architecture
-  + derive **documentation** (context map, plant-uml, markdown, ...) 
-  + combine with `FModel` - generate delegating aggregate
+  + Derive **documentation** (context map, plant-uml, markdown, ...) 
+  + Combine with `FModel` - generate delegating aggregate
 + Research
-  + use it in polyglot environments
+  + Use it in polyglot environments (TypeScript, Python)
   + Data protection and schema?
 
 :::
