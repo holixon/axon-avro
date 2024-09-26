@@ -93,7 +93,7 @@ How can Apache `AVRO` help you?
 + Schema **fingerprint** embedded in messages
   + Ability to look up the `writer-schema`
 + Simplified **upcasting**
-  + **Defaults**  for can be defined for new properties
+  + **Defaults** can be defined for new properties
   + **Conflicts** can be determined on `schema` level
   + The **intermediate representation** _(`GenericRecord`)_ understands the underlying `schema` (no mental model mismatch)
 :::

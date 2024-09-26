@@ -52,7 +52,7 @@ IT Challenges
 + You will need to **share** your `commands`, `events` and `queries` between services and teams
   + You must always use the latest **revisions**
   + You must share **serialization** details as well
-+ The semantics of your messages and the **axon framework** require you to implement specific handler functions
++ The semantics of your messages and the **Axon Framework** require you to implement specific handler functions
 + You must not make any **mistakes**!
 :::
 
