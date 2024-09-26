@@ -13,7 +13,7 @@ mermaid:
   theme: forest
 subtitle: Schema-First, lightning fast message serialization with decreased disk usage and less boilerplate.
 ---
-<!-- slide template="[[tpl-title]]" bg="[[holisticon-bg.svg]]" -->
+<!-- slide template="[[tpl-title]]" bg="[[holisticon-bg.svg]]" data-background-opacity=".2" -->
 
 ::: title
 ![[avro-logo.png]]

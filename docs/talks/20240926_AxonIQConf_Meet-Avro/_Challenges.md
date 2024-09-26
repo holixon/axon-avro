@@ -9,7 +9,7 @@ The Challenges
 :::
 
 --
-<!-- slide template="[[tpl-col-1-1]]" bg="[[holisticon-bg.svg]]" -->
+<!-- slide template="[[tpl-col-1-1]]" bg="[[holisticon-bg.svg]]" data-background-opacity=".2" -->
 
 ::: title
 Business Challenges
@@ -38,7 +38,7 @@ Business Challenges
 
 --
 
-<!-- slide template="[[tpl-col-1-1]]" bg="[[holisticon-bg.svg]]" -->
+<!-- slide template="[[tpl-col-1-1]]" bg="[[holisticon-bg.svg]]" data-background-opacity=".2" -->
 
 ::: title
 IT Challenges

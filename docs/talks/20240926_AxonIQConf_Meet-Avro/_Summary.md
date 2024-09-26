@@ -1,4 +1,4 @@
-<!-- slide template="[[tpl-intermediate-subtitle]]" bg="[[holisticon-bg.svg]]" -->
+<!-- slide template="[[tpl-intermediate-subtitle]]" bg="[[holisticon-bg.svg]]" data-background-opacity=".2" -->
 
 ::: title
 Summary
@@ -9,7 +9,7 @@ Summary
 :::
 
 --
-<!-- slide template="[[tpl-col-1-1]]" bg="[[holisticon-bg.svg]]" -->
+<!-- slide template="[[tpl-col-1-1]]" bg="[[holisticon-bg.svg]]" data-background-opacity=".2" -->
 
 ::: title
 Summary
@@ -44,7 +44,7 @@ Summary
 :::
 
 --
-<!-- slide template="[[tpl-col-1-1-footer]]" bg="[[holisticon-bg.svg]]" -->
+<!-- slide template="[[tpl-col-1-1-footer]]" bg="[[holisticon-bg.svg]]" data-background-opacity=".2" -->
 
 ::: title
 

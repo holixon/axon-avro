@@ -1,4 +1,4 @@
-<!-- slide template="[[tpl-col-1-1-footer]]" bg="[[holisticon-bg.svg]]" -->
+<!-- slide template="[[tpl-col-1-1-footer]]" bg="[[holisticon-bg.svg]]" data-background-opacity=".2" -->
 
 ::: title
 Who are we?

@@ -1,4 +1,4 @@
-<!-- slide template="[[tpl-intermediate-subtitle]]" bg="[[holisticon-bg.svg]]" -->
+<!-- slide template="[[tpl-intermediate-subtitle]]" bg="[[holisticon-bg.svg]]" data-background-opacity=".2" -->
 
 ::: title
 DDD & CQRS/ES
@@ -9,18 +9,18 @@ The Solution
 :::
 
 --
-<!-- slide template="[[tpl-intermediate-subtitle]]" bg="[[holisticon-bg.svg]]" -->
+<!-- slide template="[[tpl-intermediate-subtitle]]" bg="[[holisticon-bg.svg]]" data-background-opacity=".2" -->
 
 ::: title
 Apache `AVRO`
 :::
 
 ::: subtitle
-plus our `axon-avro` extension
+plus our axon-avro extension  <!-- element class="fragment" -->
 :::
 
 --
-<!-- slide template="[[tpl-col-1-1]]" bg="[[holisticon-bg.svg]]" -->
+<!-- slide template="[[tpl-col-1-1]]" bg="[[holisticon-bg.svg]]" data-background-opacity=".2" -->
 
 ::: title
 What is Apache `AVRO`?
@@ -30,7 +30,7 @@ What is Apache `AVRO`?
 
 ### Self Promotion
 
-> Apache Avro™ is the leading serialization format for record data, and first choice for
+> Apache Avro™ is the leading **serialization format** for record data, and first choice for
 > streaming data pipelines.
 >
 >
@@ -45,13 +45,13 @@ What is Apache `AVRO`?
 
 * Created in 2011, as part of Hadoop ecosystem
 * Platform independent - FE/BE, LLM, Messaging, ...
-* Schema-First approach for types and protocols
+* **Schema-First** approach for types and protocols
   * Defines a **Type system**  _(int, string, long, array, record, ...)_
   * Defines **serialization encodings**  _(JSON, Binary, Single Object Encoding)_
 ::: 
 
 --
-<!-- slide template="[[tpl-col-1-center-wide]]" bg="[[holisticon-bg.svg]]" -->
+<!-- slide template="[[tpl-col-1-center-wide]]" bg="[[holisticon-bg.svg]]" data-background-opacity=".2" -->
 
 ::: title
 What is Apache `AVRO`?
@@ -62,7 +62,7 @@ Example of a simplified bank-account context (json):
 ![[BankAccountContextProtocol]]
 
 --
-<!-- slide template="[[tpl-col-1-1]]" bg="[[holisticon-bg.svg]]" -->
+<!-- slide template="[[tpl-col-1-1]]" bg="[[holisticon-bg.svg]]" data-background-opacity=".2" -->
 
 ::: title
 How can Apache `AVRO` help you?
@@ -88,18 +88,17 @@ How can Apache `AVRO` help you?
 ### Evolution
 
 + Schema **(in)compatibility** matrix
-  + Different levels of forward/backward compatibility
   + Separation of `writer` and `reader` **schema**
+  + Different levels of forward/backward compatibility
 + Schema **fingerprint** embedded in messages
   + Ability to look up the `writer-schema`
 + Simplified **upcasting**
-  + **Defaults** can be defined for new properties
   + **Conflicts** can be determined on `schema` level
   + The **intermediate representation** _(`GenericRecord`)_ understands the underlying `schema` (no mental model mismatch)
 :::
 
 --
-<!-- slide template="[[tpl-col-1-1]]" bg="[[holisticon-bg.svg]]" -->
+<!-- slide template="[[tpl-col-1-1]]" bg="[[holisticon-bg.svg]]" data-background-opacity=".2" -->
 
 ::: title
 How can our `AXON-AVRO` help?
@@ -116,7 +115,7 @@ How can our `AXON-AVRO` help?
   + `interfaces` for `CommandHandler` and `EventSourcingHandler` functions
   + Custom `CommandGateway` for type safe publishing
 + Generate **Query Model**
-  + `interfaces` for `QueryHandler` functions
+  + `interfaces` for `QueryHandler` and `EventHandler` functions
   + `QueryGateway` extensions for type safe and reliant `query`/`response` clients
 :::
 

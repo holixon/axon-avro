@@ -1,11 +1,11 @@
-<!-- slide template="[[tpl-intermediate-subtitle]]" bg="[[holisticon-bg.svg]]" -->
+<!-- slide template="[[tpl-intermediate-subtitle]]" bg="[[holisticon-bg.svg]]" data-background-opacity=".2" -->
 
 ::: title
 Demo Time
 :::
 
 ::: subtitle
-aka _flicker book_
+aka flicker book   <!-- element class="fragment" -->
 :::
 
 --
