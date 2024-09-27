@@ -1,0 +1,129 @@
+@font-face {
+    font-family: 'ES Klarheit Kurrent';
+    font-weight: 400;
+    src: url('./ESKlarheitKurrent-Rg.woff2') format('woff2');
+    font-style: normal;
+    font-display: swap;
+    }
+
+@font-face {
+    font-family: 'ES Klarheit Kurrent';
+    font-weight: 400;
+    src: url('./ESKlarheitKurrent-It.woff2') format('woff2');
+    font-style: italic;
+    font-display: swap;
+    }
+
+@font-face {
+    font-family: 'ES Klarheit Kurrent';
+    font-weight: 500;
+    src: url('./ESKlarheitKurrent-Md.woff2') format('woff2');
+    font-style: normal;
+    font-display: swap;
+    }
+
+@font-face {
+    font-family: 'ES Klarheit Kurrent';
+    font-weight: 500;
+    src: url('./ESKlarheitKurrent-MdIt.woff2') format('woff2');
+    font-style: italic;
+    font-display: swap;
+    }
+
+@font-face {
+    font-family: 'ES Klarheit Kurrent';
+    font-weight: 600;
+    src: url('./ESKlarheitKurrent-Smbd.woff2') format('woff2');
+    font-style: normal;
+    font-display: swap;
+    }
+
+@font-face {
+    font-family: 'ES Klarheit Kurrent';
+    font-weight: 600;
+    src: url('./ESKlarheitKurrent-SmbdIt.woff2') format('woff2');
+    font-style: italic;
+    font-display: swap;
+    }
+
+@font-face {
+    font-family: 'ES Klarheit Kurrent';
+    font-weight: 700;
+    src: url('./ESKlarheitKurrent-Bd.woff2') format('woff2');
+    font-style: normal;
+    font-display: swap;
+    }
+
+@font-face {
+    font-family: 'ES Klarheit Kurrent';
+    font-weight: 700;
+    src: url('./ESKlarheitKurrent-BdIt.woff2') format('woff2');
+    font-style: italic;
+    font-display: swap;
+    }
+
+/* ES Klarheit Grotesk */
+
+@font-face {
+    font-family: 'ES Klarheit Grotesk';
+    font-weight: 400;
+    src: url('./ESKlarheitGrotesk-Rg.woff2') format('woff2');
+    font-style: normal;
+    font-display: swap;
+    }
+
+@font-face {
+    font-family: 'ES Klarheit Grotesk';
+    font-weight: 400;
+    src: url('./ESKlarheitGrotesk-It.woff2') format('woff2');
+    font-style: italic;
+    font-display: swap;
+    }
+
+@font-face {
+    font-family: 'ES Klarheit Grotesk';
+    font-weight: 500;
+    src: url('./ESKlarheitGrotesk-Md.woff2') format('woff2');
+    font-style: normal;
+    font-display: swap;
+    }
+
+@font-face {
+    font-family: 'ES Klarheit Grotesk';
+    font-weight: 500;
+    src: url('./ESKlarheitGrotesk-MdIt.woff2') format('woff2');
+    font-style: italic;
+    font-display: swap;
+    }
+
+@font-face {
+    font-family: 'ES Klarheit Grotesk';
+    font-weight: 600;
+    src: url('./ESKlarheitGrotesk-Smbd.woff2') format('woff2');
+    font-style: normal;
+    font-display: swap;
+    }
+
+@font-face {
+    font-family: 'ES Klarheit Grotesk';
+    font-weight: 600;
+    src: url('./ESKlarheitGrotesk-SmbdIt.woff2') format('woff2');
+    font-style: italic;
+    font-display: swap;
+    }
+
+@font-face {
+    font-family: 'ES Klarheit Grotesk';
+    font-weight: 700;
+    src: url('./ESKlarheitGrotesk-Bd.woff2') format('woff2');
+    font-style: normal;
+    font-display: swap;
+    }
+
+@font-face {
+    font-family: 'ES Klarheit Grotesk';
+    font-weight: 700;
+    src: url('./ESKlarheitGrotesk-BdIt.woff2') format('woff2');
+    font-style: italic;
+    font-display: swap;
+    }

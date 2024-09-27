@@ -1,6 +1,6 @@
 services:
   axonserver:
-    image: axoniq/axonserver:2023.2.6-jdk-17
+    image: axoniq/axonserver:2024.1.2-jdk-17
     container_name: axon-avro-holi-bank-example
     ports:
       - "8024:8024"
@@ -8,4 +8,3 @@ services:
     environment:
       AXONIQ_AXONSERVER_DEVMODE_ENABLED: true
       AXONIQ_AXONSERVER_STANDALONE: true
-
