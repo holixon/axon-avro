@@ -8,7 +8,7 @@ import java.util.*
  */
 enum class MessageMetaDataType {
   Decider,
-  DeciderInit,
+  Factory,
   Query;
 
   val decapitalizedName = name.replaceFirstChar { c -> c.lowercase(Locale.getDefault()) }
