@@ -24,15 +24,15 @@ fun AvroProtocol.Message.isQuery(): Boolean {
       .any { RecordMetaDataType.Query == it.type }
     // TODO: analyze response of query
    */
-  return this.messageMetaData()?.type == MessageMetaDataType.Query
+  return this.messageMetaData()?.types?.contains(MessageMetaDataType.Query) ?: false
 }
 
 fun AvroProtocol.Message.isDecider(): Boolean {
-  return this.messageMetaData()?.type == MessageMetaDataType.Decider
+  return this.messageMetaData()?.types?.contains(MessageMetaDataType.Decider) ?: false
 }
 
-fun AvroProtocol.Message.isDeciderInit(): Boolean {
-  return this.messageMetaData()?.type == MessageMetaDataType.DeciderInit
+fun AvroProtocol.Message.isFactory(): Boolean {
+  return this.messageMetaData()?.types?.contains(MessageMetaDataType.Factory) ?: false
 }
 
 

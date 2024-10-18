@@ -51,7 +51,7 @@ class AxonEventSourcingHandlerProtocolInterfaceStrategy : AvroFileSpecFromProtoc
     Single interface for each event souring handler
      */
     input.protocol.messages.filterTwoWay()
-      .filterValues { message -> message.isDecider() || message.isDeciderInit() }
+      .filterValues { message -> message.isDecider() || message.isFactory() }
       .entries
       .groupBy { message -> message.value.messageMetaData()?.group?.value ?: UNKNOWN_GROUP }
       .mapNotNull { (groupName, messages) ->
@@ -107,6 +107,6 @@ class AxonEventSourcingHandlerProtocolInterfaceStrategy : AvroFileSpecFromProtoc
   override fun test(context: ProtocolDeclarationContext, input: Any): Boolean {
     return super.test(context, input)
       && input is ProtocolDeclaration
-      && input.protocol.messages.values.any { message -> message.isDecider() || message.isDeciderInit() }
+      && input.protocol.messages.values.any { message -> message.isDecider() || message.isFactory() }
   }
 }
