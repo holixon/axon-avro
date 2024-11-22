@@ -34,6 +34,7 @@
     <module>../test</module>
     <module>../../lib</module>
     <module>../../serializer</module>
+    <module>../../serializer-strategy</module>
     <module>../../server-plugin</module>
     <module>../../axon-avro-generation</module>
     <module>../coverage-aggregator</module>
