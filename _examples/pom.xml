@@ -23,6 +23,8 @@
 
   <modules>
     <module>axon-avro-holi-bank-example</module>
+    <module>axon-411-serializer-kotlin-example</module>
+    <module>axon-411-serializer-java-example</module>
   </modules>
 
   <dependencyManagement>

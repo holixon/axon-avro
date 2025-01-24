@@ -12,6 +12,7 @@ import org.axonframework.serialization.avro.AvroUtil
 
 class AvroKotlinSerializerStrategy(
   private val avro: AvroKotlinSerialization,
+  private val includeSchemasInStackTraces: Boolean = true,
   private val revisionResolver: RevisionResolver
 ) : AvroSerializerStrategy {
 
@@ -39,7 +40,8 @@ class AvroKotlinSerializerStrategy(
       type,
       avro.schema(type.kotlin).get(),
       avro[AvroFingerprint.of(ByteArrayValue(serializedObject.data))].get(),
-      e
+      e,
+      includeSchemasInStackTraces
     )
   }
 
