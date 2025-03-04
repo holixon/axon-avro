@@ -2,7 +2,6 @@ package io.holixon.axon.avro.generation.strategy
 
 import _ktx.StringKtx.firstUppercase
 import com.squareup.kotlinpoet.*
-import io.holixon.axon.avro.generation.meta.AxonAvroMetaData.Companion.metaData
 import io.holixon.axon.avro.generation.meta.FieldMetaData.Companion.fieldMetaData
 import io.holixon.axon.avro.generation.meta.FieldMetaDataType
 import io.holixon.axon.avro.generation.meta.MessageMetaData.Companion.messageMetaData
@@ -22,7 +21,6 @@ import io.toolisticon.kotlin.generation.KotlinCodeGeneration.buildAnnotation
 import io.toolisticon.kotlin.generation.KotlinCodeGeneration.builder
 import io.toolisticon.kotlin.generation.KotlinCodeGeneration.builder.funBuilder
 import io.toolisticon.kotlin.generation.KotlinCodeGeneration.builder.objectBuilder
-import io.toolisticon.kotlin.generation.builder.KotlinAnnotationSpecBuilder.Companion.member
 import io.toolisticon.kotlin.generation.builder.KotlinFunSpecBuilder
 import io.toolisticon.kotlin.generation.spec.KotlinFileSpec
 import io.toolisticon.kotlin.generation.spi.processor.executeAll
@@ -59,7 +57,7 @@ class AxonCommandHandlerProtocolInterfaceStrategy : AvroFileSpecFromProtocolDecl
     Single interface for each command
      */
     input.protocol.messages
-      .filterValues { message -> message.isDecider() || message.isDeciderInit() }
+      .filterValues { message -> message.isDecider() }
       .entries
       .groupBy { message -> message.value.messageMetaData()?.group?.value ?: UNKNOWN_GROUP }
       .mapNotNull { (groupName, messages) ->
@@ -128,7 +126,7 @@ class AxonCommandHandlerProtocolInterfaceStrategy : AvroFileSpecFromProtocolDecl
         addAnnotation(CommandHandler::class)
         addParameter(command.name.value, avroPoetTypes[command.schema.hashCode].typeName)
 
-        if (message.isDeciderInit()) {
+        if (message.isFactory()) {
           addAnnotation(
             buildAnnotation(CreationPolicy::class) {
               addEnumMember("value", AggregateCreationPolicy.ALWAYS)
@@ -149,6 +147,6 @@ class AxonCommandHandlerProtocolInterfaceStrategy : AvroFileSpecFromProtocolDecl
   override fun test(context: ProtocolDeclarationContext, input: Any): Boolean {
     return super.test(context, input)
       && input is ProtocolDeclaration
-      && input.protocol.messages.values.any { message -> message.isDecider() || message.isDeciderInit() }
+      && input.protocol.messages.values.any { message -> message.isDecider() || message.isFactory() }
   }
 }
