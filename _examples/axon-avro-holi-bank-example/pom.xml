@@ -27,6 +27,13 @@
         <scope>import</scope>
         <type>pom</type>
       </dependency>
+      <dependency>
+        <groupId>org.jmolecules</groupId>
+        <artifactId>jmolecules-bom</artifactId>
+        <version>2023.1.2</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -73,6 +80,21 @@
       <artifactId>jakarta.annotation-api</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.jmolecules</groupId>
+      <artifactId>kmolecules-ddd</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jmolecules</groupId>
+      <artifactId>jmolecules-cqrs-architecture</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jmolecules</groupId>
+      <artifactId>jmolecules-events</artifactId>
+    </dependency>
+
     <!-- TEST -->
     <dependency>
       <groupId>org.mockito.kotlin</groupId>
@@ -110,7 +132,9 @@
         <groupId>io.toolisticon.kotlin.avro.maven</groupId>
         <artifactId>avro-kotlin-maven-plugin</artifactId>
         <version>${avro-kotlin.version}</version>
-        <configuration />
+        <configuration>
+          <formatter>NONE</formatter>
+        </configuration>
         <executions>
           <execution>
             <id>generate-schema</id>
