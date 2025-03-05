@@ -4,10 +4,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>io.holixon.axon.avro</groupId>
+    <groupId>io.holixon.axon.avro._</groupId>
     <artifactId>axon-avro-root</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>axon-avro-examples-root</artifactId>
@@ -18,11 +17,11 @@
     <maven.test.skip>true</maven.test.skip>
     <failIfNoTests>false</failIfNoTests>
 
-    <spring-boot.version>3.3.3</spring-boot.version>
+    <spring-boot.version>3.4.3</spring-boot.version>
   </properties>
 
   <modules>
-    <module>axon-avro-holi-bank-example</module>
+<!--    <module>axon-avro-holi-bank-example</module>-->
   </modules>
 
   <dependencyManagement>
