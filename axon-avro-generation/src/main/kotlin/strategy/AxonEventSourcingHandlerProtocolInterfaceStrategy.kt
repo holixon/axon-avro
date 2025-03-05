@@ -4,6 +4,7 @@ import _ktx.StringKtx.firstUppercase
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ExperimentalKotlinPoetApi
 import com.squareup.kotlinpoet.KModifier
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holixon.axon.avro.generation.meta.MessageMetaData.Companion.messageMetaData
 import io.toolisticon.kotlin.avro.declaration.ProtocolDeclaration
 import io.toolisticon.kotlin.avro.generator.AvroKotlinGenerator
@@ -21,13 +22,14 @@ import io.toolisticon.kotlin.generation.KotlinCodeGeneration.builder.objectBuild
 import io.toolisticon.kotlin.generation.spec.KotlinFileSpec
 import io.toolisticon.kotlin.generation.spec.KotlinFunSpec
 import io.toolisticon.kotlin.generation.support.GeneratedAnnotation
-import mu.KLogging
 import org.axonframework.eventsourcing.EventSourcingHandler
+
+private val logger = KotlinLogging.logger {}
 
 @OptIn(ExperimentalKotlinPoetApi::class)
 class AxonEventSourcingHandlerProtocolInterfaceStrategy : AvroFileSpecFromProtocolDeclarationStrategy() {
 
-  companion object : KLogging() {
+  companion object {
     private const val UNKNOWN_GROUP = "__UNKNOWN__"
   }
 
@@ -41,7 +43,8 @@ class AxonEventSourcingHandlerProtocolInterfaceStrategy : AvroFileSpecFromProtoc
       addKDoc(input.documentation)
     }
 
-    val allEventSourcingHandlersInterfaceName = (input.canonicalName.namespace + Name(input.name.value + "AllEventSourcingHandlers")).asClassName()
+    val allEventSourcingHandlersInterfaceName =
+      (input.canonicalName.namespace + Name(input.name.value + "AllEventSourcingHandlers")).asClassName()
     val allEventSourcingHandlersInterfaceBuilder = builder.interfaceBuilder(allEventSourcingHandlersInterfaceName).apply {
       addKDoc(Documentation("Union interface for all event souring handlers"))
       // TODO: introduce scopes in meta, to allow correct grouping, instead of building all command handlers for the context
@@ -72,7 +75,8 @@ class AxonEventSourcingHandlerProtocolInterfaceStrategy : AvroFileSpecFromProtoc
           )
         } else {
           messages.map { (name, message) ->
-            val eventSouringHandlerInterfaceName = (input.canonicalName.namespace + Name(name.value.firstUppercase() + "EventSouringHandler")).asClassName()
+            val eventSouringHandlerInterfaceName =
+              (input.canonicalName.namespace + Name(name.value.firstUppercase() + "EventSouringHandler")).asClassName()
             val interfaceBuilder = builder.interfaceBuilder(eventSouringHandlerInterfaceName).apply {
               // TODO: the strategy should be a fall-through in order: on message, on message type, on referenced-type
               addKDoc(message.documentation)

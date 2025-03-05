@@ -1,6 +1,9 @@
 package io.holixon.axon.avro.generation.strategy
 
-import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.ExperimentalKotlinPoetApi
+import com.squareup.kotlinpoet.ParameterSpec
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.toolisticon.kotlin.avro.declaration.ProtocolDeclaration
 import io.toolisticon.kotlin.avro.generator.AvroKotlinGenerator
 import io.toolisticon.kotlin.avro.generator.addKDoc
@@ -12,13 +15,12 @@ import io.toolisticon.kotlin.generation.KotlinCodeGeneration.builder
 import io.toolisticon.kotlin.generation.KotlinCodeGeneration.builder.objectBuilder
 import io.toolisticon.kotlin.generation.spec.KotlinFileSpec
 import io.toolisticon.kotlin.generation.support.GeneratedAnnotation
-import mu.KLogging
 import org.axonframework.queryhandling.QueryGateway
+
+private val logger = KotlinLogging.logger {}
 
 @OptIn(ExperimentalKotlinPoetApi::class)
 class AxonQueryProtocolExtensionsStrategy : AvroFileSpecFromProtocolDeclarationStrategy() {
-
-  companion object : KLogging()
 
   override fun invoke(context: ProtocolDeclarationContext, input: ProtocolDeclaration): KotlinFileSpec {
 
@@ -35,13 +37,14 @@ class AxonQueryProtocolExtensionsStrategy : AvroFileSpecFromProtocolDeclarationS
      */
     input.protocol.messages.filterTwoWay()
       .filter { (_, message) -> message.isQuery() }
-      .forEach {  (_, message) ->
+      .forEach { (_, message) ->
         if (message.request.fields.size == 1) {
 
           val queryTypeName = context.avroPoetTypes[message.request.fields.first().schema.hashCode].typeName
           val queryParameter = ParameterSpec.builder("query", queryTypeName).build()
           val responseTypeClass = requireNotNull(message.response.memberName()) { "Query must have a non-nullable response" }
-          val completableFutureResultTypeName = requireNotNull(context.avroPoetTypes.resolveExtensionFunctionQueryResponseTypeName(message.response)) { "Query must have a non-nullable response" }
+          val completableFutureResultTypeName =
+            requireNotNull(context.avroPoetTypes.resolveExtensionFunctionQueryResponseTypeName(message.response)) { "Query must have a non-nullable response" }
           val responseTypeName = context.avroPoetTypes[message.response.get().hashCode].typeName
 
           objectBuilder.addFunction(

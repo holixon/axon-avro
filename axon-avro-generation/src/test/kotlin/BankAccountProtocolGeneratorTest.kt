@@ -1,22 +1,23 @@
 package io.holixon.axon.avro.generation
 
 import com.squareup.kotlinpoet.ExperimentalKotlinPoetApi
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.toolisticon.kotlin.avro.generator.AvroKotlinGenerator
 import io.toolisticon.kotlin.avro.generator.spi.AvroCodeGenerationSpiRegistry
 import io.toolisticon.kotlin.generation.spec.KotlinFileSpecList
 import io.toolisticon.kotlin.generation.test.KotlinCodeGenerationTest
 import io.toolisticon.kotlin.generation.test.model.KotlinCompilationCommand
 import io.toolisticon.kotlin.generation.test.model.requireOk
-import mu.KLogging
 import org.assertj.core.api.Assertions.assertThat
 import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.io.File
 
+private val logger = KotlinLogging.logger {}
+
 @OptIn(ExperimentalKotlinPoetApi::class, ExperimentalCompilerApi::class)
 class BankAccountProtocolGeneratorTest {
-  companion object : KLogging()
 
   private val declaration = TestFixtures.parseProtocol("BankAccountProtocol.avpr")
   private val outputDirectory = generatedTestSourcesDirectory()

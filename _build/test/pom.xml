@@ -4,12 +4,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>io.holixon.axon.avro</groupId>
+    <groupId>io.holixon.axon.avro._</groupId>
     <artifactId>axon-avro-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <relativePath>../parent/pom.xml</relativePath>
   </parent>
 
+  <groupId>io.holixon.axon.avro</groupId>
   <artifactId>axon-avro-lib-test</artifactId>
   <name>lib: axon-avro-lib-test</name>
   <description>Internally used test BOM</description>
@@ -41,7 +42,7 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>5.14.2</version>
+      <version>5.16.0</version>
       <scope>compile</scope>
     </dependency>
 
@@ -56,7 +57,7 @@
       <groupId>org.testcontainers</groupId>
       <artifactId>junit-jupiter</artifactId>
       <scope>compile</scope>
-      <version>1.20.4</version>
+      <version>1.20.6</version>
       <exclusions>
         <exclusion>
           <groupId>org.apache.commons</groupId>
@@ -75,7 +76,7 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>2.0.16</version>
+      <version>2.0.17</version>
       <scope>compile</scope>
     </dependency>
 
@@ -88,14 +89,14 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>3.26.3</version>
+      <version>3.27.3</version>
       <scope>compile</scope>
     </dependency>
 
     <dependency>
       <groupId>org.awaitility</groupId>
       <artifactId>awaitility-kotlin</artifactId>
-      <version>4.2.2</version>
+      <version>4.3.0</version>
       <scope>compile</scope>
     </dependency>
 

@@ -4,12 +4,14 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>io.holixon.axon.avro</groupId>
-    <artifactId>axon-avro-serializer</artifactId>
+    <groupId>io.holixon.axon.avro._</groupId>
+    <artifactId>axon-avro-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <relativePath>../_build/parent/pom.xml</relativePath>
   </parent>
 
-  <artifactId>axon-avro-serializer-core</artifactId>
+  <groupId>io.holixon.axon.avro</groupId>
+  <artifactId>axon-avro-kotlin-serializer</artifactId>
 
   <dependencies>
     <dependency>
@@ -22,18 +24,22 @@
       <artifactId>axon-modelling</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>io.toolisticon.kotlin.avro</groupId>
+      <artifactId>avro-kotlin-serialization</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>org.axonframework</groupId>
       <artifactId>axon-configuration</artifactId>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>axon-avro-lib-fixture-events-avro-java</artifactId>
-      <version>${project.version}</version>
-      <scope>test</scope>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>${project.groupId}</groupId>-->
+<!--      <artifactId>axon-avro-lib-fixture-events-avro-java</artifactId>-->
+<!--      <version>${project.version}</version>-->
+<!--      <scope>test</scope>-->
+<!--    </dependency>-->
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
