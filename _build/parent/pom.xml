@@ -55,7 +55,7 @@
       </dependency>
 
       <dependency>
-        <groupId>io.holixon.axon.avro._</groupId>
+        <groupId>io.holixon.axon.avro</groupId>
         <artifactId>axon-avro-lib-test</artifactId>
         <version>${project.version}</version>
         <scope>test</scope>
@@ -86,6 +86,11 @@
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>2.0.17</version>
+    </dependency>
+    <dependency>
+      <groupId>io.holixon.axon.avro</groupId>
+      <artifactId>axon-avro-lib-test</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 

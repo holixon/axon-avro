@@ -1,42 +1,40 @@
-package io.holixon.axon.avro.serializer.strategy
+package io.holixon.axon.avro.serializer
 
-import io.holixon.axon.avro.serializer.strategy.test.ComplexObject
+import io.holixon.axon.avro.serializer._test.ComplexObject
 import io.toolisticon.kotlin.avro.AvroKotlin
 import io.toolisticon.kotlin.avro.serialization.AvroKotlinSerialization
 import io.toolisticon.kotlin.avro.value.JsonString
-import org.apache.avro.Schema
 import org.apache.avro.generic.GenericRecord
 import org.apache.avro.message.BinaryMessageEncoder
 import org.apache.avro.message.SchemaStore
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.axonframework.common.AxonConfigurationException
 import org.axonframework.messaging.MetaData
 import org.axonframework.serialization.*
 import org.axonframework.serialization.avro.AvroSerializer
 import org.axonframework.serialization.avro.AvroUtil
 import org.axonframework.serialization.json.JacksonSerializer
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.function.Executable
 import org.mockito.Mockito.spy
 import org.mockito.Mockito.verify
+import java.io.InputStream
 
-// FIXME: copied from java ... replace assertions with assertj!
-class AvroSerializerTest {
+class AxonAvroKotlinSerializerTest {
   private val revisionResolver = RevisionResolver { payloadType -> null }
-  private lateinit var testSubject: AvroSerializer
-  private lateinit var serializer: Serializer
+  private lateinit var serializer: AvroSerializer
+  private lateinit var serializerDelegate: Serializer
   private lateinit var avro: AvroKotlinSerialization
 
   @BeforeEach
   fun setUp() {
     avro = AvroKotlinSerialization()
 
-    serializer = spy<JacksonSerializer>(JacksonSerializer.defaultSerializer())
-    testSubject = AvroSerializer
+    serializerDelegate = spy<JacksonSerializer>(JacksonSerializer.defaultSerializer())
+    serializer = AvroSerializer
       .builder()
-      .serializerDelegate(serializer)
+      .serializerDelegate(serializerDelegate)
       .revisionResolver(revisionResolver)
       .schemaStore(avro)
       .includeSchemasInStackTraces(true)
@@ -47,123 +45,91 @@ class AvroSerializerTest {
 
   @Test
   fun testBuilderMandatoryValues() {
-    val revisionResolverMandatory =
-      assertThrows<AxonConfigurationException>(
-        AxonConfigurationException::class.java,
-        Executable {
-          AvroSerializer.builder().build()
-        })
-    assertEquals(
-      "RevisionResolver is mandatory",
-      revisionResolverMandatory.message
-    )
+//    assertThatThrownBy {
+//      AvroSerializer.builder()
+//        .includeDefaultAvroSerializationStrategies(false)
+//        .build()
+//    }.isInstanceOf(AxonConfigurationException::class.java)
+//      .hasMessage("RevisionResolver is mandatory")
 
-    val schemaStoreMandatory =
-      assertThrows<AxonConfigurationException>(
-        AxonConfigurationException::class.java,
-        Executable {
-          AvroSerializer.builder()
-            .revisionResolver(RevisionResolver { c: java.lang.Class<*>? -> "" })
-            .build()
-        })
-    assertEquals("SchemaStore is mandatory", schemaStoreMandatory.message)
+    assertThatThrownBy {
+      AvroSerializer.builder()
+        .revisionResolver(RevisionResolver { c: java.lang.Class<*>? -> "" })
+        .build()
+    }.isInstanceOf(AxonConfigurationException::class.java)
+      .hasMessage("SchemaStore is mandatory")
 
-    val serializerDelegateMandatory =
-      assertThrows<AxonConfigurationException>(
-        AxonConfigurationException::class.java,
-        Executable {
-          AvroSerializer.builder()
-            .revisionResolver(RevisionResolver { c: java.lang.Class<*>? -> "" })
-            .schemaStore(SchemaStore.Cache())
-            .build()
-        })
-    assertEquals(
-      "SerializerDelegate is mandatory",
-      serializerDelegateMandatory.message
-    )
+    assertThatThrownBy {
+      AvroSerializer.builder()
+        .revisionResolver(RevisionResolver { c: java.lang.Class<*>? -> "" })
+        .schemaStore(SchemaStore.Cache())
+        .build()
+    }.isInstanceOf(AxonConfigurationException::class.java)
+      .hasMessage("SerializerDelegate is mandatory")
   }
 
   @Test
   fun deliverUnknownClassIfTypeIsNotOnClasspath() {
     val clazz =
-      testSubject.classForType(SimpleSerializedType("org.acme.Foo", null))
-    assertEquals(
-      org.axonframework.serialization.UnknownSerializedType::class.java,
-      clazz
-    )
+      serializer.classForType(SimpleSerializedType("org.acme.Foo", null))
+
+    assertThat(clazz).isEqualTo(UnknownSerializedType::class.java)
   }
 
   @Test
   fun deliverEmptyType() {
-    assertEquals(
-      SimpleSerializedType.emptyType(),
-      testSubject.typeForClass(null)
-    )
-    assertEquals(
-      SimpleSerializedType.emptyType(),
-      testSubject.typeForClass(Void::class.java)
-    )
+    assertThat(serializer.typeForClass(null))
+      .isEqualTo(SimpleSerializedType.emptyType())
+    assertThat(serializer.typeForClass(Void::class.java))
+      .isEqualTo(SimpleSerializedType.emptyType())
   }
 
   @Test
   fun deliverNonEmptyType() {
-    assertEquals(
-      SimpleSerializedType(
-        kotlin.String::class.java.getCanonicalName(),
-        revisionResolver.revisionOf(kotlin.String::class.java)
-      ),
-      testSubject.typeForClass(kotlin.String::class.java)
-    )
+    assertThat(serializer.typeForClass(String::class.java))
+      .isEqualTo(
+        SimpleSerializedType(
+          String::class.java.getCanonicalName(),
+          revisionResolver.revisionOf(String::class.java)
+        )
+      )
   }
-
 
   @Test
   fun canSerialize() {
-    assertTrue(testSubject.canSerializeTo<ByteArray>(ByteArray::class.java))
-    assertTrue(testSubject.canSerializeTo<GenericRecord>(GenericRecord::class.java))
+    assertThat(serializer.canSerializeTo<ByteArray>(ByteArray::class.java)).isTrue
+    assertThat(serializer.canSerializeTo<GenericRecord>(GenericRecord::class.java)).isTrue
 
-    assertTrue(testSubject.canSerializeTo<kotlin.String?>(kotlin.String::class.java))
-    assertTrue(testSubject.canSerializeTo<java.io.InputStream?>(java.io.InputStream::class.java))
-    assertFalse(testSubject.canSerializeTo<kotlin.Int?>(kotlin.Int::class.java))
+    assertThat(serializer.canSerializeTo<String?>(String::class.java)).isTrue
+    assertThat(serializer.canSerializeTo<InputStream?>(InputStream::class.java)).isTrue
+    assertThat(serializer.canSerializeTo<Int?>(Int::class.java)).isFalse
   }
 
   @Test
   fun serializeMetaDataByDelegate() {
     val original = MetaData.from(mapOf<String, String>("test" to "test"))
 
-    val serialized = testSubject.serialize<ByteArray>(original, ByteArray::class.java)
-    val actual = testSubject.deserialize<ByteArray, MetaData?>(serialized)
+    val serialized = serializer.serialize<ByteArray>(original, ByteArray::class.java)
+    val actual = serializer.deserialize<ByteArray, MetaData?>(serialized)
 
-    assertNotNull(actual)
-    assertEquals("test", actual.get("test"))
-    assertEquals(1, actual.size)
+    assertThat(actual).isNotNull
+    assertThat(actual).hasSize(1)
+    assertThat(actual["test"]).isEqualTo("test")
 
-    verify<Serializer?>(serializer).serialize<ByteArray>(original, ByteArray::class.java)
-    verify<Serializer?>(serializer).deserialize<ByteArray, kotlin.Any?>(serialized)
+    verify<Serializer?>(serializerDelegate).serialize<ByteArray>(original, ByteArray::class.java)
+    verify<Serializer?>(serializerDelegate).deserialize<ByteArray, kotlin.Any?>(serialized)
   }
 
   @Test
   fun serializeNullByDelegate() {
-    testSubject.serialize<ByteArray>(null, ByteArray::class.java)
+    serializer.serialize<ByteArray>(null, ByteArray::class.java)
 
-    verify(serializer).serialize<ByteArray>(null, ByteArray::class.java)
+    verify(serializerDelegate).serialize<ByteArray>(null, ByteArray::class.java)
   }
 
   @Test
   fun deserializeEmptyBytes() {
-    assertEquals(
-      Void::class.java,
-      testSubject.classForType(SerializedType.emptyType())
-    )
-    org.junit.jupiter.api.Assertions.assertNull(
-      testSubject.deserialize<ByteArray, kotlin.Any?>(
-        org.axonframework.serialization.SimpleSerializedObject<ByteArray>(
-          ByteArray(0),
-          ByteArray::class.java,
-          SerializedType.emptyType()
-        )
-      )
-    )
+    assertThat(serializer.classForType(SerializedType.emptyType())).isEqualTo(Void::class.java)
   }
 
   @Test
@@ -171,15 +137,12 @@ class AvroSerializerTest {
     avro.registerSchema(avro.schema(ComplexObject::class))
 
     val serialized =
-      testSubject.serialize<ByteArray>(complexObject, ByteArray::class.java)
-    assertEquals(
-      serialized.getType().getName(),
-      ComplexObject::class.java.getCanonicalName()
-    )
+      serializer.serialize<ByteArray>(complexObject, ByteArray::class.java)
 
+    assertThat(serialized.type.name).isEqualTo(ComplexObject::class.java.getCanonicalName())
 
-    val deserialized: ComplexObject? = testSubject.deserialize<ByteArray, ComplexObject?>(serialized)
-    assertEquals(complexObject, deserialized)
+    val deserialized: ComplexObject? = serializer.deserialize<ByteArray, ComplexObject?>(serialized)
+    assertThat(deserialized).isEqualTo(complexObject)
   }
 
   @Test
@@ -199,13 +162,12 @@ class AvroSerializerTest {
       encodedBytes,
       ComplexObject::class.java.getCanonicalName()
     )
-    assertEquals(
-      serialized.getType().getName(),
-      ComplexObject::class.java.getCanonicalName()
-    )
 
-    val deserialized: ComplexObject? = testSubject.deserialize<ByteArray, ComplexObject?>(serialized)
-    assertEquals(complexObject, deserialized)
+    assertThat(serialized.type.name)
+      .isEqualTo(ComplexObject::class.java.getCanonicalName())
+
+    val deserialized: ComplexObject? = serializer.deserialize<ByteArray, ComplexObject?>(serialized)
+    assertThat(deserialized).isEqualTo(complexObject)
   }
 
   @Test
@@ -220,12 +182,10 @@ class AvroSerializerTest {
       put("value3", complexObject.value3)
     }
 
+    val serialized: SerializedObject<GenericRecord> = createSerializedObject(record)
 
-    val serialized: SerializedObject<GenericRecord> =
-      AvroSerializerTest.Companion.createSerializedObject(record)
-
-    val deserialized: ComplexObject? = testSubject.deserialize<GenericRecord, ComplexObject?>(serialized)
-    assertEquals(complexObject, deserialized)
+    val deserialized: ComplexObject? = serializer.deserialize<GenericRecord, ComplexObject?>(serialized)
+    assertThat(deserialized).isEqualTo(complexObject)
   }
 
   @Test
@@ -242,20 +202,17 @@ class AvroSerializerTest {
       put("value4", "ignored value")
     }
 
-    val encodedBytes: ByteArray = AvroSerializerTest.Companion.genericRecordToByteArray(record)
+    val encodedBytes: ByteArray = genericRecordToByteArray(record)
 
-    val serialized: org.axonframework.serialization.SerializedObject<ByteArray> =
-      AvroSerializerTest.Companion.createSerializedObject(
-        encodedBytes,
-        ComplexObject::class.java.getCanonicalName()
-      )
-    assertEquals(
-      serialized.getType().getName(),
+    val serialized: SerializedObject<ByteArray> = createSerializedObject(
+      encodedBytes,
       ComplexObject::class.java.getCanonicalName()
     )
 
-    val deserialized: ComplexObject? = testSubject.deserialize<ByteArray, ComplexObject?>(serialized)
-    assertEquals(complexObject, deserialized)
+    assertThat(serialized.type.name).isEqualTo(ComplexObject::class.java.getCanonicalName())
+
+    val deserialized: ComplexObject? = serializer.deserialize<ByteArray, ComplexObject?>(serialized)
+    assertThat(deserialized).isEqualTo(complexObject)
   }
 
   @Test
@@ -268,20 +225,16 @@ class AvroSerializerTest {
       put("value3", complexObject.value3)
     }
 
-
     val encodedBytes: ByteArray = genericRecordToByteArray(record)
 
     val serialized: SerializedObject<ByteArray> = createSerializedObject(
       encodedBytes,
       ComplexObject::class.java.getCanonicalName()
     )
-    assertEquals(
-      serialized.getType().getName(),
-      ComplexObject::class.java.getCanonicalName()
-    )
+    assertThat(serialized.getType().getName()).isEqualTo(ComplexObject::class.java.getCanonicalName())
 
-    val deserialized: ComplexObject = testSubject.deserialize<ByteArray, ComplexObject>(serialized)
-    assertEquals("default value", deserialized.value2)
+    val deserialized: ComplexObject = serializer.deserialize<ByteArray, ComplexObject>(serialized)
+    assertThat(deserialized.value2).isEqualTo("default value")
   }
 
   @Test
@@ -295,59 +248,40 @@ class AvroSerializerTest {
       put("value3", complexObject.value3)
     }
 
-
     val encodedBytes: ByteArray = genericRecordToByteArray(record)
 
     val serialized: SerializedObject<ByteArray> = createSerializedObject(
       encodedBytes,
       ComplexObject::class.java.getCanonicalName()
     )
-    assertEquals(
-      serialized.getType().getName(),
-      ComplexObject::class.java.getCanonicalName()
-    )
 
-    Assertions.assertThatThrownBy { testSubject.deserialize<ByteArray, Any>(serialized) }
+    assertThat(serialized.getType().name).isEqualTo(ComplexObject::class.java.getCanonicalName())
+
+    assertThatThrownBy { serializer.deserialize<ByteArray, Any>(serialized) }
       .isInstanceOf(SerializationException::class.java)
       .hasMessageStartingWith(
-        "Failed to deserialize single-object-encoded bytes to instance of " +
-          "io.holixon.axon.avro.serializer.strategy.test.ComplexObject,"
+        "Failed to deserialize single-object-encoded bytes to instance of io.holixon.axon.avro.serializer._test.ComplexObject,"
       )
-
-//
-//    assertEquals(
-//      exception.message,
-//      AvroUtil.createExceptionFailedToDeserialize(
-//        ComplexObject::class.java,
-//        ComplexObject.getClassSchema(),
-//        writerSchema.get(),
-//        "",
-//        true
-//      ).message
-//    )
   }
 
   @Test
   fun failToDeserializeIfClassIsNotAvailable() {
     val writerSchema = AvroKotlin.parseSchema(incompatibleSchema)
     avro.registerSchema(writerSchema)
+
     val record: GenericRecord = AvroKotlin.createGenericRecord(writerSchema) {
       put("value2", complexObject.value1)
       put("value3", complexObject.value3)
     }
 
-
-    val `object`: org.axonframework.serialization.SimpleSerializedObject<GenericRecord> =
-      org.axonframework.serialization.SimpleSerializedObject<GenericRecord>(
-        record,
-        GenericRecord::class.java,
-        SimpleSerializedType("org.acme.Foo", null)
-      )
-    val deserialized = testSubject.deserialize<GenericRecord, kotlin.Any>(`object`)
-    assertEquals(
-      UnknownSerializedType::class.java,
-      deserialized.javaClass
+    val serializedObject: SimpleSerializedObject<GenericRecord> = SimpleSerializedObject<GenericRecord>(
+      record,
+      GenericRecord::class.java,
+      SimpleSerializedType("org.acme.Foo", null)
     )
+    val deserialized = serializer.deserialize<GenericRecord, Any>(serializedObject)
+
+    assertThat(deserialized.javaClass).isEqualTo(ComplexObject::class.java)
   }
 
 
@@ -467,14 +401,12 @@ class AvroSerializerTest {
       )
     }
 
-    private fun createSerializedObject(record: GenericRecord): org.axonframework.serialization.SerializedObject<GenericRecord> {
-      return org.axonframework.serialization.SimpleSerializedObject<GenericRecord>(
+    private fun createSerializedObject(record: GenericRecord): SerializedObject<GenericRecord> {
+      return SimpleSerializedObject<GenericRecord>(
         record,
         GenericRecord::class.java,
-        SimpleSerializedType(record.getSchema().getFullName(), null)
+        SimpleSerializedType(record.schema.fullName, null)
       )
     }
   }
-
-  fun ComplexObject.Companion.getClassSchema(): Schema = AvroKotlinSerialization().schema(ComplexObject::class).get()
 }

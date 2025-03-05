@@ -1,4 +1,4 @@
-package io.holixon.axon.avro.serializer.strategy
+package io.holixon.axon.avro.serializer
 
 import io.toolisticon.kotlin.avro.serialization.AvroKotlinSerialization
 import io.toolisticon.kotlin.avro.serialization.isKotlinxDataClass
@@ -45,7 +45,6 @@ class AvroKotlinSerializerStrategy(
     )
   }
 
-
   override fun <T : Any> deserializeFromGenericRecord(
     serializedObject: SerializedObject<GenericRecord>,
     type: Class<T>
@@ -53,4 +52,3 @@ class AvroKotlinSerializerStrategy(
     return avro.decodeFromGenericRecord(serializedObject.data, type.kotlin)
   }
 }
-

@@ -30,16 +30,17 @@
     </dependency>
 
     <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
       <groupId>org.axonframework</groupId>
       <artifactId>axon-configuration</artifactId>
       <scope>test</scope>
     </dependency>
-<!--    <dependency>-->
-<!--      <groupId>${project.groupId}</groupId>-->
-<!--      <artifactId>axon-avro-lib-fixture-events-avro-java</artifactId>-->
-<!--      <version>${project.version}</version>-->
-<!--      <scope>test</scope>-->
-<!--    </dependency>-->
+
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>

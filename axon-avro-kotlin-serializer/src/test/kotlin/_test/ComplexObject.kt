@@ -1,4 +1,4 @@
-package io.holixon.axon.avro.serializer.strategy.test
+package io.holixon.axon.avro.serializer._test
 
 import kotlinx.serialization.Serializable
 
