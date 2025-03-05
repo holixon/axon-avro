@@ -39,70 +39,8 @@
     <module>../coverage-aggregator</module>
   </modules>
 
-  <dependencyManagement>
-    <dependencies>
-
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-dependencies</artifactId>
-        <version>${springboot.version}</version>
-        <scope>import</scope>
-        <type>pom</type>
-      </dependency>
-
-      <!-- Axon Framework -->
-      <dependency>
-        <groupId>org.axonframework</groupId>
-        <artifactId>axon-bom</artifactId>
-        <version>${axon-bom.version}</version>
-        <scope>import</scope>
-        <type>pom</type>
-      </dependency>
-
-      <dependency>
-        <groupId>io.toolisticon.kotlin.avro</groupId>
-        <artifactId>avro-kotlin-bom</artifactId>
-        <version>${avro-kotlin.version}</version>
-        <scope>import</scope>
-        <type>pom</type>
-      </dependency>
-
-      <dependency>
-        <groupId>io.toolisticon.kotlin.generation</groupId>
-        <artifactId>kotlin-code-generation-bom</artifactId>
-        <version>${kotlin-code-generation.version}</version>
-        <scope>import</scope>
-        <type>pom</type>
-      </dependency>
-
-      <dependency>
-        <groupId>io.holixon.axon.avro</groupId>
-        <artifactId>axon-avro-lib-test</artifactId>
-        <version>${project.version}</version>
-        <scope>test</scope>
-      </dependency>
-
-    </dependencies>
-  </dependencyManagement>
-
-  <dependencies>
-    <!-- Kotlin -->
-    <dependency>
-      <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-stdlib-jdk8</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-reflect</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.github.microutils</groupId>
-      <artifactId>kotlin-logging-jvm</artifactId>
-    </dependency>
-  </dependencies>
 
   <build>
-    <defaultGoal>clean verify</defaultGoal>
     <pluginManagement>
       <plugins>
         <plugin>

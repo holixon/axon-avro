@@ -34,6 +34,7 @@
     <module>axon-avro-bom</module>
 
     <module>axon-avro-generation</module>
+    <module>axon-avro-kotlin-serializer</module>
 <!--    <module>pom/parent</module>-->
   </modules>
 

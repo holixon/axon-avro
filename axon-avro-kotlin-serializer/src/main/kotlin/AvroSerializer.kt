@@ -1,5 +1,6 @@
 package io.holixon.axon.avro.serializer
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holixon.axon.avro.serializer.converter.*
 import io.holixon.axon.avro.serializer.strategy.InstanceResponseTypeStrategy
 import io.holixon.axon.avro.serializer.strategy.MetaDataStrategy
@@ -13,7 +14,6 @@ import io.toolisticon.kotlin.avro.serialization.strategy.KotlinxDataClassStrateg
 import io.toolisticon.kotlin.avro.serialization.strategy.KotlinxEnumClassStrategy
 import io.toolisticon.kotlin.avro.serialization.strategy.SpecificRecordBaseStrategy
 import io.toolisticon.kotlin.avro.value.SingleObjectEncodedBytes
-import mu.KLogging
 import org.apache.avro.generic.GenericData
 import org.apache.avro.generic.GenericRecord
 import org.apache.avro.util.ClassUtils
@@ -21,6 +21,7 @@ import org.axonframework.serialization.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.function.Supplier
 
+private val logger = KotlinLogging.logger {}
 
 /**
  *
@@ -52,7 +53,7 @@ class AvroSerializer private constructor(
   private val serializationStrategies: List<GenericRecordSerializationStrategy>,
 ) : Serializer {
 
-  companion object : KLogging() {
+  companion object  {
 
 
     private val axonSchemaResolver: AvroSchemaResolverMap = AvroSchemaResolverMap(

@@ -53,6 +53,13 @@
         <scope>import</scope>
         <type>pom</type>
       </dependency>
+
+      <dependency>
+        <groupId>io.holixon.axon.avro._</groupId>
+        <artifactId>axon-avro-lib-test</artifactId>
+        <version>${project.version}</version>
+        <scope>test</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -82,4 +89,64 @@
     </dependency>
   </dependencies>
 
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <!-- kotlin compiler -->
+          <groupId>org.jetbrains.kotlin</groupId>
+          <artifactId>kotlin-maven-plugin</artifactId>
+          <configuration>
+            <jvmTarget>${java.version}</jvmTarget>
+            <args>
+              <arg>-Xjsr305=strict</arg>
+            </args>
+            <compilerPlugins>
+              <plugin>spring</plugin>
+              <plugin>jpa</plugin>
+              <plugin>no-arg</plugin>
+              <plugin>all-open</plugin>
+              <plugin>kotlinx-serialization</plugin>
+            </compilerPlugins>
+            <pluginOptions>
+              <option>all-open:annotation=org.axonframework.eventhandling.EventHandler</option>
+              <option>all-open:annotation=org.axonframework.queryhandling.QueryHandler</option>
+            </pluginOptions>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>org.jetbrains.kotlin</groupId>
+              <artifactId>kotlin-maven-serialization</artifactId>
+              <version>${kotlin.version}</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.avro</groupId>
+          <artifactId>avro-maven-plugin</artifactId>
+          <executions>
+            <execution>
+              <phase>generate-sources</phase>
+              <goals>
+                <goal>schema</goal>
+              </goals>
+              <configuration>
+                <sourceDirectory>${project.basedir}/src/main/resources/avro/</sourceDirectory>
+                <outputDirectory>${project.build.directory}/generated-sources/avro/</outputDirectory>
+                <stringType>String</stringType>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
+    <plugins>
+      <plugin>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
 </project>
