@@ -1,9 +1,15 @@
 package io.holixon.axon.avro.serializer
 
+import io.github.oshai.kotlinlogging.KotlinLogging
+import io.holixon.axon.avro.serializer.AxonAvroKotlinSerializerHelper.REVISION_RESOLVER_BLANK
+import io.holixon.axon.avro.serializer.AxonAvroKotlinSerializerHelper.REVISION_RESOLVER_NULL
+import io.holixon.axon.avro.serializer.AxonAvroKotlinSerializerHelper.SchemaJson.compatibleSchema
+import io.holixon.axon.avro.serializer.AxonAvroKotlinSerializerHelper.SchemaJson.compatibleSchemaWithAdditionalField
+import io.holixon.axon.avro.serializer.AxonAvroKotlinSerializerHelper.SchemaJson.compatibleSchemaWithoutValue2
+import io.holixon.axon.avro.serializer.AxonAvroKotlinSerializerHelper.SchemaJson.incompatibleSchema
 import io.holixon.axon.avro.serializer._test.ComplexObject
 import io.toolisticon.kotlin.avro.AvroKotlin
 import io.toolisticon.kotlin.avro.serialization.AvroKotlinSerialization
-import io.toolisticon.kotlin.avro.value.JsonString
 import org.apache.avro.generic.GenericRecord
 import org.apache.avro.message.BinaryMessageEncoder
 import org.apache.avro.message.SchemaStore
@@ -19,10 +25,12 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.spy
 import org.mockito.Mockito.verify
+import java.io.ByteArrayOutputStream
 import java.io.InputStream
 
+private val logger = KotlinLogging.logger {}
+
 class AxonAvroKotlinSerializerTest {
-  private val revisionResolver = RevisionResolver { payloadType -> null }
   private lateinit var serializer: AvroSerializer
   private lateinit var serializerDelegate: Serializer
   private lateinit var avro: AvroKotlinSerialization
@@ -32,14 +40,14 @@ class AxonAvroKotlinSerializerTest {
     avro = AvroKotlinSerialization()
 
     serializerDelegate = spy<JacksonSerializer>(JacksonSerializer.defaultSerializer())
-    serializer = AvroSerializer
-      .builder()
+
+    serializer = AvroSerializer.builder()
       .serializerDelegate(serializerDelegate)
-      .revisionResolver(revisionResolver)
+      .revisionResolver(REVISION_RESOLVER_NULL)
       .schemaStore(avro)
       .includeSchemasInStackTraces(true)
       .performSchemaCompatibilityCheck(true)
-      .addSerializerStrategy(AvroKotlinSerializerStrategy(avro = avro, revisionResolver = revisionResolver))
+      .addSerializerStrategy(AvroKotlinSerializerStrategy(avro = avro, revisionResolver = REVISION_RESOLVER_NULL))
       .build()
   }
 
@@ -54,14 +62,14 @@ class AxonAvroKotlinSerializerTest {
 
     assertThatThrownBy {
       AvroSerializer.builder()
-        .revisionResolver(RevisionResolver { c: java.lang.Class<*>? -> "" })
+        .revisionResolver(REVISION_RESOLVER_BLANK)
         .build()
     }.isInstanceOf(AxonConfigurationException::class.java)
       .hasMessage("SchemaStore is mandatory")
 
     assertThatThrownBy {
       AvroSerializer.builder()
-        .revisionResolver(RevisionResolver { c: java.lang.Class<*>? -> "" })
+        .revisionResolver(REVISION_RESOLVER_BLANK)
         .schemaStore(SchemaStore.Cache())
         .build()
     }.isInstanceOf(AxonConfigurationException::class.java)
@@ -80,6 +88,7 @@ class AxonAvroKotlinSerializerTest {
   fun deliverEmptyType() {
     assertThat(serializer.typeForClass(null))
       .isEqualTo(SimpleSerializedType.emptyType())
+
     assertThat(serializer.typeForClass(Void::class.java))
       .isEqualTo(SimpleSerializedType.emptyType())
   }
@@ -90,7 +99,7 @@ class AxonAvroKotlinSerializerTest {
       .isEqualTo(
         SimpleSerializedType(
           String::class.java.getCanonicalName(),
-          revisionResolver.revisionOf(String::class.java)
+          REVISION_RESOLVER_NULL.revisionOf(String::class.java)
         )
       )
   }
@@ -184,7 +193,7 @@ class AxonAvroKotlinSerializerTest {
 
     val serialized: SerializedObject<GenericRecord> = createSerializedObject(record)
 
-    val deserialized: ComplexObject? = serializer.deserialize<GenericRecord, ComplexObject?>(serialized)
+    val deserialized = serializer.deserialize<GenericRecord, ComplexObject>(serialized)
     assertThat(deserialized).isEqualTo(complexObject)
   }
 
@@ -281,103 +290,16 @@ class AxonAvroKotlinSerializerTest {
     )
     val deserialized = serializer.deserialize<GenericRecord, Any>(serializedObject)
 
-    assertThat(deserialized.javaClass).isEqualTo(ComplexObject::class.java)
+    assertThat(deserialized.javaClass).isEqualTo(UnknownSerializedType::class.java)
   }
 
 
   companion object {
-    private val compatibleSchemaWithoutValue2: JsonString = JsonString.of(
-      "{\n" +
-        "  \"name\": \"ComplexObject\",\n" +
-        "  \"namespace\": \"io.holixon.axon.avro.serializer.strategy.test\",\n" +
-        "  \"type\": \"record\",\n" +
-        "  \"fields\": [\n" +
-        "    {\n" +
-        "      \"name\": \"value1\",\n" +
-        "      \"type\": \"string\"\n" +
-        "    },\n" +
-        "    {\n" +
-        "      \"name\": \"value3\",\n" +
-        "      \"type\": \"int\"\n" +
-        "    }\n" +
-        "  ]\n" +
-        "}"
-    )
-
-    private val incompatibleSchema = JsonString.of(
-      "{\n" +
-        "  \"name\": \"ComplexObject\",\n" +
-        "  \"namespace\": \"io.holixon.axon.avro.serializer.strategy.test\",\n" +
-        "  \"type\": \"record\",\n" +
-        "  \"fields\": [\n" +
-        "    {\n" +
-        "      \"name\": \"value2\",\n" +
-        "      \"type\": \"string\"\n" +
-        "    },\n" +
-        "    {\n" +
-        "      \"name\": \"value3\",\n" +
-        "      \"type\": \"int\"\n" +
-        "    }\n" +
-        "  ]\n" +
-        "}"
-    )
-
-
-    private val compatibleSchema = JsonString.of(
-      "{\n" +
-        "  \"name\": \"ComplexObject\",\n" +
-        "  \"namespace\": \"io.holixon.axon.avro.serializer.strategy.test\",\n" +
-        "  \"type\": \"record\",\n" +
-        "  \"fields\": [\n" +
-        "    {\n" +
-        "      \"name\": \"value1\",\n" +
-        "      \"type\": \"string\"\n" +
-        "    },\n" +
-        "    {\n" +
-        "      \"name\": \"value2\",\n" +
-        "      \"type\": \"string\"\n" +
-        "    },\n" +
-        "    {\n" +
-        "      \"name\": \"value3\",\n" +
-        "      \"type\": \"int\"\n" +
-        "    }\n" +
-        "  ]\n" +
-        "}"
-    )
-
-    private val compatibleSchemaWithAdditionalField = JsonString.of(
-      "{\n" +
-        "  \"name\": \"ComplexObject\",\n" +
-        "  \"namespace\": \"io.holixon.axon.avro.serializer.strategy.test\",\n" +
-        "  \"type\": \"record\",\n" +
-        "  \"fields\": [\n" +
-        "    {\n" +
-        "      \"name\": \"value1\",\n" +
-        "      \"type\": \"string\"\n" +
-        "    },\n" +
-        "    {\n" +
-        "      \"name\": \"value2\",\n" +
-        "      \"type\": \"string\"\n" +
-        "    },\n" +
-        "    {\n" +
-        "      \"name\": \"value4\",\n" +
-        "      \"type\": \"string\"\n" +
-        "    },\n" +
-        "    {\n" +
-        "      \"name\": \"value3\",\n" +
-        "      \"type\": \"int\"\n" +
-        "    }\n" +
-        "  ]\n" +
-        "}"
-    )
-
-
     private val complexObject: ComplexObject = ComplexObject("foo", "bar", 42)
-
 
     private fun genericRecordToByteArray(genericRecord: GenericRecord): ByteArray {
       try {
-        java.io.ByteArrayOutputStream().use { baos ->
+        ByteArrayOutputStream().use { baos ->
           val encoder: BinaryMessageEncoder<GenericRecord> = BinaryMessageEncoder<GenericRecord>(
             AvroUtil.genericData,
             genericRecord.getSchema()
@@ -390,11 +312,8 @@ class AxonAvroKotlinSerializerTest {
       }
     }
 
-    private fun createSerializedObject(
-      payload: ByteArray,
-      objectType: kotlin.String?
-    ): org.axonframework.serialization.SerializedObject<ByteArray> {
-      return org.axonframework.serialization.SimpleSerializedObject<ByteArray>(
+    private fun createSerializedObject(payload: ByteArray, objectType: String?): SerializedObject<ByteArray> {
+      return SimpleSerializedObject<ByteArray>(
         payload,
         ByteArray::class.java,
         SimpleSerializedType(objectType, null)
@@ -405,7 +324,7 @@ class AxonAvroKotlinSerializerTest {
       return SimpleSerializedObject<GenericRecord>(
         record,
         GenericRecord::class.java,
-        SimpleSerializedType(record.schema.fullName, null)
+        SimpleSerializedType(record.schema.fullName, REVISION_RESOLVER_NULL.revisionOf(GenericRecord::class.java))
       )
     }
   }

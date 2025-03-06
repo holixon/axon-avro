@@ -37,10 +37,11 @@
     </dependency>
 
     <dependency>
-      <groupId>io.toolisticon.kotlin.avro.test</groupId>
-      <artifactId>avro-kotlin-test</artifactId>
+      <groupId>io.holixon.axon.avro._</groupId>
+      <artifactId>axon-avro-lib-test</artifactId>
       <scope>test</scope>
     </dependency>
+
     <dependency>
       <groupId>io.toolisticon.kotlin.generation</groupId>
       <artifactId>kotlin-code-generation-test</artifactId>

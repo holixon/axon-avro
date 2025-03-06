@@ -10,7 +10,6 @@
     <relativePath>../parent/pom.xml</relativePath>
   </parent>
 
-  <groupId>io.holixon.axon.avro</groupId>
   <artifactId>axon-avro-lib-test</artifactId>
   <name>lib: axon-avro-lib-test</name>
   <description>Internally used test BOM</description>
@@ -20,22 +19,9 @@
   </properties>
 
   <dependencies>
-    <!-- all test dependencies are on the compile scope, because this is a test lib which is used on the test scope -->
     <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter</artifactId>
-      <scope>compile</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <scope>compile</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-test-junit5</artifactId>
+      <groupId>io.toolisticon.kotlin.avro.test</groupId>
+      <artifactId>avro-kotlin-test</artifactId>
       <scope>compile</scope>
     </dependency>
 
@@ -74,22 +60,8 @@
     </dependency>
 
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>2.0.17</version>
-      <scope>compile</scope>
-    </dependency>
-
-    <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <scope>compile</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.assertj</groupId>
-      <artifactId>assertj-core</artifactId>
-      <version>3.27.3</version>
       <scope>compile</scope>
     </dependency>
 

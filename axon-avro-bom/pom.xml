@@ -18,35 +18,21 @@
       <!-- AVRO-KOTLIN -->
       <dependency>
         <groupId>io.toolisticon.kotlin.avro</groupId>
-        <artifactId>avro-kotlin</artifactId>
+        <artifactId>avro-kotlin-bom</artifactId>
+        <version>${avro-kotlin.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+
+      <dependency>
+        <groupId>io.holixon.axon.avro</groupId>
+        <artifactId>axon-avro-generation</artifactId>
         <version>${project.version}</version>
       </dependency>
 
-      <!-- AVRO-KOTLIN-SERIALIZATION -->
       <dependency>
-        <groupId>io.toolisticon.kotlin.avro</groupId>
-        <artifactId>avro-kotlin-serialization</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <!-- AVRO-KOTLIN-TEST -->
-      <dependency>
-        <groupId>io.toolisticon.kotlin.avro.test</groupId>
-        <artifactId>avro-kotlin-test</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <!-- AVRO-KOTLIN-GENERATOR -->
-      <dependency>
-        <groupId>io.toolisticon.kotlin.avro</groupId>
-        <artifactId>avro-kotlin-generator</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <!-- AVRO-KOTLIN-GENERATOR-MAVEN-PLUGIN -->
-      <dependency>
-        <groupId>io.toolisticon.kotlin.avro.maven</groupId>
-        <artifactId>avro-kotlin-maven-plugin</artifactId>
+        <groupId>io.holixon.axon.avro</groupId>
+        <artifactId>axon-avro-kotlin-serializer</artifactId>
         <version>${project.version}</version>
       </dependency>
     </dependencies>

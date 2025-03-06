@@ -30,6 +30,12 @@
     </dependency>
 
     <dependency>
+      <groupId>io.holixon.axon.avro._</groupId>
+      <artifactId>axon-avro-lib-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-jsr310</artifactId>
       <scope>test</scope>
@@ -38,12 +44,6 @@
     <dependency>
       <groupId>org.axonframework</groupId>
       <artifactId>axon-configuration</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-simple</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -79,10 +79,10 @@
           </dependency>
         </dependencies>
       </plugin>
-      <plugin>
-        <groupId>org.apache.avro</groupId>
-        <artifactId>avro-maven-plugin</artifactId>
-      </plugin>
+<!--      TODO  <plugin>-->
+<!--        <groupId>org.apache.avro</groupId>-->
+<!--        <artifactId>avro-maven-plugin</artifactId>-->
+<!--      </plugin>-->
     </plugins>
   </build>
 </project>
