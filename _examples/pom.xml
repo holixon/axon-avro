@@ -21,13 +21,19 @@
   </properties>
 
   <modules>
-<!--    <module>axon-avro-holi-bank-example</module>-->
-<!--    <module>axon-411-serializer-kotlin-example</module>-->
-<!--    <module>axon-411-serializer-java-example</module>-->
+    <module>axon-avro-kotlin-example</module>
   </modules>
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${spring-boot.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+
       <dependency>
         <groupId>org.axonframework</groupId>
         <artifactId>axon-bom</artifactId>
@@ -35,13 +41,15 @@
         <scope>import</scope>
         <type>pom</type>
       </dependency>
+
       <dependency>
-        <groupId>io.toolisticon.kotlin.avro</groupId>
-        <artifactId>avro-kotlin</artifactId>
-        <version>${avro-kotlin.version}</version>
+        <groupId>io.holixon.axon.avro</groupId>
+        <artifactId>axon-avro-bom</artifactId>
+        <version>${project.version}</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>
+
     </dependencies>
   </dependencyManagement>
 

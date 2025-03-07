@@ -3,8 +3,6 @@
   "protocol": "BankAccountContext",
   "doc": "Protocol declaration for bank-account.",
   "types": [
-
-    // ========== COMMANDS     ==========
     {
       "name": "CreateBankAccountCommand",
       "doc": "Creates a new bank account with given accountId",
@@ -74,8 +72,6 @@
         }
       ]
     },
-
-    // ========== EXCEPTIONS     ==========
     {
       "name": "IllegalInitialBalance",
       "type": "error",
@@ -86,8 +82,6 @@
         }
       ]
     },
-
-    // ========== EVENTS     ==========
     {
       "name": "BankAccountCreatedEvent",
       "doc": "A new BankAccount has been created with initial balance.",
@@ -148,8 +142,6 @@
         }
       ]
     },
-
-    // ========== QUERIES     ==========
     {
       "name": "FindCurrentBalanceByAccountIdQuery",
       "doc": "Searches bank account balance for given account id.",
@@ -180,8 +172,6 @@
         }
       ]
     },
-
-    // ========== RESULTS     ==========
     {
       "name": "CurrentBalance",
       "doc": "Current balance of bank account.",
@@ -242,9 +232,7 @@
       ]
     }
   ],
-
   "messages": {
-    // ========== COMMAND-HANDLERS     ==========
     "createBankAccount": {
       "doc": "Creates a new bank account.",
       "meta": {
@@ -288,8 +276,6 @@
       ],
       "response": "MoneyDepositedEvent"
     },
-
-    // ========== QUERY-HANDLERS     ==========
     "findCurrentBalanceForAccountId": {
       "meta": {
         "group": "BankAccountProjection",

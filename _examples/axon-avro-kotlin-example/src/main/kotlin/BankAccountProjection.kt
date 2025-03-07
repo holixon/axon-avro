@@ -1,10 +1,12 @@
-package holi.bank
+package io.holixon.axon.avro.example.kotlin
 
+import holi.bank.*
 import holi.bank.BankAccountContextEventHandlers.BankAccountContextAllEventHandlers
 import holi.bank.BankAccountContextQueries.BankAccountProjectionQueries
 import org.axonframework.eventhandling.EventHandler
+import org.axonframework.queryhandling.QueryHandler
 import org.springframework.stereotype.Component
-import java.util.Optional
+import java.util.*
 
 
 @Component
@@ -13,26 +15,49 @@ class BankAccountProjection : BankAccountContextAllEventHandlers, BankAccountPro
   private val balances: MutableMap<String, CurrentBalance> = mutableMapOf()
   private val transfers: MutableMap<String, MutableList<MoneyTransfer>> = mutableMapOf()
 
+  @QueryHandler
   override fun findCurrentBalanceForAccountId(query: FindCurrentBalanceByAccountIdQuery): Optional<CurrentBalance> {
     return Optional.ofNullable(balances[query.accountId])
   }
 
+  @QueryHandler
   override fun findAllMoneyTransfersForAccountId(query: FindAllMoneyTransfersByAccountIdQuery): MoneyTransfers {
     return MoneyTransfers(transfers[query.accountId] ?: emptyList())
   }
 
+  @EventHandler
   override fun onBankAccountCreatedEvent(event: BankAccountCreatedEvent) {
     balances[event.accountId] = CurrentBalance(event.accountId, event.initialBalance)
     transfers[event.accountId] = mutableListOf()
   }
 
+  @EventHandler
   override fun onMoneyDepositedEvent(event: MoneyDepositedEvent) {
     balances.computeIfPresent(event.accountId) { _, balance -> balance.copy(balance = balance.balance + event.amount) }
-    transfers.computeIfPresent(event.accountId) { _, transfer -> transfer.apply { add(MoneyTransfer(MoneyTransferType.DEPOSIT, event.amount)) } }
+    transfers.computeIfPresent(event.accountId) { _, transfer ->
+      transfer.apply {
+        add(
+          MoneyTransfer(
+            MoneyTransferType.DEPOSIT,
+            event.amount
+          )
+        )
+      }
+    }
   }
 
+  @EventHandler
   override fun onMoneyWithdrawnEvent(event: MoneyWithdrawnEvent) {
     balances.computeIfPresent(event.accountId) { _, balance -> balance.copy(balance = balance.balance - event.amount) }
-    transfers.computeIfPresent(event.accountId) { _, transfer -> transfer.apply { add(MoneyTransfer(MoneyTransferType.WITHDRAWAL, event.amount)) } }
+    transfers.computeIfPresent(event.accountId) { _, transfer ->
+      transfer.apply {
+        add(
+          MoneyTransfer(
+            MoneyTransferType.WITHDRAWAL,
+            event.amount
+          )
+        )
+      }
+    }
   }
 }

@@ -22,7 +22,6 @@ import io.toolisticon.kotlin.generation.KotlinCodeGeneration.builder.objectBuild
 import io.toolisticon.kotlin.generation.spec.KotlinFileSpec
 import io.toolisticon.kotlin.generation.spec.KotlinFunSpec
 import io.toolisticon.kotlin.generation.support.GeneratedAnnotation
-import org.axonframework.queryhandling.QueryHandler
 
 private val logger = KotlinLogging.logger {}
 
@@ -113,7 +112,7 @@ class AxonQueryProtocolInterfaceStrategy : AvroFileSpecFromProtocolDeclarationSt
   private fun buildQueryFunctionSpec(name: Name, message: AvroProtocol.TwoWayMessage, avroPoetTypes: AvroPoetTypes): KotlinFunSpec {
     return buildFun(name.value) {
       addModifiers(KModifier.ABSTRACT)
-      addAnnotation(QueryHandler::class)
+      // FIXME addAnnotation(QueryHandler::class)
       message.request.fields.forEach { f ->
         this.addParameter(f.name.value, avroPoetTypes[f.schema.hashCode].typeName)
       }

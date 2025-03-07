@@ -20,7 +20,6 @@ import io.toolisticon.kotlin.avro.model.RecordField
 import io.toolisticon.kotlin.avro.model.wrapper.AvroProtocol
 import io.toolisticon.kotlin.avro.value.Documentation
 import io.toolisticon.kotlin.avro.value.Name
-import io.toolisticon.kotlin.generation.KotlinCodeGeneration.buildAnnotation
 import io.toolisticon.kotlin.generation.KotlinCodeGeneration.builder
 import io.toolisticon.kotlin.generation.KotlinCodeGeneration.builder.funBuilder
 import io.toolisticon.kotlin.generation.KotlinCodeGeneration.builder.objectBuilder
@@ -28,9 +27,6 @@ import io.toolisticon.kotlin.generation.builder.KotlinFunSpecBuilder
 import io.toolisticon.kotlin.generation.spec.KotlinFileSpec
 import io.toolisticon.kotlin.generation.spi.processor.executeAll
 import io.toolisticon.kotlin.generation.support.GeneratedAnnotation
-import org.axonframework.commandhandling.CommandHandler
-import org.axonframework.modelling.command.AggregateCreationPolicy
-import org.axonframework.modelling.command.CreationPolicy
 
 private val logger = KotlinLogging.logger {}
 
@@ -127,15 +123,15 @@ class AxonCommandHandlerProtocolInterfaceStrategy : AvroFileSpecFromProtocolDecl
       // TODO: the strategy should be a fall-through in order: on message, on message type, on referenced-type
       funBuilder(name.value).apply {
         addModifiers(KModifier.ABSTRACT)
-        addAnnotation(CommandHandler::class)
+        // FIXME addAnnotation(CommandHandler::class)
         addParameter(command.name.value, avroPoetTypes[command.schema.hashCode].typeName)
 
         if (message.isDeciderInit()) {
-          addAnnotation(
-            buildAnnotation(CreationPolicy::class) {
-              addEnumMember("value", AggregateCreationPolicy.ALWAYS)
-            }
-          )
+// FIXME          addAnnotation(
+//            buildAnnotation(CreationPolicy::class) {
+//              addEnumMember("value", AggregateCreationPolicy.ALWAYS)
+//            }
+//          )
           // this is the field annotated with `@TargetAggregateIdentifier` used for routing to this aggregate
           val associationField = command.schema.fields.first { FieldMetaDataType.Association == RecordField(it).fieldMetaData()?.type }
           // return aggregate identifier of the aggregate

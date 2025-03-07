@@ -25,33 +25,9 @@ import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 import java.util.*
 
-fun main() {
-  System.setProperty("disable-axoniq-console-message", "true")
-  runApplication<AxonAvroExampleApplication>()
-}
 
 @SpringBootApplication
 class AxonAvroExampleApplication {
-
-  @Configuration
-  @EnableAxonAvroSerializer
-  @AvroSchemaScan(
-    basePackages = ["holi.bank"],// commands, events, queries
-  )
-  class AvroSerializerConfiguration {
-
-    @Bean
-    @Primary
-    fun defaultSerializer(): Serializer = JacksonSerializer.builder().build()
-
-    @Bean
-    @Qualifier("eventSerializer")
-    fun eventSerializer(builder: AvroSerializer.Builder): Serializer = builder.build()
-
-    @Bean
-    @Qualifier("messageSerializer")
-    fun messageSerializer(builder: AvroSerializer.Builder): Serializer = builder.build()
-  }
 
 
   @Component

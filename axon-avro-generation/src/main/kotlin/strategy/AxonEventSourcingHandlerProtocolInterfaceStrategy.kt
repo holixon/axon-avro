@@ -22,7 +22,6 @@ import io.toolisticon.kotlin.generation.KotlinCodeGeneration.builder.objectBuild
 import io.toolisticon.kotlin.generation.spec.KotlinFileSpec
 import io.toolisticon.kotlin.generation.spec.KotlinFunSpec
 import io.toolisticon.kotlin.generation.support.GeneratedAnnotation
-import org.axonframework.eventsourcing.EventSourcingHandler
 
 private val logger = KotlinLogging.logger {}
 
@@ -102,7 +101,7 @@ class AxonEventSourcingHandlerProtocolInterfaceStrategy : AvroFileSpecFromProtoc
     val eventType = avroPoetTypes[message.response.schema.hashCode]
     return buildFun("on" + eventType.avroType.name) {
       addModifiers(KModifier.ABSTRACT)
-      addAnnotation(EventSourcingHandler::class)
+      // FIXME addAnnotation(EventSourcingHandler::class)
       this.addParameter("event", eventType.typeName)
     }
   }

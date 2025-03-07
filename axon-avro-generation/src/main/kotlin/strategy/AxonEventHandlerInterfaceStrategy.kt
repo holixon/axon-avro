@@ -8,7 +8,6 @@ import io.toolisticon.kotlin.avro.declaration.ProtocolDeclaration
 import io.toolisticon.kotlin.avro.generator.AvroKotlinGenerator
 import io.toolisticon.kotlin.avro.generator.addKDoc
 import io.toolisticon.kotlin.avro.generator.asClassName
-import io.toolisticon.kotlin.avro.generator.rootClassName
 import io.toolisticon.kotlin.avro.generator.spi.ProtocolDeclarationContext
 import io.toolisticon.kotlin.avro.generator.strategy.AvroFileSpecFromProtocolDeclarationStrategy
 import io.toolisticon.kotlin.avro.model.RecordType
@@ -21,7 +20,6 @@ import io.toolisticon.kotlin.generation.KotlinCodeGeneration.builder.objectBuild
 import io.toolisticon.kotlin.generation.KotlinCodeGeneration.className
 import io.toolisticon.kotlin.generation.spec.KotlinFileSpec
 import io.toolisticon.kotlin.generation.support.GeneratedAnnotation
-import org.axonframework.eventhandling.EventHandler
 
 @OptIn(ExperimentalKotlinPoetApi::class)
 class AxonEventHandlerInterfaceStrategy : AvroFileSpecFromProtocolDeclarationStrategy() {
@@ -42,11 +40,11 @@ class AxonEventHandlerInterfaceStrategy : AvroFileSpecFromProtocolDeclarationStr
 
     allEvents.map { context.avroPoetTypes[it] }.map {
       val eventName = it.avroType.name
-      val interfaceName : ClassName= className( fileName.packageName, it.avroType.name.suffix("EventHandler").value)
+      val interfaceName: ClassName = className(fileName.packageName, it.avroType.name.suffix("EventHandler").value)
       buildInterface(interfaceName) {
         // TODO what doc to use? hierarchy?
         addFunction("on" + eventName.value) {
-          addAnnotation(EventHandler::class)
+          // FIXME addAnnotation(EventHandler::class)
           makeAbstract()
           addParameter("event", it.suffixedTypeName)
         }

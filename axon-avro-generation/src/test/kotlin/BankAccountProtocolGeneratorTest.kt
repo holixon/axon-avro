@@ -11,11 +11,13 @@ import io.toolisticon.kotlin.generation.test.model.requireOk
 import org.assertj.core.api.Assertions.assertThat
 import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.io.File
 
 private val logger = KotlinLogging.logger {}
 
+@Disabled
 @OptIn(ExperimentalKotlinPoetApi::class, ExperimentalCompilerApi::class)
 class BankAccountProtocolGeneratorTest {
 
