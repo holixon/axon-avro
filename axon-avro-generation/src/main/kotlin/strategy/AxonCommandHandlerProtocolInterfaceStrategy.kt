@@ -1,8 +1,10 @@
 package io.holixon.axon.avro.generation.strategy
 
 import _ktx.StringKtx.firstUppercase
-import com.squareup.kotlinpoet.*
-import io.holixon.axon.avro.generation.meta.AxonAvroMetaData.Companion.metaData
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.ExperimentalKotlinPoetApi
+import com.squareup.kotlinpoet.KModifier
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holixon.axon.avro.generation.meta.FieldMetaData.Companion.fieldMetaData
 import io.holixon.axon.avro.generation.meta.FieldMetaDataType
 import io.holixon.axon.avro.generation.meta.MessageMetaData.Companion.messageMetaData
@@ -18,24 +20,20 @@ import io.toolisticon.kotlin.avro.model.RecordField
 import io.toolisticon.kotlin.avro.model.wrapper.AvroProtocol
 import io.toolisticon.kotlin.avro.value.Documentation
 import io.toolisticon.kotlin.avro.value.Name
-import io.toolisticon.kotlin.generation.KotlinCodeGeneration.buildAnnotation
 import io.toolisticon.kotlin.generation.KotlinCodeGeneration.builder
 import io.toolisticon.kotlin.generation.KotlinCodeGeneration.builder.funBuilder
 import io.toolisticon.kotlin.generation.KotlinCodeGeneration.builder.objectBuilder
-import io.toolisticon.kotlin.generation.builder.KotlinAnnotationSpecBuilder.Companion.member
 import io.toolisticon.kotlin.generation.builder.KotlinFunSpecBuilder
 import io.toolisticon.kotlin.generation.spec.KotlinFileSpec
 import io.toolisticon.kotlin.generation.spi.processor.executeAll
 import io.toolisticon.kotlin.generation.support.GeneratedAnnotation
-import mu.KLogging
-import org.axonframework.commandhandling.CommandHandler
-import org.axonframework.modelling.command.AggregateCreationPolicy
-import org.axonframework.modelling.command.CreationPolicy
+
+private val logger = KotlinLogging.logger {}
 
 @OptIn(ExperimentalKotlinPoetApi::class)
 class AxonCommandHandlerProtocolInterfaceStrategy : AvroFileSpecFromProtocolDeclarationStrategy() {
 
-  companion object : KLogging() {
+  companion object {
     private const val UNKNOWN_GROUP = "__UNKNOWN__"
   }
 
@@ -125,15 +123,15 @@ class AxonCommandHandlerProtocolInterfaceStrategy : AvroFileSpecFromProtocolDecl
       // TODO: the strategy should be a fall-through in order: on message, on message type, on referenced-type
       funBuilder(name.value).apply {
         addModifiers(KModifier.ABSTRACT)
-        addAnnotation(CommandHandler::class)
+        // FIXME addAnnotation(CommandHandler::class)
         addParameter(command.name.value, avroPoetTypes[command.schema.hashCode].typeName)
 
         if (message.isDeciderInit()) {
-          addAnnotation(
-            buildAnnotation(CreationPolicy::class) {
-              addEnumMember("value", AggregateCreationPolicy.ALWAYS)
-            }
-          )
+// FIXME          addAnnotation(
+//            buildAnnotation(CreationPolicy::class) {
+//              addEnumMember("value", AggregateCreationPolicy.ALWAYS)
+//            }
+//          )
           // this is the field annotated with `@TargetAggregateIdentifier` used for routing to this aggregate
           val associationField = command.schema.fields.first { FieldMetaDataType.Association == RecordField(it).fieldMetaData()?.type }
           // return aggregate identifier of the aggregate

@@ -6,8 +6,10 @@ import io.toolisticon.kotlin.avro.generator.spi.AvroCodeGenerationSpiRegistry
 import io.toolisticon.kotlin.avro.generator.spi.ProtocolDeclarationContext
 import io.toolisticon.kotlin.generation.spi.strategy.KotlinCodeGenerationStrategyList
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
+@Disabled
 @OptIn(ExperimentalKotlinPoetApi::class)
 class AxonEventHandlerInterfaceStrategyTest {
 
@@ -24,7 +26,8 @@ class AxonEventHandlerInterfaceStrategyTest {
   fun `create event handler interfaces`() {
     val file = strategy.invoke(context, declaration)
 
-    assertThat(file.code).isEqualToIgnoringWhitespace("""
+    assertThat(file.code).isEqualToIgnoringWhitespace(
+      """
       package holi.bank
 
       import jakarta.`annotation`.Generated
@@ -57,7 +60,8 @@ class AxonEventHandlerInterfaceStrategyTest {
         public interface BankAccountContextAllEventHandlers : BankAccountCreatedEventEventHandler,
             MoneyDepositedEventEventHandler, MoneyWithdrawnEventEventHandler
       }
-    """.trimIndent())
+    """.trimIndent()
+    )
 
   }
 

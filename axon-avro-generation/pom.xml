@@ -4,12 +4,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>io.holixon.axon.avro</groupId>
+    <groupId>io.holixon.axon.avro._</groupId>
     <artifactId>axon-avro-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <relativePath>../pom/parent/pom.xml</relativePath>
+    <relativePath>../_build/parent/pom.xml</relativePath>
   </parent>
 
+  <groupId>io.holixon.axon.avro</groupId>
   <artifactId>axon-avro-generation</artifactId>
 
   <name>${project.artifactId}</name>
@@ -36,10 +37,11 @@
     </dependency>
 
     <dependency>
-      <groupId>io.toolisticon.kotlin.avro.test</groupId>
-      <artifactId>avro-kotlin-test</artifactId>
+      <groupId>io.holixon.axon.avro._</groupId>
+      <artifactId>axon-avro-lib-test</artifactId>
       <scope>test</scope>
     </dependency>
+
     <dependency>
       <groupId>io.toolisticon.kotlin.generation</groupId>
       <artifactId>kotlin-code-generation-test</artifactId>
@@ -47,4 +49,16 @@
     </dependency>
   </dependencies>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
 </project>

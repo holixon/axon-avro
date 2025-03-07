@@ -1,0 +1,5 @@
+axon:
+  serializer:
+    general: jackson
+    messages: jackson
+    events: avro

@@ -4,10 +4,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>io.holixon.axon.avro</groupId>
+    <groupId>io.holixon.axon.avro._</groupId>
     <artifactId>axon-avro-root</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>axon-avro-examples-root</artifactId>
@@ -18,15 +17,23 @@
     <maven.test.skip>true</maven.test.skip>
     <failIfNoTests>false</failIfNoTests>
 
-    <spring-boot.version>3.3.3</spring-boot.version>
+    <spring-boot.version>3.4.3</spring-boot.version>
   </properties>
 
   <modules>
-    <module>axon-avro-holi-bank-example</module>
+    <module>axon-avro-kotlin-example</module>
   </modules>
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${spring-boot.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+
       <dependency>
         <groupId>org.axonframework</groupId>
         <artifactId>axon-bom</artifactId>
@@ -34,13 +41,15 @@
         <scope>import</scope>
         <type>pom</type>
       </dependency>
+
       <dependency>
-        <groupId>io.toolisticon.kotlin.avro</groupId>
-        <artifactId>avro-kotlin</artifactId>
-        <version>${avro-kotlin.version}</version>
+        <groupId>io.holixon.axon.avro</groupId>
+        <artifactId>axon-avro-bom</artifactId>
+        <version>${project.version}</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>
+
     </dependencies>
   </dependencyManagement>
 

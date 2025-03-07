@@ -4,6 +4,7 @@ import _ktx.StringKtx.firstUppercase
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ExperimentalKotlinPoetApi
 import com.squareup.kotlinpoet.KModifier
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holixon.axon.avro.generation.meta.MessageMetaData.Companion.messageMetaData
 import io.toolisticon.kotlin.avro.declaration.ProtocolDeclaration
 import io.toolisticon.kotlin.avro.generator.AvroKotlinGenerator
@@ -21,13 +22,13 @@ import io.toolisticon.kotlin.generation.KotlinCodeGeneration.builder.objectBuild
 import io.toolisticon.kotlin.generation.spec.KotlinFileSpec
 import io.toolisticon.kotlin.generation.spec.KotlinFunSpec
 import io.toolisticon.kotlin.generation.support.GeneratedAnnotation
-import mu.KLogging
-import org.axonframework.queryhandling.QueryHandler
+
+private val logger = KotlinLogging.logger {}
 
 @OptIn(ExperimentalKotlinPoetApi::class)
 class AxonQueryProtocolInterfaceStrategy : AvroFileSpecFromProtocolDeclarationStrategy() {
 
-  companion object : KLogging() {
+  companion object {
     private const val UNKNOWN_GROUP = "__UNKNOWN__"
   }
 
@@ -60,19 +61,19 @@ class AxonQueryProtocolInterfaceStrategy : AvroFileSpecFromProtocolDeclarationSt
           // create one enclosing type for all queries
           listOf(
             builder
-            .interfaceBuilder((input.canonicalName.namespace + Name(groupName.firstUppercase() + "Queries")).asClassName())
-            .apply {
-              messages
-                .mapNotNull { (name, message) ->
-                  if (message.request.fields.size == 1) {
-                    // TODO: the strategy should be a fall-through in order: on message, on message type, on referenced-type
-                    addFunction(buildQueryFunctionSpec(name, message, context.avroPoetTypes))
-                  } else {
-                    logger.warn { "Skipped query definition $name, because it had more then one parameter, but at most one is supported." }
-                    null
+              .interfaceBuilder((input.canonicalName.namespace + Name(groupName.firstUppercase() + "Queries")).asClassName())
+              .apply {
+                messages
+                  .mapNotNull { (name, message) ->
+                    if (message.request.fields.size == 1) {
+                      // TODO: the strategy should be a fall-through in order: on message, on message type, on referenced-type
+                      addFunction(buildQueryFunctionSpec(name, message, context.avroPoetTypes))
+                    } else {
+                      logger.warn { "Skipped query definition $name, because it had more then one parameter, but at most one is supported." }
+                      null
+                    }
                   }
-                }
-            }
+              }
           )
         } else {
           // anonymous group
@@ -111,7 +112,7 @@ class AxonQueryProtocolInterfaceStrategy : AvroFileSpecFromProtocolDeclarationSt
   private fun buildQueryFunctionSpec(name: Name, message: AvroProtocol.TwoWayMessage, avroPoetTypes: AvroPoetTypes): KotlinFunSpec {
     return buildFun(name.value) {
       addModifiers(KModifier.ABSTRACT)
-      addAnnotation(QueryHandler::class)
+      // FIXME addAnnotation(QueryHandler::class)
       message.request.fields.forEach { f ->
         this.addParameter(f.name.value, avroPoetTypes[f.schema.hashCode].typeName)
       }

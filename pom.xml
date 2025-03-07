@@ -6,32 +6,43 @@
   <parent>
     <groupId>io.toolisticon.maven.parent</groupId>
     <artifactId>maven-parent-kotlin-base</artifactId>
-    <version>2024.12.2</version>
+    <version>2025.3.0</version>
     <relativePath/>
   </parent>
 
-  <groupId>io.holixon.axon.avro</groupId>
+  <groupId>io.holixon.axon.avro._</groupId>
   <artifactId>axon-avro-root</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>POM: ${project.artifactId}</name>
+  <name>pom: ${project.artifactId}</name>
   <description>Axon Avro Root POM</description>
   <url>https://github.com/holixon/axon-avro/</url>
 
-  <modules>
-    <module>pom/parent</module>
-  </modules>
-
   <properties>
-    <kotlin.compiler.apiVersion>1.9</kotlin.compiler.apiVersion>
-    <kotlin.compiler.languageVersion>1.9</kotlin.compiler.languageVersion>
-
+    <!-- core dependencies -->
     <avro.version>1.12.0</avro.version>
-    <avro-kotlin.version>1.12.4.1</avro-kotlin.version>
+    <avro-kotlin.version>1.12.4.2</avro-kotlin.version>
     <axon-bom.version>4.11.1</axon-bom.version>
-    <kotlin-code-generation.version>0.0.9</kotlin-code-generation.version>
+    <kotlin-code-generation.version>0.1.3</kotlin-code-generation.version>
   </properties>
+
+  <modules>
+    <!-- internal build modules -->
+    <module>_build/parent</module>
+    <module>_build/test</module>
+
+    <!-- primary exposed modules -->
+    <module>axon-avro-generation</module>
+    <module>axon-avro-kotlin-serializer</module>
+    <module>axon-avro-server-plugin</module>
+
+    <!-- bill of materials for the users -->
+    <module>axon-avro-bom</module>
+
+    <!-- aggregate coverage reports -->
+    <module>_build/coverage-aggregator</module>
+  </modules>
 
   <!-- this is the maven root, all dependencies have to be declared in the concrete modules -->
   <dependencyManagement/>

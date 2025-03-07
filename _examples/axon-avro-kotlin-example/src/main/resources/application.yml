@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: "axon-avro-kotlin-example"
+
+logging:
+  level:
+    org.springframework.core.annotation.AnnotationTypeMapping: ERROR
+    org.axonframework.eventhandling.tokenstore.inmemory.InMemoryTokenStore: ERROR
+    io.toolisticon.kotlin.avro.serialization.cache: TRACE
+
+axon:
+  metrics:
+    auto-configuration:
+      enabled: false
+  serializer:
+    general: jackson
+    messages: avro
+    events: avro
+
+#spring:
+#  autoconfigure:
+#    exclude: org.axonframework.springboot.autoconfig.AxonTracingAutoConfiguration
