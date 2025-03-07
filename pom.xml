@@ -15,7 +15,7 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>POM: ${project.artifactId}</name>
+  <name>pom: ${project.artifactId}</name>
   <description>Axon Avro Root POM</description>
   <url>https://github.com/holixon/axon-avro/</url>
 
@@ -28,14 +28,20 @@
   </properties>
 
   <modules>
+    <!-- internal build modules -->
     <module>_build/parent</module>
     <module>_build/test</module>
 
-    <module>axon-avro-bom</module>
-
+    <!-- primary exposed modules -->
     <module>axon-avro-generation</module>
     <module>axon-avro-kotlin-serializer</module>
-<!--    <module>pom/parent</module>-->
+    <module>axon-avro-server-plugin</module>
+
+    <!-- bill of materials for the users -->
+    <module>axon-avro-bom</module>
+
+    <!-- aggregate coverage reports -->
+    <module>_build/coverage-aggregator</module>
   </modules>
 
   <!-- this is the maven root, all dependencies have to be declared in the concrete modules -->

@@ -5,6 +5,7 @@ import io.axoniq.axonserver.grpc.SerializedObject
 import io.axoniq.axonserver.grpc.event.Event
 import io.axoniq.axonserver.plugin.ExecutionContext
 import io.axoniq.axonserver.plugin.interceptor.ReadEventInterceptor
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holixon.axon.avro.serializer.plugin.AxonAvroSerializerPluginConfigurationListener
 import io.holixon.axon.avro.serializer.plugin.ext.data
 import io.holixon.axon.avro.serializer.plugin.ext.findSingleObjectToJsonConverterProvider
@@ -13,18 +14,16 @@ import io.holixon.axon.avro.serializer.plugin.ext.usingSingleObjectJsonConverter
 import io.toolisticon.kotlin.avro.value.ByteArrayValue
 import io.toolisticon.kotlin.avro.value.JsonString
 import io.toolisticon.kotlin.avro.value.SingleObjectEncodedBytes
-import mu.KLogging
+
 import org.osgi.framework.FrameworkUtil
 
-
+val logger = KotlinLogging.logger {}
 /**
  * If the event payload is single-object-encoded, replace the payload bytes with the json representation of the event.
  */
 @Suppress("UNUSED_PARAMETER")
 class AvroSingleObjectEncodedToJsonReadEventInterceptor(configurationHandler: AxonAvroSerializerPluginConfigurationListener) :
   ReadEventInterceptor {
-
-  companion object : KLogging()
 
   override fun readEvent(event: Event, executionContext: ExecutionContext): Event {
 

@@ -4,13 +4,15 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>io.holixon.axon.avro</groupId>
+    <groupId>io.holixon.axon.avro._</groupId>
     <artifactId>axon-avro-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <relativePath>../pom/parent/pom.xml</relativePath>
+    <relativePath>../_build/parent/pom.xml</relativePath>
   </parent>
 
+  <groupId>io.holixon.axon.avro</groupId>
   <artifactId>axon-avro-server-plugin</artifactId>
+  <description>Axon Server plugin to display Avro messages in dashboard</description>
   <packaging>bundle</packaging>
 
   <dependencies>
@@ -38,7 +40,7 @@
 
     <!-- Testing -->
     <dependency>
-      <groupId>io.holixon.axon.avro</groupId>
+      <groupId>io.holixon.axon.avro._</groupId>
       <artifactId>axon-avro-lib-test</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
@@ -66,7 +68,7 @@
               java.net.*;
               org.apache.avro.*;
               io.toolisticon.avro.kotlin.*;
-              mu.*;
+              io.github.oshai.kotlinlogging.*;
               <!--
               org.xml.sax.*;
               javax.xml.parsers.*;

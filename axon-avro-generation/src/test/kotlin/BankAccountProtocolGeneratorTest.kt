@@ -31,7 +31,7 @@ class BankAccountProtocolGeneratorTest {
     files = KotlinFileSpecList(generator.generate(declaration))
     files.forEach {
       val written = it.get().writeTo(outputDirectory)
-      logger.info("Generated file://${written.absolutePath}")
+      logger.info { "Generated file://${written.absolutePath}" }
     }
   }
 

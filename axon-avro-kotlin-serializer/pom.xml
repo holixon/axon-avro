@@ -12,6 +12,7 @@
 
   <groupId>io.holixon.axon.avro</groupId>
   <artifactId>axon-avro-kotlin-serializer</artifactId>
+  <description>Extension for Axon Framework for usage with KotlinX Avro Serialization</description>
 
   <dependencies>
     <dependency>
