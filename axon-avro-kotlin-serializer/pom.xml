@@ -15,6 +15,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>io.toolisticon.kotlin.avro</groupId>
+      <artifactId>avro-kotlin-serialization</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>org.axonframework</groupId>
       <artifactId>axon-messaging</artifactId>
       <scope>provided</scope>
@@ -23,10 +28,6 @@
       <groupId>org.axonframework</groupId>
       <artifactId>axon-modelling</artifactId>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.toolisticon.kotlin.avro</groupId>
-      <artifactId>avro-kotlin-serialization</artifactId>
     </dependency>
 
     <dependency>
