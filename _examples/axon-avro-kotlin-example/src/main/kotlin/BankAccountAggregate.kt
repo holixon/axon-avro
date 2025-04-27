@@ -23,9 +23,6 @@ class BankAccountAggregate() : BankAccountAggregateCommandHandlers, BankAccountA
     private const val INITIAL_BALANCE_MIN = 20
   }
 
-  @CommandHandler
-  @CreationPolicy(value = ALWAYS)
-  @Throws(IllegalInitialBalance::class)
   override fun createBankAccount(command: CreateBankAccountCommand): String {
     if (command.initialBalance < INITIAL_BALANCE_MIN) {
       throw IllegalInitialBalance("Initial balance of the account must exceed ${INITIAL_BALANCE_MIN}, but it was ${command.initialBalance}.")
@@ -34,32 +31,26 @@ class BankAccountAggregate() : BankAccountAggregateCommandHandlers, BankAccountA
     return command.accountId
   }
 
-  @CommandHandler
   override fun depositMoney(command: DepositMoneyCommand) {
     AggregateLifecycle.apply(MoneyDepositedEvent(this.accountId, command.amount))
   }
 
-  @CommandHandler
   override fun withdrawMoney(command: WithdrawMoneyCommand) {
     if (this.balance >= command.amount) {
       AggregateLifecycle.apply(MoneyWithdrawnEvent(this.accountId, command.amount))
     }
   }
 
-  @EventSourcingHandler
   override fun onBankAccountCreatedEvent(event: BankAccountCreatedEvent) {
     this.accountId = event.accountId
     this.balance = event.initialBalance
   }
 
-  @EventSourcingHandler
   override fun onMoneyDepositedEvent(event: MoneyDepositedEvent) {
     this.balance += event.amount
   }
 
-  @EventSourcingHandler
   override fun onMoneyWithdrawnEvent(event: MoneyWithdrawnEvent) {
     this.balance -= event.amount
   }
-
 }

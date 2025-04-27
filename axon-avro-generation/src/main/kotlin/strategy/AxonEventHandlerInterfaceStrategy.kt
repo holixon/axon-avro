@@ -20,6 +20,7 @@ import io.toolisticon.kotlin.generation.KotlinCodeGeneration.builder.objectBuild
 import io.toolisticon.kotlin.generation.KotlinCodeGeneration.className
 import io.toolisticon.kotlin.generation.spec.KotlinFileSpec
 import io.toolisticon.kotlin.generation.support.GeneratedAnnotation
+import org.axonframework.eventhandling.EventHandler
 
 @OptIn(ExperimentalKotlinPoetApi::class)
 class AxonEventHandlerInterfaceStrategy : AvroFileSpecFromProtocolDeclarationStrategy() {
@@ -44,7 +45,7 @@ class AxonEventHandlerInterfaceStrategy : AvroFileSpecFromProtocolDeclarationStr
       buildInterface(interfaceName) {
         // TODO what doc to use? hierarchy?
         addFunction("on" + eventName.value) {
-          // FIXME addAnnotation(EventHandler::class)
+          addAnnotation(EventHandler::class)
           makeAbstract()
           addParameter("event", it.suffixedTypeName)
         }
