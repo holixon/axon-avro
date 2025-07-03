@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.toolisticon.maven.parent</groupId>
     <artifactId>maven-parent-kotlin-base</artifactId>
-    <version>2025.6.0</version>
+    <version>2025.7.1</version>
     <relativePath/>
   </parent>
 
@@ -24,7 +24,7 @@
     <avro.version>1.12.0</avro.version>
     <avro-kotlin.version>1.12.5.0</avro-kotlin.version>
     <axon-bom.version>4.11.3</axon-bom.version>
-    <kotlin-code-generation.version>0.1.4</kotlin-code-generation.version>
+    <kotlin-code-generation.version>0.2.2</kotlin-code-generation.version>
   </properties>
 
   <modules>
