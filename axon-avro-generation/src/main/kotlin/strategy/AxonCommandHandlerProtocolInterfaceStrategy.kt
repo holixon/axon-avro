@@ -3,7 +3,6 @@ package io.holixon.axon.avro.generation.strategy
 import _ktx.StringKtx.firstUppercase
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ExperimentalKotlinPoetApi
-import com.squareup.kotlinpoet.KModifier
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.holixon.axon.avro.generation.meta.FieldMetaData.Companion.fieldMetaData
 import io.holixon.axon.avro.generation.meta.FieldMetaDataType
@@ -17,7 +16,9 @@ import io.toolisticon.kotlin.avro.generator.processor.KotlinFunSpecFromProtocolM
 import io.toolisticon.kotlin.avro.generator.spi.ProtocolDeclarationContext
 import io.toolisticon.kotlin.avro.generator.strategy.AvroFileSpecFromProtocolDeclarationStrategy
 import io.toolisticon.kotlin.avro.model.RecordField
-import io.toolisticon.kotlin.avro.model.wrapper.AvroProtocol
+import io.toolisticon.kotlin.avro.model.RecordType
+import io.toolisticon.kotlin.avro.model.RequestType
+import io.toolisticon.kotlin.avro.model.wrapper.AvroProtocol.Message
 import io.toolisticon.kotlin.avro.value.Documentation
 import io.toolisticon.kotlin.avro.value.Name
 import io.toolisticon.kotlin.generation.KotlinCodeGeneration.buildAnnotation
@@ -39,6 +40,12 @@ class AxonCommandHandlerProtocolInterfaceStrategy : AvroFileSpecFromProtocolDecl
 
   companion object {
     private const val UNKNOWN_GROUP = "__UNKNOWN__"
+
+    fun RecordType.associationField(): RecordField {
+      return this.fields.first {
+        FieldMetaDataType.Association == it.fieldMetaData()?.type
+      }
+    }
   }
 
   override fun invoke(context: ProtocolDeclarationContext, input: ProtocolDeclaration): KotlinFileSpec {
@@ -58,7 +65,7 @@ class AxonCommandHandlerProtocolInterfaceStrategy : AvroFileSpecFromProtocolDecl
     }
 
     /*
-    Single interface for each command
+     * Single interface for each command
      */
     input.protocol.messages
       .filterValues { message -> message.isDecider() || message.isDeciderInit() }
@@ -112,7 +119,6 @@ class AxonCommandHandlerProtocolInterfaceStrategy : AvroFileSpecFromProtocolDecl
         allCommandHandlersInterfaceBuilder.addSuperinterface(ClassName.bestGuess(interfaceBuilder.spec().className.simpleName))
       }
 
-
     objectBuilder.addType(allCommandHandlersInterfaceBuilder) // add union interface
     fileBuilder.addType(objectBuilder)
 
@@ -121,23 +127,28 @@ class AxonCommandHandlerProtocolInterfaceStrategy : AvroFileSpecFromProtocolDecl
     return fileBuilder.build()
   }
 
-  private fun buildCommandHandlerFunction(name: Name, message: AvroProtocol.Message, avroPoetTypes: AvroPoetTypes): KotlinFunSpecBuilder? {
-    return if (message.request.fields.size == 1) {
-      val command = message.request.fields.first() // first field is a command
+  internal fun buildCommandHandlerFunction(name: Name, message: Message, avroPoetTypes: AvroPoetTypes): KotlinFunSpecBuilder? {
+    val requestType = RequestType(message.request)
+
+    return if (requestType.fields.size == 1) {
+      val funBuilder = funBuilder(name.value).makeAbstract()
+        .addAnnotation(CommandHandler::class)
+      val commandType = requestType.fields.single().type
+      if ( commandType !is RecordType ) {
+        logger.warn { "Skipped command handler definition $name, because it was not a record type, but ${commandType::class.simpleName}." }
+        return null
+      }
+
+
       // TODO: the strategy should be a fall-through in order: on message, on message type, on referenced-type
-      funBuilder(name.value).apply {
-        addModifiers(KModifier.ABSTRACT)
-        addAnnotation(CommandHandler::class)
-        addParameter(command.name.value, avroPoetTypes[command.schema.hashCode].typeName)
+      funBuilder.apply {
+        addParameter(commandType.name.value, avroPoetTypes[commandType.schema.hashCode].typeName)
+
 
         if (message.isDeciderInit()) {
-          addAnnotation(
-            buildAnnotation(CreationPolicy::class) {
-              addEnumMember("value", AggregateCreationPolicy.ALWAYS)
-            }
-          )
+          addAnnotation(buildAnnotation(CreationPolicy::class) { addEnumMember("value", AggregateCreationPolicy.ALWAYS) })
           // this is the field annotated with `@TargetAggregateIdentifier` used for routing to this aggregate
-          val associationField = command.schema.fields.first { FieldMetaDataType.Association == RecordField(it).fieldMetaData()?.type }
+          val associationField = commandType.associationField()
           // return aggregate identifier of the aggregate
           returns(avroPoetTypes[associationField.schema.hashCode].typeName)
         }

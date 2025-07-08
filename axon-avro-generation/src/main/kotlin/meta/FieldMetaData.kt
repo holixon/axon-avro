@@ -2,7 +2,9 @@ package io.holixon.axon.avro.generation.meta
 
 import io.holixon.axon.avro.generation.meta.FieldMetaData.Companion.KEYS.TYPE
 import io.toolisticon.kotlin.avro.model.RecordField
+import io.toolisticon.kotlin.avro.model.RequestField
 import io.toolisticon.kotlin.avro.value.Name
+import io.toolisticon.kotlin.avro.value.ObjectProperties
 import io.toolisticon.kotlin.avro.value.property.meta
 
 data class FieldMetaData(
@@ -16,6 +18,14 @@ data class FieldMetaData(
     }
 
     fun RecordField.fieldMetaData(): FieldMetaData? = this.properties.meta.metaData {
+
+      FieldMetaData(
+        name = this@fieldMetaData.name,
+        type = this[TYPE]?.let { it as String }?.let { FieldMetaDataType[it.trim()] }
+      )
+    }
+
+    fun RequestField.fieldMetaData(): FieldMetaData? = this.properties.meta.metaData {
 
       FieldMetaData(
         name = this@fieldMetaData.name,

@@ -12,7 +12,6 @@ enum class FieldMetaDataType {
 
   val decapitalizedName = name.replaceFirstChar { c -> c.lowercase(Locale.getDefault()) }
 
-
   companion object {
     // TODO: support lower camel case to upper snake case
     private val NAMES: Map<String, FieldMetaDataType> = FieldMetaDataType.entries.associateBy { it.decapitalizedName }

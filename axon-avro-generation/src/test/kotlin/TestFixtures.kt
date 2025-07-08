@@ -6,6 +6,7 @@ import io.toolisticon.kotlin.avro.declaration.ProtocolDeclaration
 import io.toolisticon.kotlin.avro.generator.AvroKotlinGenerator
 import io.toolisticon.kotlin.avro.generator.DefaultAvroKotlinGeneratorProperties
 import io.toolisticon.kotlin.avro.generator.spi.AvroCodeGenerationSpiRegistry
+import io.toolisticon.kotlin.avro.generator.spi.ProtocolDeclarationContext
 import java.time.Instant
 
 object TestFixtures {
@@ -19,5 +20,11 @@ object TestFixtures {
 
   fun parseProtocol(path:String) : ProtocolDeclaration = PARSER.parseProtocol(
     resourceUrl(path)
+  )
+
+  fun protocolContext(declaration: ProtocolDeclaration) = ProtocolDeclarationContext.of(
+    declaration = declaration,
+    registry = DEFAULT_REGISTRY,
+    properties = DEFAULT_PROPERTIES
   )
 }

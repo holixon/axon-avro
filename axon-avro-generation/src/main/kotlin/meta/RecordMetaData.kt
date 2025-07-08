@@ -3,6 +3,7 @@ package io.holixon.axon.avro.generation.meta
 import io.holixon.axon.avro.generation.meta.RecordMetaData.Companion.KEYS.REVISION
 import io.holixon.axon.avro.generation.meta.RecordMetaData.Companion.KEYS.TYPE
 import io.toolisticon.kotlin.avro.model.RecordType
+import io.toolisticon.kotlin.avro.model.RequestType
 import io.toolisticon.kotlin.avro.model.wrapper.AvroSchema
 import io.toolisticon.kotlin.avro.value.CanonicalName
 import io.toolisticon.kotlin.avro.value.Name
@@ -22,10 +23,10 @@ data class RecordMetaData(
       const val TYPE = "type"
     }
 
+    fun RequestType.recordMetaData(): RecordMetaData? = this.schema.recordMetaData()
     fun RecordType.recordMetaData(): RecordMetaData? = this.schema.recordMetaData()
     fun AvroSchema.recordMetaData(): RecordMetaData? = this.metaData {
       val meta = this.properties.meta
-
 
       RecordMetaData(
         namespace = this.namespace,
