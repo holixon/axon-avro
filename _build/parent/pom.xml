@@ -15,7 +15,7 @@
   <packaging>pom</packaging>
 
   <properties>
-    <springboot.version>3.5.4</springboot.version>
+    <springboot.version>3.5.5</springboot.version>
   </properties>
 
   <dependencyManagement>
