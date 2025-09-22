@@ -8,7 +8,7 @@ import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.asTypeName
 import io.holixon.axon.avro.generation.meta.MessageMetaData.Companion.messageMetaData
 import io.holixon.axon.avro.generation.meta.MessageMetaDataType
-import io.toolisticon.kotlin.avro.generator.api.AvroPoetTypes
+import io.toolisticon.kotlin.avro.generator.poet.AvroPoetTypes
 import io.toolisticon.kotlin.avro.model.MessageResponse
 import io.toolisticon.kotlin.avro.model.wrapper.AvroProtocol
 import org.axonframework.messaging.responsetypes.ResponseTypes
