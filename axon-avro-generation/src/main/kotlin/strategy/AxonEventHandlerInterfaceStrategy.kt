@@ -17,7 +17,7 @@ import io.toolisticon.kotlin.generation.KotlinCodeGeneration
 import io.toolisticon.kotlin.generation.KotlinCodeGeneration.buildFile
 import io.toolisticon.kotlin.generation.KotlinCodeGeneration.buildInterface
 import io.toolisticon.kotlin.generation.KotlinCodeGeneration.builder.objectBuilder
-import io.toolisticon.kotlin.generation.KotlinCodeGeneration.className
+import io.toolisticon.kotlin.generation.KotlinCodeGeneration.name.className
 import io.toolisticon.kotlin.generation.spec.KotlinFileSpec
 import io.toolisticon.kotlin.generation.support.GeneratedAnnotation
 import org.axonframework.eventhandling.EventHandler

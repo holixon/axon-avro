@@ -9,7 +9,7 @@ import io.holixon.axon.avro.generation.meta.MessageMetaData.Companion.messageMet
 import io.toolisticon.kotlin.avro.declaration.ProtocolDeclaration
 import io.toolisticon.kotlin.avro.generator.AvroKotlinGenerator
 import io.toolisticon.kotlin.avro.generator.addKDoc
-import io.toolisticon.kotlin.avro.generator.api.AvroPoetTypes
+import io.toolisticon.kotlin.avro.generator.poet.AvroPoetTypes
 import io.toolisticon.kotlin.avro.generator.asClassName
 import io.toolisticon.kotlin.avro.generator.spi.ProtocolDeclarationContext
 import io.toolisticon.kotlin.avro.generator.strategy.AvroFileSpecFromProtocolDeclarationStrategy
