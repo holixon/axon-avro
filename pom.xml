@@ -24,7 +24,7 @@
     <avro.version>1.12.0</avro.version>
     <avro-kotlin.version>1.12.6.1</avro-kotlin.version>
     <axon-bom.version>4.12.3</axon-bom.version>
-    <kotlin-code-generation.version>0.3.4</kotlin-code-generation.version>
+    <kotlin-code-generation.version>0.4.0</kotlin-code-generation.version>
   </properties>
 
   <modules>
