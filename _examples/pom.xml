@@ -17,7 +17,7 @@
     <maven.test.skip>true</maven.test.skip>
     <failIfNoTests>false</failIfNoTests>
 
-    <spring-boot.version>3.5.7</spring-boot.version>
+    <spring-boot.version>4.0.5</spring-boot.version>
   </properties>
 
   <modules>
